@@ -9,6 +9,8 @@ export const config = {
   privilege_url: 'http://localhost:8083/privileges',
   audit_log_url: 'http://localhost:8083/audit-logs',
   cinema_url: 'http://localhost:8083/cinema',
+  category_url: 'http://localhost:8083/categories',
+  film_url: 'http://localhost:8083/films',
 };
 
 export const env = {
