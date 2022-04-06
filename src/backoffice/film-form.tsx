@@ -27,6 +27,7 @@ const createFilm = (): Film => {
 };
 
 const initialize = async (filmId: string | null, load: (id: string | null) => void, set: DispatchWithCallback<Partial<InternalState>>) => {
+    // eslint-disable-next-line
     const categoryService = useCategory();
     categoryService.getAllCategories().then(allCategories => {
         const categoryList: string[] = [];

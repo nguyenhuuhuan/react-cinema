@@ -30,5 +30,23 @@ export const en = {
 
   role_assigned_users: 'Assigned Users',
   role_roles_assign_to_groups: 'Role Assign To Group(s)',
+
+   // Category
+   category: 'category',
+   categories: 'Categories',
+   category_id: 'Category Id',
+   category_name: 'Category Name',
+ 
+   category_assignment_subject: 'Administrator Category Assignment',
+   category_assignment_search_film: 'Search Film',
+   // Film
+   film: 'film',
+   films: 'Films',
+   film_id: 'Film Id',
+   title: 'Title',
+   image_url: 'Image URL',
+   trailer_url: 'Trailer URL',
+   description: 'Description',
+   films_lookup: 'Search Film',
 };
 

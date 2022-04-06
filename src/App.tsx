@@ -55,6 +55,10 @@ import './assets/css/profile.css';
 import './assets/css/theme.css';
 import { CinemaForm } from './backoffice/cinema-form';
 import { CinemasForm } from './backoffice/cinemas-form';
+import { CategoriesForm } from './backoffice/categories-form';
+import { CategoryForm } from './backoffice/category-form';
+import { FilmForm } from './backoffice/film-form';
+import { FilmsForm } from './backoffice/films-form';
 // import "./assets/fonts/Roboto/font.css";
 
 let isInit = false;
@@ -117,6 +121,13 @@ function App() {
           <Route path='backoffice/cinema/edit/:id' element={<CinemaForm />} />
           <Route path='backoffice/cinema/add' element={<CinemaForm />} />
           <Route path='backoffice/cinema' element={<CinemasForm />} />
+          <Route path='backoffice/categories' element={<CategoriesForm />} />
+          <Route path='backoffice/categories/edit/:id' element={<CategoryForm />} />
+          <Route path='backoffice/categories/add' element={<CategoryForm />} />
+          <Route path='backoffice/films' element={<FilmsForm />} />
+          <Route path='backoffice/films/add' element={<FilmForm />} />
+          <Route path='backoffice/films/edit/:id' element={<FilmForm />} />
+          
         </Route>
         <Route path='/' element={<HomePage />} />
       </Routes>
