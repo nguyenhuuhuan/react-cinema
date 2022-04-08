@@ -3,7 +3,7 @@ import { UserAccount } from 'uione';
 import { FileUploads, Uploads } from './model';
 
 const url = 'http://localhost:8080';
-const user: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'') as UserAccount;
+const user: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
 export const fetchImageUploaded = (): Promise<FileUploads[]> | FileUploads[] => {
   if (user) {
     return axios.get(url + `/uploads/${user.id}`).then(files => {

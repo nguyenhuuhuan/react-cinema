@@ -9,8 +9,9 @@ export interface State {
   success: boolean;
   loading: boolean;
 }
-const user: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'') as UserAccount;
+const user: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
 export const useUpload = () => {
+  
   const [file, setFile] = React.useState<File>();
   const [state, setState] = React.useState<State>({
     success: false,
