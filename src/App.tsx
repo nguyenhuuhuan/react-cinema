@@ -59,6 +59,7 @@ import { CategoriesForm } from './backoffice/categories-form';
 import { CategoryForm } from './backoffice/category-form';
 import { FilmForm } from './backoffice/film-form';
 import { FilmsForm } from './backoffice/films-form';
+import UploadFile from './uploads/app';
 // import "./assets/fonts/Roboto/font.css";
 
 let isInit = false;
@@ -127,7 +128,8 @@ function App() {
           <Route path='backoffice/films' element={<FilmsForm />} />
           <Route path='backoffice/films/add' element={<FilmForm />} />
           <Route path='backoffice/films/edit/:id' element={<FilmForm />} />
-          
+          <Route path={'upload/:id/image'} element={<UploadFile />} />
+          <Route path={'upload'} element={<UploadFile />} />
         </Route>
         <Route path='/' element={<HomePage />} />
       </Routes>
