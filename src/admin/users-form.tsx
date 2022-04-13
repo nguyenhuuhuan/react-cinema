@@ -7,6 +7,7 @@ import { inputSearch } from 'uione';
 import femaleIcon from '../assets/images/female.png';
 import maleIcon from '../assets/images/male.png';
 import { getUserService, User, UserFilter } from './service';
+import UserCarousel from './users_carousel/app';
 
 interface UserSearch extends SearchComponentState<User, UserFilter> {
   statusList: Item[];
@@ -27,6 +28,7 @@ const initialState: UserSearch = {
 export const UsersForm = () => {
   const navigate = useNavigate();
   const refForm = React.useRef();
+  const [listStatus, setListStatus] = React.useState(true);
   const { state, resource, component, updateState, search, sort, toggleFilter, changeView, pageChanged, pageSizeChanged } = useSearch<User, UserFilter, UserSearch>(refForm, initialState, getUserService(), inputSearch());
   component.viewable = true;
   component.editable = true;
@@ -56,9 +58,9 @@ export const UsersForm = () => {
           <section className='row search-group'>
             <label className='col s12 m4 search-input'>
               <PageSizeSelect size={component.pageSize} sizes={component.pageSizes} onChange={pageSizeChanged} />
-              <input type='text' id='q' name='q' value={filter.q || ''} onChange={updateState} maxLength={255} placeholder={resource.keyword}/>
-              <button type='button' className='btn-filter' onClick={toggleFilter}/>
-              <button type='submit' className='btn-search' onClick={search}/>
+              <input type='text' id='q' name='q' value={filter.q || ''} onChange={updateState} maxLength={255} placeholder={resource.keyword} />
+              <button type='button' className='btn-filter' onClick={toggleFilter} />
+              <button type='submit' className='btn-search' onClick={search} />
             </label>
             <Pagination className='col s12 m8' total={component.total} size={component.pageSize} max={component.pageMaxSize} page={component.pageIndex} onChange={pageChanged} />
           </section>
@@ -109,6 +111,9 @@ export const UsersForm = () => {
           </section>
         </form>
         <form className='list-result'>
+          <section className='btn-group' style={{ paddingLeft: '16px' }}>
+            <div className='btn-search' style={{ textAlign: 'center', padding: '6px 0' }} onClick={() => setListStatus(l => !l)}>{listStatus ? 'Carousel' : 'Items'}</div>
+          </section>
           {component.view === 'table' && <div className='table-responsive'>
             <table>
               <thead>
@@ -137,18 +142,27 @@ export const UsersForm = () => {
           </div>}
           {component.view !== 'table' && <ul className='row list-view'>
             {list && list.length > 0 && list.map((user, i) => {
-              return (
-                <li key={i} className='col s12 m6 l4 xl3' onClick={e => edit(e, user.userId)}>
-                  <section>
-                    <img src={user.imageURL && user.imageURL.length > 0 ? user.imageURL : (user.gender === 'F' ? femaleIcon : maleIcon)} alt='user' className='round-border' />
-                    <div>
-                      <h3 className={user.status === 'I' ? 'inactive' : ''}>{user.displayName}</h3>
-                      <p>{user.email}</p>
-                    </div>
-                    <button className='btn-detail' />
-                  </section>
-                </li>
-              );
+              return (<>
+                {
+                  listStatus ? (<li key={i} className='col s12 m6 l4 xl3' onClick={e => edit(e, user.userId)}>
+                    <section>
+                      <img src={user.imageURL && user.imageURL.length > 0 ? user.imageURL : (user.gender === 'F' ? femaleIcon : maleIcon)} alt='user' className='round-border' />
+                      <div>
+                        <h3 className={user.status === 'I' ? 'inactive' : ''}>{user.displayName}</h3>
+                        <p>{user.email}</p>
+                      </div>
+                      <button className='btn-detail' />
+                    </section>
+                  </li>)
+                    : (
+                      <li key={i} className='col s12 m6 l4 xl3'>
+                        <section>
+                          <UserCarousel user={user} edit={edit} />
+                        </section>
+                      </li>
+                    )
+                }
+              </>)
             })}
           </ul>}
         </form>

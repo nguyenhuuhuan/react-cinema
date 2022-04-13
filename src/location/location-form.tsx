@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Route, Routes, useParams } from 'react-router-dom'
+import { Link,  Routes, useParams } from 'react-router-dom'
 // import { Review } from './review'
 import { useLocation } from './service'
 import { Location } from './service/location/location'
-import imageOnline from '../assets/images/status/online.svg';
+import imageOnline from '../assets/images/online.svg';
 export const LocationForm = () => {
     const { id = '' } = useParams()
     const [location, setLocation] = useState<Location>();
@@ -19,7 +19,7 @@ export const LocationForm = () => {
             setLocation(currentLocation);
     }
     if (!location)
-        return (<div>s</div>)
+        return (<div></div>)
     return (
         <div className='profile view-container'>
 

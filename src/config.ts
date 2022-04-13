@@ -11,6 +11,8 @@ export const config = {
   cinema_url: 'http://localhost:8080/cinema',
   category_url: 'http://localhost:8080/categories',
   film_url: 'http://localhost:8080/films',
+  location_url: 'http://localhost:8081/locations',
+  location_rate_url: 'http://localhost:8081/locationsrate',
 };
 
 export const env = {

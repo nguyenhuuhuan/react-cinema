@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { UserAccount } from 'uione';
-import { FileUploads, Uploads } from './model';
+import { FileUploads, Uploads, Thumbnail } from './model';
 
 const url = 'http://localhost:8080';
-const user: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
+const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 export const fetchImageUploaded = (): Promise<FileUploads[]> | FileUploads[] => {
   if (user) {
     return axios.get(url + `/uploads/${user.id}`).then(files => {
@@ -50,4 +50,9 @@ export const updateData = (data: FileUploads[]): Promise<number> => {
   };
   return axios.patch(url + '/uploads', body).then(r => r.data as number).catch(e => e);
 };
-
+const urlYutuServece = 'http://localhost:8081';
+export const fetchThumbnailVideo = (videoId: string): Promise<Thumbnail> => {
+  return axios.get(urlYutuServece + `/tube/video/${videoId}&thumbnail,standardThumbnail,mediumThumbnail,maxresThumbnail,highThumbnail`).then(thumbnail => {
+    return thumbnail.data as Thumbnail;
+  });
+};

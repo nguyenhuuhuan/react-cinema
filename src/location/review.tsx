@@ -9,7 +9,7 @@ import './rate.css';
 import moment from 'moment';
 const customStyles = {
     content: {
-        top: '50%', 
+        top: '50%',
         left: '50%',
         right: 'auto',
         bottom: 'auto',
@@ -87,7 +87,7 @@ export const Review = (props: any) => {
             if (viewCount !== 0) {
                 percent = Number(value || 0 * 100 / viewCount);
             }
-            const numberStar = Array(i).fill(<i className='mdi mdi-flare'/>);
+            const numberStar = Array(i).fill(<i className='mdi mdi-flare' />);
             const startDiv = <div className='rv-star'>{numberStar}</div>;
             const endDiv = <div key={i} className='progress'>
                 <span style={{ width: `${percent}%` }} />
@@ -148,7 +148,7 @@ export const Review = (props: any) => {
             return <span>{resource.review} {text}</span>;
         }
     }
-    console.log(location?.info,rates)
+    console.log(location?.info, rates)
     if (location)
         return (
             <>
@@ -179,8 +179,8 @@ export const Review = (props: any) => {
                 <ul className='row list-view'>
                     {
                         (
-                            rates.length > 0 &&
-                            ( rates.map((value: LocationRate, index: number) => {
+                            rates && rates.length > 0 &&
+                            (rates.map((value: LocationRate, index: number) => {
                                 return <li key={index} className='col s12 m12 l12 review-custom'>
                                     <section className='card'>
                                         <h4>{value.userId}</h4>
