@@ -18,7 +18,7 @@ const customStyles = {
     }
 };
 ReactModal.setAppElement('#root');
-export const Review = (props: any) => {
+export const Review = () => {
     const params = useParams();
     const [currClass, setCurrClass] = useState<string>('')
     const [voteStar, setVoteStar] = useState<number>()
@@ -124,9 +124,10 @@ export const Review = (props: any) => {
 
     const moreReview = async (e: any) => {
         e.preventDefault();
+        debugger
         const locationRateSM = new LocationRateFilter();
-        const { locationId } = props;
-        locationRateSM.locationId = locationId;
+        const { id } = params;
+        locationRateSM.locationId = id;
         locationRateSM.limit = pageSize + 3;
         locationRateSM.sort = '-rateTime';
         const searchRates = await locationRateService.search(locationRateSM);
@@ -148,13 +149,12 @@ export const Review = (props: any) => {
             return <span>{resource.review} {text}</span>;
         }
     }
-    console.log(location?.info, rates)
-    if (location)
+    if (location && window.location.pathname.includes('review'))
         return (
             <>
                 <div className='row top-content'>
                     <div className='col s4 m5 l6 summary' >
-                        <div className='score'><span>{(location.info) && location.info.rate}</span></div>
+                        <div className='score'><span>{(location.info) && Math.ceil(location.info.rate * 100) / 100}</span></div>
                         <div className='average'>
                             <div className='empty-stars' />
                             <div className='full-stars'
