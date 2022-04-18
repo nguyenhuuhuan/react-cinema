@@ -3,8 +3,8 @@ import { HttpRequest } from 'axios-core';
 import { options, storage } from 'uione';
 import { LocationService } from './location/location';
 import { LocationClient } from './location';
-import { LocationRateService } from './location-service/location-rate';
-import { LocationRateClient } from './location-service';
+import { LocationRateService } from './location-rate/location-rate';
+import { LocationRateClient } from './location-rate';
 export * from './location';
 axios.defaults.withCredentials = true;
 
@@ -44,11 +44,11 @@ class ApplicationContext {
 
 export const context = new ApplicationContext();
 
-export function useLocation(): LocationService {
+export function getLocations(): LocationService {
   return context.getLocationService();
 }
 
-export function useLocationRate(): LocationRateService {
+export function getLocationRates(): LocationRateService {
   return context.getLocationRateService();
 }
 

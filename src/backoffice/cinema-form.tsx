@@ -1,9 +1,9 @@
 import { ValueText } from 'onecore';
 import React from 'react';
-import { createModel, DispatchWithCallback, EditComponentParam, useEdit, useEditProps } from 'react-hook-core';
-import { formatPhone } from 'ui-plus';
-import { emailOnBlur, Gender, handleError, inputEdit, phoneOnBlur, Status } from 'uione';
-import { Cinema, useMasterData, useCinema } from './service';
+import { createModel, DispatchWithCallback, EditComponentParam, useEdit } from 'react-hook-core';
+
+import { inputEdit, Status } from 'uione';
+import { Cinema, useCinema } from './service';
 
 interface InternalState {
   cinema: Cinema;

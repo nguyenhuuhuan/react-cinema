@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import { storage } from 'uione';
-import { useLocation, useLocationRate } from './service';
-import { LocationRate, LocationRateFilter } from './service/location-service/location-rate';
+import { LocationRate, LocationRateFilter } from './service/location-rate/location-rate';
 import { Location, LocationInfo } from './service/location/location';
 import './rate.css';
 import moment from 'moment';
+import { getLocationRates, getLocations } from './service';
 const customStyles = {
     content: {
         top: '50%',
@@ -30,8 +30,8 @@ export const Review = () => {
     const [maxLengthReviewText] = useState(65)
     const [resource] = useState(storage.resource().resource())
 
-    const locationRateService = useLocationRate();
-    const locationService = useLocation();
+    const locationRateService = getLocationRates();
+    const locationService = getLocations();
     useEffect(() => {
         load()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps

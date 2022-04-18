@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Route, Routes, useParams } from 'react-router-dom'
+import { Link, Routes, useParams } from 'react-router-dom'
 // import { Review } from './review'
 import { getLocations } from './service'
 import { Location } from './service/location/location'
-import imageOnline from '../assets/images/status/online.svg';
-export const TourForm = () => {
+import imageOnline from '../assets/images/online.svg';
+import { Review } from './review';
+import { Overview } from './overview';
+export const LocationHome = () => {
     const { id = '' } = useParams()
     const [location, setLocation] = useState<Location>();
     const locationService = getLocations();
@@ -19,7 +21,7 @@ export const TourForm = () => {
             setLocation(currentLocation);
     }
     if (!location)
-        return (<div>s</div>)
+        return (<div></div>)
     return (
         <div className='profile view-container'>
 
@@ -53,24 +55,17 @@ export const TourForm = () => {
               </div>*/}
                     <nav className='menu'>
                         <ul>
-                            <li><Link to={`/tripal/location/${id}`}  > Overview </Link></li>
-                            <li><Link to={`/tripal/location/${id}/bookable`}  > Bookable </Link></li>
+                            <li><Link to={`/location/${id}`}  > Overview </Link></li>
+                            <li><Link to={`/location/${id}/bookable`}  > Bookable </Link></li>
                             <li><Link to={`/location/${id}/review`}  > Review </Link></li>
-                            <li><Link to={`/tripal/location/${id}/photo`}  > Photo </Link></li>
-                            <li><Link to={`/tripal/location/${id}/about`}  > About </Link></li>
+                            <li><Link to={`/location/${id}/photo`}  > Photo </Link></li>
+                            <li><Link to={`/location/${id}/about`}  > About </Link></li>
                         </ul>
                     </nav>
                 </header>
                 <div className='row'>
-                    <Routes>
-                        {/* <Route path='/location/:id/review' element={() => <Review />} /> */}
-                    </Routes>
-                    {/* <Route path='/tripal/location/:id'  element={() => <OverView location={location} />} /> */}
-                    {/* <Route path='/tripal/location/:id/bookable'  element={() => <Bookable  locationId = {id}  location={props.location} history={props.history}/>} /> */}
-
-                    {/* <Route path='/tripal/location/:id/photo'  element={<Photo/>}/> */}
-                    {/* <Route path='/tripal/location/:id/about'  element={<About/>}/> */}
-                    {/* <Route path='/tripal/location/:id/bookable/add'  element={() => <AddBooking locationId = {id} recieve={recieve}/>}/> */}
+                    <Overview />
+                    <Review />
                 </div>
             </form>
         </div>

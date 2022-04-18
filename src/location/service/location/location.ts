@@ -1,6 +1,6 @@
 
 import { Filter, Attributes, Service } from 'onecore';
-import { LocationRate } from '../location-service/location-rate';
+import { LocationRate } from '../location-rate/location-rate';
 export interface Location {
   id: string;
   name: string;
@@ -11,6 +11,7 @@ export interface Location {
   info?: LocationInfo;
   thumbnail?:string;
   imageURL?:string;
+  status:string;
 }
 // filter
 export interface LocationFilter extends Filter {

@@ -1,73 +1,253 @@
-import React, { useEffect, useState } from 'react'
-import { Link, Routes, useParams } from 'react-router-dom'
-// import { Review } from './review'
-import { useLocation } from './service'
-import { Location } from './service/location/location'
-import imageOnline from '../assets/images/online.svg';
-import { Review } from './review';
-import { Overview } from './overview';
-export const LocationForm = () => {
-    const { id = '' } = useParams()
-    const [location, setLocation] = useState<Location>();
-    const locationService = useLocation();
-    useEffect(() => {
-        getLocation(id ?? '');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id])
-
-    const getLocation = async (id: string) => {
-        const currentLocation = await locationService.load(id)
-        if (currentLocation)
-            setLocation(currentLocation);
-    }
-    if (!location)
-        return (<div></div>)
-    return (
-        <div className='profile view-container'>
-
-            <form id='locationForm' name='locationForm'>
-                <header className='border-bottom-highlight'>
-                    <div className='cover-image'>
-                        {
-                            ((location.thumbnail) && <img alt='' src={`data:image/jpeg;base64,${location.thumbnail}`} />)
-                            || (<img alt='' src='https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg' />)
-                        }
-                        <div className='contact-group'>
-                            <button id='btnPhone' name='btnPhone' className='btn-phone' />
-                            <button id='btnEmail' name='btnEmail' className='btn-email' />
-                        </div>
-                        <button id='btnFollow' name='btnFollow' className='btn-follow'>Follow</button>
-                    </div>
-                    <button id='btnCamera' name='btnCamera' className='btn-camera' />
-                    <div className='avatar-wrapper'>
-                        <img alt='' className='avatar' src={location.imageURL || 'https://www.bluebridgewindowcleaning.co.uk/wp-content/uploads/2016/04/default-avatar.png'} />
-                        <img className='profile-status' alt='status' src={imageOnline} />
-                    </div>
-                    <div className='profile-title'>
-                        <h3>{location.name}</h3>
-                        <p>{location.description}</p>
-                        <p>500 followers</p>
-                    </div>
-                    {/*
-              <div className='card'>
-                <h3>{location.locationName}</h3>
-                <p>{location.description}</p>
-              </div>*/}
-                    <nav className='menu'>
-                        <ul>
-                            <li><Link to={`/location/${id}`}  > Overview </Link></li>
-                            <li><Link to={`/location/${id}/bookable`}  > Bookable </Link></li>
-                            <li><Link to={`/location/${id}/review`}  > Review </Link></li>
-                            <li><Link to={`/location/${id}/photo`}  > Photo </Link></li>
-                            <li><Link to={`/location/${id}/about`}  > About </Link></li>
-                        </ul>
-                    </nav>
-                </header>
-                <div className='row'>
-                    <Overview />
-                    <Review />
-                </div>
-            </form>
-        </div>
-    );
+import * as Leaflet from 'leaflet';
+import { ValueText } from 'onecore';
+import React, { useState } from 'react';
+import { createModel, DispatchWithCallback, EditComponentParam, OnClick, useEdit } from 'react-hook-core';
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet';
+import ReactModal from 'react-modal';
+import { inputEdit, Status } from 'uione';
+import { getLocations } from './service';
+import { Location } from "./service/location/location";
+interface InternalState {
+  location: Location;
 }
+
+const createLocation = (): Location => {
+  const location = createModel<Location>();
+  // location.status = Status.Active;
+  return location;
+};
+const initialize = (id: string | null, load: (id: string | null) => void, set: DispatchWithCallback<Partial<InternalState>>) => {
+  console.log('id', id);
+  load(id);
+};
+
+const initialState: InternalState = {
+  location: {} as Location
+};
+
+const param: EditComponentParam<Location, string, InternalState> = {
+  createModel: createLocation,
+  initialize
+};
+export const LocationForm = () => {
+  const refForm = React.useRef();
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+  const { resource, setState, updateState, flag,save, back, state } = useEdit<Location, string, InternalState>(refForm, initialState, getLocations(), inputEdit(), param);
+  const location = state.location;
+  console.log('resource', resource)
+
+
+
+  // const save = (e:OnClick) => {
+  //   e.preventDefault()
+  //   console.log('state', state)
+  // }
+
+  const onClick = (e: Leaflet.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng;
+    setState({ location: { ...location, longitude: lat, latitude: lng } })
+  }
+
+  const closeModal = () => {
+    setModalIsOpen(false)
+  }
+
+  const openModal = (e: OnClick) => {
+    e.preventDefault()
+    setModalIsOpen(true)
+  }
+
+  React.useEffect(() => {
+    const L = require("leaflet");
+
+    delete L.Icon.Default.prototype._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+      iconUrl: require("leaflet/dist/images/marker-icon.png"),
+      shadowUrl: require("leaflet/dist/images/marker-shadow.png")
+    });
+  }, []);
+  return (
+    <div className='view-container'>
+      <form id='cinemaForm' name='cinemaForm' model-name='location' ref={refForm as any}>
+        <header>
+          <button type='button' id='btnBack' name='btnBack' className='btn-back' onClick={back} />
+          <h2>{flag.newMode ? resource.create : resource.edit} location</h2>
+        </header>
+        <div className='row'>
+          <div className='col s12 m6'>
+            <button onClick={openModal}>Map</button>
+          </div>
+        </div>
+        <div className='row'>
+        <label className='col s12 m6'>
+            Name
+            <input
+              type='text'
+              id='name'
+              name='name'
+              value={location.name}
+              readOnly={!flag.newMode}
+              onChange={updateState}
+              maxLength={20} required={true}
+              placeholder="Name" />
+          </label>
+          <label className='col s12 m6'>
+            Type
+            <input
+              type='text'
+              id='type'
+              name='type'
+              value={location.type}
+              readOnly={!flag.newMode}
+              onChange={updateState}
+              maxLength={20} required={true}
+              placeholder="Type" />
+          </label>
+          <label className='col s12 m6'>
+            Longitude
+            <input
+              type='text'
+              id='longitude'
+              name='longitude'
+              value={location.longitude}
+              readOnly
+              onChange={updateState}
+              maxLength={20} required={true}
+              placeholder="Longitude" />
+          </label>
+          <label className='col s12 m6'>
+            Latitude
+            <input
+              type='text'
+              id='latitude'
+              name='latitude'
+              value={location.latitude}
+              readOnly
+              onChange={updateState}
+              maxLength={40} required={true}
+              placeholder="Latitude" />
+          </label>
+          <label className='col s12 m6'>
+            Description
+            <input
+              type='text'
+              id='description'
+              name='description'
+              value={location.description}
+              onChange={updateState}
+              maxLength={40} required={true}
+              placeholder='Description' />
+          </label>
+          <label className='col s12 m6'>
+            Thumbnail
+            <input
+              type='text'
+              id='thumbnail'
+              name='thumbnail'
+              value={location.thumbnail}
+              onChange={updateState}
+              maxLength={40} required={true}
+              placeholder='Thumbnail' />
+          </label>
+          <label className='col s12 m6'>
+            ImageURL
+            <input
+              type='text'
+              id='imageURL'
+              name='imageURL'
+              value={location.imageURL}
+              onChange={updateState}
+              maxLength={40} required={true}
+              placeholder='ImageURL' />
+          </label>
+          <div className='col s12 m6 radio-section'>
+            {resource.status}
+            <div className='radio-group'>
+              <label>
+                <input
+                  type='radio'
+                  id='active'
+                  name='status'
+                  onChange={updateState}
+                  value={Status.Active} checked={location.status === Status.Active} />
+                {resource.yes}
+              </label>
+              <label>
+                <input
+                  type='radio'
+                  id='inactive'
+                  name='status'
+                  onChange={updateState}
+                  value={Status.Inactive} checked={location.status === Status.Inactive} />
+                {resource.no}
+              </label>
+            </div>
+          </div>
+        </div>
+        <footer>
+          {!flag.readOnly &&
+            <button type='submit' id='btnSave' name='btnSave' onClick={save}>
+              {resource.save}
+            </button>}
+        </footer>
+      </form>
+      <ReactModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel='Modal'
+        // portalClassName='modal-portal'
+        className='modal-portal-content small-width-height'
+        bodyOpenClassName='modal-portal-open'
+        overlayClassName='modal-portal-backdrop'
+      >
+        <div className='view-container profile-info'>
+          <form model-name='data'>
+            <header>
+              <h2>{resource.user_profile_general_info}</h2>
+              <button type='button' id='btnClose' name='btnClose' className='btn-close' onClick={closeModal} />
+            </header>
+            <div >
+              <MapContainer
+                center={{ lat: 10.854886268472459, lng: 106.63051128387453 }}
+                zoom={16}
+                maxZoom={100}
+                attributionControl={true}
+                zoomControl={true}
+                scrollWheelZoom={true}
+                dragging={true}
+                // animate={true}
+                easeLinearity={0.35}
+                style={{ height: "550px", width: "100%" }}
+                whenCreated={(map) => {
+                  map.on("click", onClick);
+                }}
+              >
+                <TileLayer
+                  attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {/* <MyComponent /> */}
+                <Marker
+                  key={`marker-index`}
+                  position={[state.location.longitude ?? 0, state.location.latitude ?? 0]}
+                >
+                  <Popup>
+                    <span>{location.name}</span>
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+
+            <footer>
+              <button type='button' id='btnSave' name='btnSave' onClick={closeModal}>
+                OK
+              </button>
+            </footer>
+          </form>
+        </div>
+      </ReactModal>
+    </div>
+  );
+};

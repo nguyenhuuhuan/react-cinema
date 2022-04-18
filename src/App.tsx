@@ -61,8 +61,9 @@ import { FilmForm } from './backoffice/film-form';
 import { FilmsForm } from './backoffice/films-form';
 import UploadFile from './uploads/app';
 import { LocationsForm } from './location/locations-form';
-import { LocationForm } from './location/location-form';
+import { LocationHome } from './location/location-home';
 import { Review } from './location/review';
+import { LocationForm } from './location/location-form';
 // import "./assets/fonts/Roboto/font.css";
 
 let isInit = false;
@@ -132,8 +133,9 @@ function App() {
           <Route path='backoffice/films/add' element={<FilmForm />} />
           <Route path='backoffice/films/edit/:id' element={<FilmForm />} />
           <Route path='location' element={<LocationsForm />} />
-          <Route path='location/:id' element={<LocationForm />} />
-          <Route path='location/:id/review' element={<LocationForm />} />
+          <Route path='location/add' element={<LocationForm />} />
+          <Route path='location/:id' element={<LocationHome />} />
+          <Route path='location/:id/review' element={<LocationHome />} />
           <Route path={'upload/:id/image'} element={<UploadFile />} />
           <Route path={'upload'} element={<UploadFile />} />
         </Route>

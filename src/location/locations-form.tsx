@@ -1,6 +1,7 @@
 import { ValueText } from "onecore";
 import * as React from "react";
 import {
+  OnClick,
   SearchComponentState,
   useSearch,
   value,
@@ -10,8 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { Pagination } from "reactx-pagination";
 import { inputSearch } from "uione";
 import { Location, LocationFilter } from "./service/location/location";
-import { useLocation } from "./service/index";
-import { Map as LeafletMap, Marker, Popup, TileLayer } from "react-leaflet";
+import { getLocations } from "./service/index";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import * as Leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -51,7 +52,7 @@ export const LocationsForm = () => {
   } = useSearch<Location, LocationFilter, LocationSearch>(
     refForm,
     initialState,
-    useLocation(),
+    getLocations(),
     inputSearch()
   );
   component.viewable = true;
@@ -97,10 +98,14 @@ export const LocationsForm = () => {
       name: 'you are here',
       description: 'description',
       type: '',
+      status:'1'
     }
     setList([...list, newLocation])
   }
-
+  const add = (e: OnClick) => {
+    e.preventDefault();
+    navigate(`add`);
+  };
   return (
     <div className="view-container">
       <header>
@@ -126,7 +131,7 @@ export const LocationsForm = () => {
               onClick={changeView}
             />
           )}
-          {/* {component.addable && (
+          {component.addable && (
             <button
               type="button"
               id="btnNew"
@@ -134,7 +139,7 @@ export const LocationsForm = () => {
               className="btn-new"
               onClick={add}
             />
-          )} */}
+          )}
         </div>
       </header>
       <div>
@@ -258,7 +263,7 @@ export const LocationsForm = () => {
             )
           ) : (
             <div style={{ height: "600px", width: "800px" }}>
-              <LeafletMap
+              <MapContainer
                 center={{ lat: 10.854886268472459, lng: 106.63051128387453 }}
                 zoom={16}
                 maxZoom={100}
@@ -286,7 +291,7 @@ export const LocationsForm = () => {
                       </Popup>
                     </Marker>
                   ))}
-              </LeafletMap>
+              </MapContainer>
             </div>
           )}
 
