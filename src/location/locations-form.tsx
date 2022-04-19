@@ -73,6 +73,11 @@ export const LocationsForm = () => {
     e.preventDefault();
     navigate(`${id}`);
   };
+
+  const edit = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
+    e.preventDefault();
+    navigate(`edit/${id}`);
+  };
   const [viewList, setViewList] = React.useState(true);
   const [list, setList] = React.useState<Location[]>([]);
   const [filter, setFilter] = React.useState<LocationFilter>(value(state.filter));
@@ -83,9 +88,9 @@ export const LocationsForm = () => {
       setFilter(state.filter)
   }, [state]);
 
-  const onSetViewList = (e: { preventDefault: () => void; }, view: boolean) => {
+  const onSetViewList = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    setViewList(view)
+    setViewList(!viewList)
   }
 
   const addMarker = (e: Leaflet.LeafletMouseEvent) => {
@@ -98,7 +103,7 @@ export const LocationsForm = () => {
       name: 'you are here',
       description: 'description',
       type: '',
-      status:'1'
+      status: '1'
     }
     setList([...list, newLocation])
   }
@@ -106,31 +111,34 @@ export const LocationsForm = () => {
     e.preventDefault();
     navigate(`add`);
   };
+
+
   return (
     <div className="view-container">
       <header>
         <h2>{resource.users}</h2>
         <div className="btn-group">
-          {component.view !== "table" && (
-            <button
-              type="button"
-              id="btnTable"
-              name="btnTable"
-              className="btn-table"
-              data-view="table"
-              onClick={changeView}
-            />
-          )}
-          {component.view === "table" && (
+
+          {!viewList && (
             <button
               type="button"
               id="btnListView"
               name="btnListView"
               className="btn-list-view"
               data-view="listview"
-              onClick={changeView}
+              onClick={(e) => onSetViewList(e)}
             />
           )}
+          {viewList && (<button
+            type="button"
+            id="btnListView"
+            name="btnListView"
+            className="btn-map"
+            data-view="listview"
+            onClick={(e) => onSetViewList(e)}
+          ><span className="material-icons-outlined">
+            </span>
+          </button>)}
           {component.addable && (
             <button
               type="button"
@@ -234,33 +242,31 @@ export const LocationsForm = () => {
               </table>
             </div>
           )}
-          <div>
-            <button onClick={(e) => onSetViewList(e, true)}>Show List</button>
-            <button onClick={(e) => onSetViewList(e, false)}>Show Map</button>
-          </div>
+
           {viewList ? (
-            component.view !== "table" && (
-              <ul className="row list-view">
-                {list &&
-                  list.length > 0 &&
-                  list.map((location, i) => {
-                    return (
-                      <li
-                        key={i}
-                        className="col s12 m6 l4 xl3"
-                        onClick={(e) => viewDetail(e, location.id)}
-                      >
-                        <section>
-                          <div>
-                            <h3>{location.name}</h3>
-                          </div>
-                          <button className="btn-detail" />
-                        </section>
-                      </li>
-                    );
-                  })}
-              </ul>
-            )
+            <ul className="row list-view">
+              {list &&
+                list.length > 0 &&
+                list.map((location, i) => {
+                  return (
+                    <li
+                      key={i}
+                      className="col s12 m6 l4 xl3 card"
+                    >
+                      <section>
+                        <div className='cover' style={{ backgroundImage: `url('${location.imageURL}')` }}>
+                        </div>
+                        <div style={{ width: '100%',display:'flex' }}>
+                          <h3 onClick={e => edit(e, location.id)}>{location.name}</h3>
+                          <button className="btn-detail" onClick={(e) => viewDetail(e, location.id)} />
+                        </div>
+
+                      </section>
+                    </li>
+                  );
+                })}
+            </ul>
+
           ) : (
             <div style={{ height: "600px", width: "800px" }}>
               <MapContainer

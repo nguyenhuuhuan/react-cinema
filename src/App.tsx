@@ -134,6 +134,7 @@ function App() {
           <Route path='backoffice/films/edit/:id' element={<FilmForm />} />
           <Route path='location' element={<LocationsForm />} />
           <Route path='location/add' element={<LocationForm />} />
+          <Route path='location/edit/:id' element={<LocationForm />} />
           <Route path='location/:id' element={<LocationHome />} />
           <Route path='location/:id/review' element={<LocationHome />} />
           <Route path={'upload/:id/image'} element={<UploadFile />} />

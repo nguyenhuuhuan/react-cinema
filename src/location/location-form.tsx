@@ -140,7 +140,7 @@ export const LocationForm = () => {
               maxLength={40} required={true}
               placeholder='Description' />
           </label>
-          <label className='col s12 m6'>
+          {/* <label className='col s12 m6'>
             Thumbnail
             <input
               type='text'
@@ -148,9 +148,9 @@ export const LocationForm = () => {
               name='thumbnail'
               value={location.thumbnail}
               onChange={updateState}
-              maxLength={40} required={true}
+              maxLength={40} 
               placeholder='Thumbnail' />
-          </label>
+          </label> */}
           <label className='col s12 m6'>
             ImageURL
             <input
@@ -159,7 +159,7 @@ export const LocationForm = () => {
               name='imageURL'
               value={location.imageURL}
               onChange={updateState}
-              maxLength={40} required={true}
+               required={true}
               placeholder='ImageURL' />
           </label>
           <div className='col s12 m6 radio-section'>
