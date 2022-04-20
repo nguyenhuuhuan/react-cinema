@@ -13,9 +13,9 @@ import { inputSearch } from "uione";
 import { Location, LocationFilter } from "./service/location/location";
 import { getLocations } from "./service/index";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import * as Leaflet from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-
+import * as Leaflet from "leaflet";
+import "leaflet/dist/leaflet.css";
+import UserCarousel from "../admin/users_carousel/app";
 
 interface LocationSearch
   extends SearchComponentState<Location, LocationFilter> {
@@ -48,7 +48,6 @@ export const LocationsForm = () => {
     changeView,
     pageChanged,
     pageSizeChanged,
-
   } = useSearch<Location, LocationFilter, LocationSearch>(
     refForm,
     initialState,
@@ -57,6 +56,7 @@ export const LocationsForm = () => {
   );
   component.viewable = true;
   component.editable = true;
+  const [listStatus, setListStatus] = React.useState(true);
   React.useEffect(() => {
     const L = require("leaflet");
 
@@ -65,11 +65,14 @@ export const LocationsForm = () => {
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
       iconUrl: require("leaflet/dist/images/marker-icon.png"),
-      shadowUrl: require("leaflet/dist/images/marker-shadow.png")
+      shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
     });
   }, []);
 
-  const viewDetail = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
+  const viewDetail = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    id: string
+  ) => {
     e.preventDefault();
     navigate(`${id}`);
   };
@@ -80,45 +83,43 @@ export const LocationsForm = () => {
   };
   const [viewList, setViewList] = React.useState(true);
   const [list, setList] = React.useState<Location[]>([]);
-  const [filter, setFilter] = React.useState<LocationFilter>(value(state.filter));
+  const [filter, setFilter] = React.useState<LocationFilter>(
+    value(state.filter)
+  );
   React.useEffect(() => {
-    if (state.list)
-      setList(state.list);
-    if (state.filter)
-      setFilter(state.filter)
+    if (state.list) setList(state.list);
+    if (state.filter) setFilter(state.filter);
   }, [state]);
 
-  const onSetViewList = (e: { preventDefault: () => void; }) => {
+  const onSetViewList = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setViewList(!viewList)
-  }
+    setViewList(!viewList);
+  };
 
   const addMarker = (e: Leaflet.LeafletMouseEvent) => {
     const currentPos = e.latlng;
-    console.log(currentPos)
+    console.log(currentPos);
     const newLocation = {
       longitude: currentPos.lat,
       latitude: currentPos.lng,
       id: currentPos.lng.toString(),
-      name: 'you are here',
-      description: 'description',
-      type: '',
-      status: '1'
-    }
-    setList([...list, newLocation])
-  }
+      name: "you are here",
+      description: "description",
+      type: "",
+      status: "1",
+    };
+    setList([...list, newLocation]);
+  };
   const add = (e: OnClick) => {
     e.preventDefault();
     navigate(`add`);
   };
-
 
   return (
     <div className="view-container">
       <header>
         <h2>{resource.users}</h2>
         <div className="btn-group">
-
           {!viewList && (
             <button
               type="button"
@@ -129,16 +130,18 @@ export const LocationsForm = () => {
               onClick={(e) => onSetViewList(e)}
             />
           )}
-          {viewList && (<button
-            type="button"
-            id="btnListView"
-            name="btnListView"
-            className="btn-map"
-            data-view="listview"
-            onClick={(e) => onSetViewList(e)}
-          ><span className="material-icons-outlined">
-            </span>
-          </button>)}
+          {viewList && (
+            <button
+              type="button"
+              id="btnListView"
+              name="btnListView"
+              className="btn-map"
+              data-view="listview"
+              onClick={(e) => onSetViewList(e)}
+            >
+              <span className="material-icons-outlined"></span>
+            </button>
+          )}
           {component.addable && (
             <button
               type="button"
@@ -168,7 +171,7 @@ export const LocationsForm = () => {
                 type="text"
                 id="q"
                 name="q"
-                value={filter.q}
+                value={filter.q || ""}
                 onChange={updateState}
                 maxLength={255}
                 placeholder={resource.keyword}
@@ -199,7 +202,7 @@ export const LocationsForm = () => {
                 type="text"
                 id="name"
                 name="name"
-                value={filter.name}
+                value={filter.name || ""}
                 onChange={updateState}
                 maxLength={255}
                 placeholder={resource.username}
@@ -208,6 +211,18 @@ export const LocationsForm = () => {
           </section>
         </form>
         <form className="list-result">
+          {viewList && (
+            <section className="btn-group" style={{ paddingLeft: "16px" }}>
+              <div
+                className="btn-search"
+                style={{ textAlign: "center", padding: "6px 0" }}
+                onClick={() => setListStatus((l) => !l)}
+              >
+                {listStatus ? "Carousel" : "Items"}
+              </div>
+            </section>
+          )}
+
           {component.view === "table" && (
             <div className="table-responsive">
               <table>
@@ -230,7 +245,10 @@ export const LocationsForm = () => {
                   list.length > 0 &&
                   list.map((user, i) => {
                     return (
-                      <tr key={i} onClick={(e) => viewDetail(e, user.id)}>
+                      <tr
+                        key={"table" + i}
+                        onClick={(e) => viewDetail(e, user.id)}
+                      >
                         <td className="text-right">
                           {(user as any).sequenceNo}
                         </td>
@@ -247,26 +265,48 @@ export const LocationsForm = () => {
             <ul className="row list-view">
               {list &&
                 list.length > 0 &&
-                list.map((location, i) => {
-                  return (
-                    <li
-                      key={i}
-                      className="col s12 m6 l4 xl3 card"
-                    >
-                      <section>
-                        <div className='cover' style={{ backgroundImage: `url('${location.imageURL}')` }}>
-                        </div>
-                        <div style={{ width: '100%',display:'flex' }}>
-                          <h3 onClick={e => edit(e, location.id)}>{location.name}</h3>
-                          <button className="btn-detail" onClick={(e) => viewDetail(e, location.id)} />
-                        </div>
-
-                      </section>
-                    </li>
-                  );
-                })}
+                list.map((location, i) => (
+                  <>
+                    {" "}
+                    {listStatus ? (
+                      <li key={"list" + i} className="col s12 m6 l4 xl3 card">
+                        <section>
+                          <div
+                            className="cover"
+                            style={{
+                              backgroundImage: `url('${location.imageURL}')`,
+                            }}
+                          ></div>
+                          <div style={{ width: "100%", display: "flex" }}>
+                            <h3 onClick={(e) => edit(e, location.id)}>
+                              {location.name}
+                            </h3>
+                            <button
+                              className="btn-detail"
+                              onClick={(e) => viewDetail(e, location.id)}
+                            />
+                          </div>
+                        </section>
+                      </li>
+                    ) : (
+                      <li key={"carousel" + i} className="col s12 m6 l4 xl3">
+                        <section>
+                          <UserCarousel
+                            user={{
+                              userId: "location",
+                              email: "",
+                              displayName: "",
+                              status: "1",
+                              username: "test",
+                            }}
+                            edit={edit}
+                          />
+                        </section>
+                      </li>
+                    )}
+                  </>
+                ))}
             </ul>
-
           ) : (
             <div style={{ height: "600px", width: "800px" }}>
               <MapContainer
@@ -283,7 +323,7 @@ export const LocationsForm = () => {
                 onclick={addMarker}
               >
                 <TileLayer
-                  attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                  attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {list &&
@@ -300,7 +340,6 @@ export const LocationsForm = () => {
               </MapContainer>
             </div>
           )}
-
         </form>
       </div>
     </div>
