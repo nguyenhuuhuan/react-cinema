@@ -298,6 +298,7 @@ export const LocationsForm = () => {
                               displayName: "",
                               status: "1",
                               username: "test",
+                              imageURL:location.imageURL
                             }}
                             edit={edit}
                           />
