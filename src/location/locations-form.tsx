@@ -318,10 +318,10 @@ export const LocationsForm = () => {
                 zoomControl={true}
                 scrollWheelZoom={true}
                 dragging={true}
-                animate={true}
+                // animate={true}
                 easeLinearity={0.35}
                 style={{ height: "100%" }}
-                onclick={addMarker}
+                // onclick={addMarker}
               >
                 <TileLayer
                   attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

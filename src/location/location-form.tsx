@@ -220,9 +220,9 @@ export const LocationForm = () => {
                 // animate={true}
                 easeLinearity={0.35}
                 style={{ height: "550px", width: "100%" }}
-                whenCreated={(map) => {
-                  map.on("click", onClick);
-                }}
+                // whenCreated={(map) => {
+                //   map.on("click", onClick);
+                // }}
               >
                 <TileLayer
                   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
