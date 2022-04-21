@@ -1,4 +1,5 @@
 import { OnClick, useUpdate } from 'react-hook-core';
+import { UserAccount } from 'uione';
 import './general-info.css';
 import { useGetMyProfileService, User } from './my-profile';
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 interface State {
   user: User;
 }
-
+const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
 export const GeneralInfo = ({ resource, user, close, saveEmit }: Props) => {
   const service = useGetMyProfileService();
   const { state, setState, updateState } = useUpdate<State>({ user }, 'user');
@@ -23,7 +24,7 @@ export const GeneralInfo = ({ resource, user, close, saveEmit }: Props) => {
   const save = (e: OnClick) => {
     e.preventDefault();
     const usr = state.user;
-    service.saveMyProfile(usr).then(success => {
+    service.saveMyProfile({...usr,id:userAccount.id||''}).then(success => {
       let status = '';
       if (success) {
         status = 'success';

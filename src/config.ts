@@ -1,5 +1,5 @@
 export const config = {
-  authentication_url: 'http://localhost:8083',
+  authentication_url: 'http://localhost:8082',
   signup_url: 'http://localhost:8082/signup',
   password_url: 'http://localhost:8082/password',
   oauth2_url: 'http://localhost:8082/oauth2',
@@ -13,7 +13,7 @@ export const config = {
   film_url: 'http://localhost:8080/films',
   location_url: 'http://localhost:8084/locations',
   location_rate_url: 'http://localhost:8084/locationsrate',
-  myprofile_url: 'http://localhost:8086/my-profile'
+  myprofile_url: 'http://localhost:8082/my-profile'
 };
 
 export const env = {
