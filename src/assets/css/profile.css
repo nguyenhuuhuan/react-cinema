@@ -1,3 +1,16 @@
+.profile.view-container {
+  max-height: calc(100vh - 44px);
+  overflow-x: auto;
+}
+@media screen and (min-width: 769px) {
+  .top-menu .profile.view-container {
+    max-height: calc(100vh - 44px - 46px);
+  }
+  .classic.top-menu .profile.view-container {
+    max-height: auto;
+    overflow-x: unset;
+  }
+}
 @media only screen and (min-width: 601px) {
   .profile.view-container {
     padding: 10px 5%;
@@ -153,15 +166,15 @@ header.nav > .profile-followers {
   color: #999999;
 }
 
-.profile-followers > a {
+.profile-followers > p {
   display: flex;
   margin-left: 16px;
   margin-right: 16px;
 }
-.profile-followers > a > i {
+.profile-followers > p > i {
   margin-right: 8px;
 }
-.profile-followers > a > i.material-icons {
+.profile-followers > p > i.material-icons {
   font-size: 19px;
 }
 
@@ -296,9 +309,16 @@ header.nav > .profile-followers {
 .profile.view-container > form > .row > .col > div.card > section {
   position: relative;
   margin-top: 16px;
+  border: none;
+  margin-bottom: unset;
+  flex-direction: unset;
 }
 .profile.view-container > form > .row > .col > div.card > section > h3 {
   font-size: 15px;
+  padding-top: unset;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  color: inherit;
 }
 .profile.view-container > form > .row > .col > div.card > section > .btn-remove {
   position: absolute;

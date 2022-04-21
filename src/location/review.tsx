@@ -42,6 +42,7 @@ export const Review = () => {
         locationRateSM.locationId = id;
         locationRateSM.limit = pageSize;
         locationRateSM.sort = '-rateTime';
+        debugger
         const location = await locationService.load(id || '');
         const searchResult = await locationRateService.search(locationRateSM);
         setRates(searchResult.list);
@@ -83,12 +84,12 @@ export const Review = () => {
         const viewCount = location.info.viewCount;
         for (let i = 5; i > 0; i--) {
             const rate = `rate${i}`
-            const value = location.info[rate as keyof LocationInfo] ?? location.info[rate as keyof LocationInfo];
+            const value = location.info[rate as keyof LocationInfo];
             let percent: number = 0;
             if (viewCount !== 0) {
                 percent = Number(value || 0 * 100 / viewCount);
             }
-            const numberStar = Array(i).fill(<i className='mdi mdi-flare' />);
+            const numberStar = Array(i).fill(<i />);
             const startDiv = <div className='rv-star'>{numberStar}</div>;
             const endDiv = <div key={i} className='progress'>
                 <span style={{ width: `${percent}%` }} />
@@ -149,6 +150,7 @@ export const Review = () => {
             return <span>{resource.review} {text}</span>;
         }
     }
+    console.log(location?.info?.rate)
     if (location && window.location.pathname.includes('review'))
         return (
             <>

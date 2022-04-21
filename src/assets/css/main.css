@@ -502,7 +502,9 @@ section > h4 > *,
 .section-header > * {
   margin-left: 10px;
 }
-
+section > h4.title > a {
+  margin-left: unset;
+}
 .subtitle {
   font-size: 13px;
   margin-bottom: 10px;
@@ -538,19 +540,31 @@ section > h4 > *,
   margin-bottom: 44px;
 }
 
+.page-body > .full {
+  max-height: calc(100vh - 44px);
+  height: calc(100vh - 44px);
+  overflow-x: auto;
+}
 @media screen and (min-width: 769px) {
+  .top-menu .page-body > .full {
+    max-height: calc(100vh - 44px - 46px);
+    height: calc(100vh - 44px - 46px);
+  }
+  .classic.top-menu .page-body > .full {
+    max-height: auto;
+    height: auto;
+    overflow-x: unset;
+  }
+
   .top-menu .page-container > .page-body .view-container > form > div {
     max-height: calc(100vh - 46px - 44px - 64px);
   }
-
   .top-menu .page-container > .page-body .view-container > form {
     max-height: calc(100vh - 46px - 44px);
   }
-
   .top-menu .page-container > .page-body .view-container > div {
     max-height: calc(100vh - 46px - 44px);
   }
-
   /* Set height for table container, prevent the parent scroll of whole page  */
   /*
   .top-menu .page-container > .page-body .view-container > .view-body > form:last-child{

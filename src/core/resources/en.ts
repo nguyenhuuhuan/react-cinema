@@ -7,6 +7,12 @@ export const en = {
   settings: 'Settings',
   help: 'Help',
   events_history: 'Event History',
+  menu: 'Menu',
+  sidebar: 'Sidebar',
+  dark_mode: 'Dark mode',
+  light_mode: 'Light mode',
+  classic_menu: 'Classic menu',
+  modern_menu: 'Modern menu',
 
   confirm: 'Confirm',
   create: 'Create',
@@ -216,5 +222,9 @@ export const en = {
 
   filter_playlists: 'Filter Playlists...',
   filter_videos: 'Filter Videos...',
-  filter_items: 'Filter Items...'
+  filter_items: 'Filter Items...',
+  videos: 'Videos',
+  playlists: 'Playlists',
+  channels: 'Channels',
+  subscriptions: 'Subscriptions'
 };

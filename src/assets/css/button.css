@@ -13,26 +13,25 @@ button:focus {
   outline: 1px darkcyan dotted;
 }
 
-section>h4>.btn-group {
+section > h4 > .btn-group {
   display: inline-flex;
   margin-left: 14px;
 }
 
-section>h4>.btn-group>button {
+section > h4 > .btn-group > button {
   font-size: 16px;
   margin-left: 4px;
   border: 0;
   background-color: transparent;
 }
 
-ul.list-view>li>section:first-child>button,
-ul.list-view>li>section:first-child>div>button,
-ul.list-view>li>button,
-div.card>button,
-section>h4>button,
-footer>.btn-accept,
-footer>.btn-next,
-footer>.btn-cancel {
+ul.list-view > li > section:first-child > button,
+ul.list-view > li > button,
+div.card > button,
+section > h4 > button,
+footer > .btn-accept,
+footer > .btn-next,
+footer > .btn-cancel {
   border: 0;
   background-color: transparent;
 }
@@ -43,20 +42,19 @@ footer>.btn-cancel {
   padding-left: 0;
   padding-right: 0;
 }
-
 .btn-detail::before {
   font-size: 34px;
   font-weight: 100;
   content: "\203A";
 }
 
-ul.list-view>li>section:first-child>button.btn-remove::before {
+ul.list-view > li > section:first-child > button.btn-remove::before {
   top: 0;
 }
 
-ul.list-view>li>section:first-child>button.btn-pick,
-ul.list-view>li>button.btn-pick,
-div.card>button.btn-pick,
+ul.list-view > li > section:first-child > button.btn-pick,
+ul.list-view > li > button.btn-pick,
+div.card > button.btn-pick,
 .btn-pick {
   min-height: 12px;
   min-width: 18px;
@@ -68,24 +66,22 @@ div.card>button.btn-pick,
   background-position-y: center;
   background-repeat: no-repeat;
 }
-
-.view-container>header>.btn-group>button {
+.view-container > header > .btn-group > button,
+.view-container > header > .btn-group > .btn-new {
   margin-left: 8px;
 }
-
-.view-container>header>.btn-group>.btn-new,
-.view-container>header>.btn-group>.btn-table,
-.view-container>header>.btn-group>.btn-list-view,
-.view-container>header>.btn-group>.btn-map,
-.view-container>header>.btn-new,
-.view-container>form>footer .btn-cancel,
-.view-container>footer .btn-cancel,
+.view-container > header > .btn-group > .btn-new,
+.view-container > header > .btn-group > .btn-table,
+.view-container > header > .btn-group > .btn-list-view,
+.view-container > header > .btn-new,
+.view-container > form > footer .btn-cancel,
+.view-container > footer .btn-cancel,
 .view-footer .btn-cancel,
-.view-container>form>footer .btn-accept,
-.view-container>footer .btn-accept,
+.view-container > form > footer .btn-accept,
+.view-container > footer .btn-accept,
 .view-footer .btn-accept,
-.view-container>form>footer .btn-next,
-.view-container>footer .btn-next,
+.view-container > form > footer .btn-next,
+.view-container > footer .btn-next,
 .view-footer .btn-next {
   height: 40px;
   width: fit-content;
@@ -97,11 +93,11 @@ div.card>button.btn-pick,
   background-size: 40px 40px;
 }
 
-section.footer>button,
-.detail-content>form>footer>button,
-.view-container>form>footer>button,
-.view-container>footer>button,
-.view-footer>button {
+section.footer > button,
+.detail-content > form > footer > button,
+.view-container > form > footer > button,
+.view-container > footer > button,
+.view-footer > button {
   width: 200px;
   height: 40px;
   margin-top: 8px;
@@ -114,10 +110,9 @@ section.footer>button,
 }
 
 .btn-more:hover,
-footer>button:hover {
-  box-shadow: 0 1px 3px 1px darkgrey;
+footer > button:hover {
+  box-shadow: 0 1px 3px 1px #a9a9a9;
 }
-
 .btn-more {
   width: 100%;
   height: 58px;
@@ -130,7 +125,6 @@ footer>button:hover {
   border: none;
   background-color: transparent;
 }
-
 .btn-more::before {
   top: -6px;
   position: absolute;
@@ -139,24 +133,22 @@ footer>button:hover {
   font-size: 35px;
   content: '\21BB';
 }
-
-footer>button.btn-accept:hover,
-footer>button.btn-next:hover,
-footer>button.btn-cancel:hover {
+footer > button.btn-accept:hover,
+footer > button.btn-next:hover,
+footer > button.btn-cancel:hover {
   box-shadow: none;
 }
 
-.view-container>form>footer .btn-accept,
-.view-container>footer .btn-accept,
+.view-container > form > footer .btn-accept,
+.view-container > footer .btn-accept,
 .view-footer .btn-accept,
-.view-container>form>footer .btn-next,
-.view-container>footer .btn-next,
+.view-container > form > footer .btn-next,
+.view-container > footer .btn-next,
 .view-footer .btn-next {
   right: 14px;
   padding-right: 45px;
 }
-
-footer>.btn-next::after {
+footer > .btn-next::after {
   font-family: Material Icons;
   content: '\e5c8';
   height: 40px;
@@ -171,7 +163,7 @@ footer>.btn-next::after {
   font-size: 25px;
 }
 
-footer>.btn-accept::after {
+footer > .btn-accept::after {
   font-family: Material Icons;
   content: '\e5ca';
   height: 40px;
@@ -186,7 +178,7 @@ footer>.btn-accept::after {
   font-size: 25px;
 }
 
-footer>.btn-cancel::before {
+footer > .btn-cancel::before {
   content: '\2715';
   height: 40px;
   width: 40px;
@@ -201,9 +193,9 @@ footer>.btn-cancel::before {
   font-weight: 100;
 }
 
-footer>.btn-cancel,
-footer>.btn-accept,
-footer>.btn-next {
+footer > .btn-cancel,
+footer > .btn-accept,
+footer > .btn-next {
   height: 40px;
   background-size: 40px 40px;
   padding: 0;
@@ -225,7 +217,6 @@ footer>.btn-next {
   top: -1px;
   left: 3px;
 }
-
 /*
 .mobile .btn-back {
   top: unset;
@@ -258,7 +249,7 @@ footer>.btn-next {
   content: "\2573";
 }
 
-.view-container>form>header>.btn,
+.view-container > form > header > .btn,
 .btn-group,
 .btn-new,
 .btn-add,
@@ -273,12 +264,10 @@ footer>.btn-next {
   color: inherit;
   background-color: transparent;
 }
-
 .btn-group.btn-right {
   margin-top: 15px;
   color: inherit;
 }
-
 .btn-edit {
   width: 18px;
   height: 18px;
@@ -289,21 +278,21 @@ footer>.btn-next {
   transform: rotate(90deg);
 }
 
-ul.list-view>li .btn-group>button {
+ul.list-view > li .btn-group > button {
   margin-left: 6px;
 }
 
-ul.list-view>li .btn-group>.btn-edit,
-td>.btn-edit {
+ul.list-view > li .btn-group > .btn-edit,
+td > .btn-edit {
   width: unset;
   height: unset;
 }
 
-h4>.btn-edit {
+h4 > .btn-edit {
   margin-left: 10px;
 }
 
-.card>header>.btn-edit {
+.card > header > .btn-edit {
   position: absolute;
   right: 16px;
   padding-right: 0;
@@ -336,17 +325,17 @@ h4>.btn-edit {
   content: "\229D";
 }
 
-ul.list-view>li .btn-group>.btn-remove::before,
-td>.btn-remove::before {
+ul.list-view > li .btn-group > .btn-remove::before,
+td > .btn-remove::before {
   position: unset;
   top: unset;
 }
 
-.detail .row .col.btn-group>.btn-remove {
+.detail .row .col.btn-group > .btn-remove {
   margin-top: 18px;
 }
 
-h4>.btn-add {
+h4> .btn-add {
   margin-left: 10px;
 }
 
@@ -359,15 +348,15 @@ h4>.btn-add {
   content: "+";
 }
 
-.row>div.col>button.btn-edit,
-.row>div.col>button.btn-remove {
+.row > div.col > button.btn-edit,
+.row > div.col > button.btn-remove {
   width: 18px;
   height: 18px;
   margin-top: 3px;
   margin-right: 6px;
 }
 
-.row>div.col>button.btn-add::before {
+.row > div.col > button.btn-add::before {
   top: 2px;
 }
 
@@ -375,55 +364,38 @@ h4>.btn-add {
   font-size: 37px;
   content: "+";
 }
-
-.view-container>header>.btn-group>.btn-list-view {
+.view-container > header > .btn-group > .btn-list-view {
   padding-top: 11px;
 }
-.view-container>header>.btn-group>.btn-map {
-  padding-top: 9px;
-}
-
-.view-container>header>.btn-group>.btn-table {
+.view-container > header > .btn-group > .btn-table {
   padding-top: 8px;
 }
-
 .btn-list-view::before {
   font-size: 23px;
   content: "\2630";
 }
-
 .btn-table::before {
   font-size: 27px;
   content: "\25A4";
 }
-
-.btn-map::before {
-  font-family: 'Material Icons';
-  font-size: 27px;
-  content: "\e55b";
-}
-
-.list-content>header>.btn-new,
-.view-container>header>.btn-new,
-.view-container>form>header>.btn-right,
-.view-container>header>.btn-group {
+.list-content > header > .btn-new,
+.view-container > header > .btn-new,
+.view-container > form > header > .btn-right,
+.view-container > header > .btn-group {
   position: absolute;
   top: -4px;
   right: 13px;
 }
-
-.view-container>header>.btn-group {
+.view-container > header > .btn-group {
   display: flex;
   flex-direction: row;
 }
-
 .btn-approve {
   border: 1px solid;
   width: 24px;
   height: 24px;
   border-radius: 50%;
 }
-
 .btn-approve::before {
   font-size: 17px;
   font-weight: 100;
@@ -457,10 +429,7 @@ h4>.btn-add {
   content: "\E0CD";
 }
 
-.btn-camera,
-.btn-divide,
-.btn-transfer,
-.btn-history {
+.btn-camera, .btn-divide, .btn-transfer, .btn-history {
   border: none;
   background-color: transparent;
 }
