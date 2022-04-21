@@ -7,6 +7,7 @@ import { Location, LocationInfo } from './service/location/location';
 import './rate.css';
 import moment from 'moment';
 import { getLocationRates, getLocations } from './service';
+import { PostRateForm } from './post-rate-form';
 const customStyles = {
     content: {
         top: '50%',
@@ -124,7 +125,6 @@ export const Review = () => {
 
     const moreReview = async (e: any) => {
         e.preventDefault();
-        debugger
         const locationRateSM = new LocationRateFilter();
         const { id } = params;
         locationRateSM.locationId = id;
@@ -204,8 +204,8 @@ export const Review = () => {
                     className='modal-portal-content small-width'
                     bodyOpenClassName='modal-portal-open'
                     overlayClassName='modal-portal-backdrop'>
-                    aa
-                    {/* <PostRateForm value={voteStar} location={location} closeModal={closeModal} loadData={load} /> */}
+                    
+                    <PostRateForm value={voteStar} location={location} closeModal={()=>setIsOpenRateModal(false)} loadData={load} />
                 </ReactModal>
             </>
         );
