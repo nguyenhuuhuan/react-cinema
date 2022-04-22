@@ -3,8 +3,12 @@ import { clone, OnClick, useUpdate } from "react-hook-core";
 import ReactModal from "react-modal";
 import { alert, message, UserAccount, useResource } from "uione";
 import imageOnline from "../assets/images/online.svg";
+import UploadFile from "../uploads/app";
+import { FileUploads } from "../uploads/model";
+
 import GeneralInfo from "./general-info";
 import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
+import Uploads from "./UploadModal/UploadContainer";
 
 interface Edit {
   edit: {
@@ -48,16 +52,24 @@ export const MyProfileForm = () => {
   const [user, setUser] = useState<User>({} as any);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
+  const [modalUpload, setModalUpload] = useState(false)
+  const [filesUploaded, setFilesUploaded] = useState<FileUploads>();
+  const handleFetch = async () => {
+    const res = await service.fetchImageUploaded();
+    setFilesUploaded(res??undefined);
+  };
 
   useEffect(() => {
-    service.getMyProfile(userAccount.id||'').then((usr) => {
+    service.getMyProfile(userAccount.id || '').then((usr) => {
       if (usr) {
         setUser(usr);
         setBio(usr.bio || "");
       }
     });
+    handleFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -223,9 +235,8 @@ export const MyProfileForm = () => {
   //   }
   const saveChanges = (event: OnClick) => {
     event.preventDefault();
-    debugger
     if (isEditing) {
-      service.saveMyProfile({...user,id:userAccount.id||''}).then((successs) => {
+      service.saveMyProfile({ ...user, id: userAccount.id || '' }).then((successs) => {
         if (successs) {
           message(resource.success_save_my_profile);
           close();
@@ -385,16 +396,28 @@ export const MyProfileForm = () => {
   const closeModalConfirm = () => {
     setModalConfirmIsOpen(false);
   };
+
+  const openModalUpload = (e: OnClick) => {
+    e.preventDefault()
+    setModalUpload(true)
+  }
+
+  const closeModalUpload = (e: OnClick) => {
+    e.preventDefault()
+    setModalUpload(false)
+  }
   const followers = "7 followers"; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
   const following = "10 following"; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
+  console.log('filesUploaded',filesUploaded?.url)
   return (
     <div className="profile view-container">
       <form id="userForm" name="userForm">
-        <header className="border-bottom-highlight">
+        <header className="border-bottom-highlight" >
           <div className="cover-image">
             <img
-              src="https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg"
+              src={(filesUploaded ? filesUploaded.url : "https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg")}
               alt="cover"
+              style={{objectFit:'cover'}}
             />
             <div className="contact-group">
               <button id="btnPhone" name="btnPhone" className="btn-phone" />
@@ -404,7 +427,7 @@ export const MyProfileForm = () => {
               Follow
             </button>
           </div>
-          <button id="btnCamera" name="btnCamera" className="btn-camera" />
+          <button id="btnCamera" name="btnCamera" className="btn-camera" onClick={openModalUpload} />
           <div className="avatar-wrapper">
             <img
               className="avatar"
@@ -1028,6 +1051,44 @@ export const MyProfileForm = () => {
         />
       </ReactModal>
       <ReactModal
+        isOpen={modalUpload}
+        onRequestClose={closeModalUpload}
+        contentLabel="Modal"
+        // portalClassName='modal-portal'
+        className="modal-portal-content"
+        bodyOpenClassName="modal-portal-open"
+        overlayClassName="modal-portal-backdrop"
+      >
+        <div className="view-container profile-info">
+          <form model-name="data">
+            <header>
+              <h2>Uploads</h2>
+              <button
+                type="button"
+                id="btnClose"
+                name="btnClose"
+                className="btn-close"
+                onClick={closeModalUpload}
+              />
+            </header>
+            <Uploads handleFetch={handleFetch}
+            />
+
+            <footer>
+              <button
+                type="button"
+                id="btnSave"
+                name="btnSave"
+                onClick={closeModalUpload}
+              >
+                OK
+              </button>
+            </footer>
+          </form>
+        </div>
+
+      </ReactModal>
+      <ReactModal
         isOpen={modalConfirmIsOpen}
         onRequestClose={closeModalConfirm}
         contentLabel="Modal"
@@ -1039,7 +1100,7 @@ export const MyProfileForm = () => {
         <div className="view-container profile-info">
           <form model-name="data">
             <header>
-              <h2>{resource.user_profile_general_info}</h2>
+              <h2>Edit About</h2>
               <button
                 type="button"
                 id="btnClose"

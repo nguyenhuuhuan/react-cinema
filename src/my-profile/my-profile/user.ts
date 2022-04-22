@@ -1,4 +1,5 @@
 import { Attributes, DateRange, Filter, Repository, Service } from 'onecore';
+import { FileUploads } from '../../uploads/model';
 
 export interface User {
   id: string;
@@ -103,6 +104,7 @@ export interface MyProfileService {
   getMySettings(id: string): Promise<UserSettings | null>;
   saveMySettings(id: string, settings: UserSettings): Promise<number>;
   saveMyProfile(user: User): Promise<number>;
+  fetchImageUploaded(): Promise<FileUploads|null>;
 }
 
 export const skillsModel: Attributes = {

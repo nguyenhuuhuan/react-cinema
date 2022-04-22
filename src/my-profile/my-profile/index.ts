@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { HttpRequest } from 'axios-core';
 import { useState } from 'react';
-import { options, storage } from 'uione';
+import { options, storage, UserAccount } from 'uione';
 import { Client } from 'web-clients';
+import { FileUploads } from '../../uploads/model';
 import { MyProfileService, User, UserFilter, userModel, UserService, UserSettings } from './user';
 
 export * from './user';
 
 const httpRequest = new HttpRequest(axios, options);
-
+const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 export class UserClient extends Client<User, string, UserFilter> implements UserService {
   constructor(http: HttpRequest, url: string) {
     super(http, url, userModel);
@@ -64,6 +65,15 @@ export class MyProfileClient implements MyProfileService {
     });
   }
 
+  fetchImageUploaded(): Promise<FileUploads | null> {
+    return this.http.get<FileUploads>(this.url + '/fetchImageUploaded/' + user.id).catch(err => {
+      const data = (err && err.response) ? err.response : err;
+      if (data && (data.status === 404 || data.status === 410)) {
+        return null;
+      }
+      throw err;
+    });
+  }
 }
 export interface Config {
   myprofile_url: string;
@@ -74,7 +84,6 @@ class ApplicationContext {
     return storage.config();
   }
   getMyProfileService(): MyProfileService {
-    console.log('service')
     if (!this.userService) {
       const c = this.getConfig();
       this.userService = new MyProfileClient(httpRequest, c.myprofile_url);
