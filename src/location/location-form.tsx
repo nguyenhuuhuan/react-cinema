@@ -29,12 +29,37 @@ const param: EditComponentParam<Location, string, InternalState> = {
   createModel: createLocation,
   initialize
 };
+interface props {
+  state: InternalState,
+  setState: DispatchWithCallback<Partial<InternalState>>
+}
+function LocationMarker({ state, setState }: props) {
+  const map = useMapEvents({
+    click(e: Leaflet.LeafletMouseEvent) {
+      const { lat, lng } = e.latlng;
+      setState({ location: { ...state.location, longitude: lat, latitude: lng } })
+    },
+  })
+  return state.location === null ? null : (
+    <Marker position={[state.location.longitude??1, state.location.latitude??1]}>
+      <Popup>You are here</Popup>
+    </Marker>
+  )
+}
+
 export const LocationForm = () => {
   const refForm = React.useRef();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
-  const { resource, setState, updateState, flag,save, back, state } = useEdit<Location, string, InternalState>(refForm, initialState, getLocations(), inputEdit(), param);
+  const { resource, setState, updateState, flag, save, back, state } = useEdit<Location, string, InternalState>(refForm, initialState, getLocations(), inputEdit(), param);
   const location = state.location;
   console.log('resource', resource)
+
+  const onClick = (e: Leaflet.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng;
+    debugger
+    setState({ location: { ...location, longitude: lat, latitude: lng } })
+  }
+
 
 
 
@@ -43,10 +68,7 @@ export const LocationForm = () => {
   //   console.log('state', state)
   // }
 
-  const onClick = (e: Leaflet.LeafletMouseEvent) => {
-    const { lat, lng } = e.latlng;
-    setState({ location: { ...location, longitude: lat, latitude: lng } })
-  }
+
 
   const closeModal = () => {
     setModalIsOpen(false)
@@ -81,7 +103,7 @@ export const LocationForm = () => {
           </div>
         </div>
         <div className='row'>
-        <label className='col s12 m6'>
+          <label className='col s12 m6'>
             Name
             <input
               type='text'
@@ -159,7 +181,7 @@ export const LocationForm = () => {
               name='imageURL'
               value={location.imageURL}
               onChange={updateState}
-               required={true}
+              required={true}
               placeholder='ImageURL' />
           </label>
           <div className='col s12 m6 radio-section'>
@@ -205,38 +227,27 @@ export const LocationForm = () => {
         <div className='view-container profile-info'>
           <form model-name='data'>
             <header>
-              <h2>{resource.user_profile_general_info}</h2>
+              <h2>Map</h2>
               <button type='button' id='btnClose' name='btnClose' className='btn-close' onClick={closeModal} />
             </header>
             <div >
               <MapContainer
                 center={{ lat: 10.854886268472459, lng: 106.63051128387453 }}
-                zoom={16}
-                maxZoom={100}
+                zoom={13}
+                // maxZoom={100}
                 attributionControl={true}
                 zoomControl={true}
                 scrollWheelZoom={true}
                 dragging={true}
-                // animate={true}
                 easeLinearity={0.35}
                 style={{ height: "550px", width: "100%" }}
-                // whenCreated={(map) => {
-                //   map.on("click", onClick);
-                // }}
+         
               >
                 <TileLayer
                   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {/* <MyComponent /> */}
-                <Marker
-                  key={`marker-index`}
-                  position={[state.location.longitude ?? 0, state.location.latitude ?? 0]}
-                >
-                  <Popup>
-                    <span>{location.name}</span>
-                  </Popup>
-                </Marker>
+                <LocationMarker state={state} setState={setState} />
               </MapContainer>
             </div>
 
