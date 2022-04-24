@@ -27,7 +27,7 @@ export default function CropImage(props: Props) {
     reader.readAsDataURL(file);
   };
 
-  const onLoad = React.useCallback((img) => {
+  const onLoad = React.useCallback((img: any) => {
     imgRef.current = img;
   }, []);
 

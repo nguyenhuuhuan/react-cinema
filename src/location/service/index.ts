@@ -6,7 +6,7 @@ import { LocationClient } from './location';
 import { LocationRateService } from './location-rate/location-rate';
 import { LocationRateClient } from './location-rate';
 export * from './location';
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 const httpRequest = new HttpRequest(axios, options);
 export interface Config {

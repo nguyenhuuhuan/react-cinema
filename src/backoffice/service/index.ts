@@ -8,7 +8,7 @@ import { FilmClient, FilmService } from './film';
 
 export * from './cinema';
 export * from './category';
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 const httpRequest = new HttpRequest(axios, options);
 export interface Config {

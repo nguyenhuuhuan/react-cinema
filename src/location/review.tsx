@@ -42,7 +42,6 @@ export const Review = () => {
         locationRateSM.locationId = id;
         locationRateSM.limit = pageSize;
         locationRateSM.sort = '-rateTime';
-        debugger
         const location = await locationService.load(id || '');
         const searchResult = await locationRateService.search(locationRateSM);
         setRates(searchResult.list);
