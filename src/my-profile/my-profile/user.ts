@@ -105,6 +105,7 @@ export interface MyProfileService {
   saveMySettings(id: string, settings: UserSettings): Promise<number>;
   saveMyProfile(user: User): Promise<number>;
   fetchImageUploaded(): Promise<FileUploads|null>;
+  fetchImageUploadedGallery(): Promise<FileUploads[]|null>;
 }
 
 export const skillsModel: Attributes = {

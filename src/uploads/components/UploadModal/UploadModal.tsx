@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { OnClick } from 'react-hook-core';
 import CropImage from './CropImage';
 import Loading from './Loading';
 import { dataURLtoFile, State } from './UploadHook';
@@ -11,9 +12,10 @@ interface Props {
 }
 
 const UploadsModal = (props: Props) => {
-  const [cropImage, setCropImage] = React.useState<string>('');
-  const [select, setSelect] = React.useState<boolean>(false);
-  const [isCrop, setIsCrop] = React.useState<boolean>(false);
+  const [cropImage, setCropImage] = useState<string>('');
+  const [select, setSelect] = useState<boolean>(false);
+  const [isCrop, setIsCrop] = useState<boolean>(false);
+  const [isPreview, setIsPreview] = useState(false)
   const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const data = event.target.files
     if (!data) return
@@ -39,6 +41,11 @@ const UploadsModal = (props: Props) => {
     }
   };
 
+  const togglePreview = (e:OnClick) => {
+    e.preventDefault()
+    setIsPreview(!isPreview)
+  }
+
   return (
     <div className='upload-modal'>
       <div className='frame'>
@@ -46,6 +53,7 @@ const UploadsModal = (props: Props) => {
           {props.file && props.file !== null ? (
             <>
               <p className='file-name'>{props.file.name}</p>
+              <button onClick={togglePreview}>Preview</button>
               <div className='preview-image'>
                 {(props.file.type === 'image/jpeg' || props.file.type === 'image/png') &&
                   <div>
@@ -54,7 +62,7 @@ const UploadsModal = (props: Props) => {
                         <img className='image-cut' src={URL.createObjectURL(props.file)} alt='file' />
                       ) : (
                         <>
-                          <CropImage image={props.file} setCropImage={setCropImage} />
+                          <CropImage image={props.file} setCropImage={setCropImage} isPreview={isPreview} />
                           <button onClick={handleSelectCropImage}>Select</button>
                         </>
                       )

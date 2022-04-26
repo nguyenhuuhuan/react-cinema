@@ -74,6 +74,15 @@ export class MyProfileClient implements MyProfileService {
       throw err;
     });
   }
+  fetchImageUploadedGallery(): Promise<FileUploads[] | []> {
+    return this.http.get<FileUploads[]>(this.url + '/fetchImageGalleryUploaded/' + user.id).catch(err => {
+      const data = (err && err.response) ? err.response : err;
+      if (data && (data.status === 404 || data.status === 410)) {
+        return [];
+      }
+      throw err;
+    });
+  }
 }
 export interface Config {
   myprofile_url: string;

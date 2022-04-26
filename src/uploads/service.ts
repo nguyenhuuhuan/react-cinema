@@ -1,12 +1,19 @@
 import axios from 'axios';
 import { UserAccount } from 'uione';
 import { FileUploads, Uploads, Thumbnail } from './model';
-
-const url = 'http://localhost:8080';
+import { config } from '../config';
 const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 export const fetchImageUploaded = (): Promise<FileUploads[]> | FileUploads[] => {
   if (user) {
-    return axios.get(url + `/uploads/${user.id}`).then(files => {
+    return axios.get(config.authentication_url + `/my-profile/fetchImageUploaded/${user.id}`).then(files => {
+      return files.data as FileUploads[];
+    });
+  }
+  return []
+};
+export const fetchImageGalleryUploaded = (): Promise<FileUploads[]> | FileUploads[] => {
+  if (user) {
+    return axios.get(config.authentication_url + `/my-profile/fetchImageGalleryUploaded/${user.id}`).then(files => {
       return files.data as FileUploads[];
     });
   }
@@ -14,7 +21,7 @@ export const fetchImageUploaded = (): Promise<FileUploads[]> | FileUploads[] => 
 };
 export const deleteFile = (fileUrl: string): Promise<number> | number => {
   if (user) {
-    return axios.delete(url + `/uploads?userId=${user.id}&url=${fileUrl}`).then(() => {
+    return axios.delete(config.authentication_url + `/my-profile/uploadGallery?userId=${user.id}&url=${fileUrl}`).then(() => {
       return 1;
     }).catch(() => 0);
   }
@@ -22,7 +29,7 @@ export const deleteFile = (fileUrl: string): Promise<number> | number => {
 };
 export const deleteFileYoutube = (fileUrl: string): Promise<number> | number => {
   if (user) {
-    return axios.delete(url + `/uploads/youtube?userId=${user.id}&url=${fileUrl}`).then(() => {
+    return axios.delete(config.authentication_url + `/my-profile/uploadGallery/youtube?userId=${user.id}&url=${fileUrl}`).then(() => {
       return 1;
     }).catch(() => 0);
   }
@@ -38,17 +45,17 @@ export const uploadVideoYoutube = (videoId: string): Promise<number> | number =>
     }]
   };
   const headers = new Headers();
-  return axios.post(url + '/uploads/youtube', body, { headers }).then(() => 1).catch(() => 0);
+  return axios.post(config.authentication_url + '/my-profile/uploadGallery/youtube', body, { headers }).then(() => 1).catch(() => 0);
 };
 export const getUser = (): Promise<string> => {
-  return axios.get(url + '/image/users/' + user.id).then(r => r.data).catch(e => e);
+  return axios.get(config.authentication_url + '/image/users/' + user.id).then(r => r.data).catch(e => e);
 };
 export const updateData = (data: FileUploads[]): Promise<number> => {
-  const body = {
+  const body = {  
     data,
     userId: user.id
   };
-  return axios.patch(url + '/uploads', body).then(r => r.data as number).catch(e => e);
+  return axios.patch(config.authentication_url + '/my-profile/uploadGallery', body).then(r => r.data as number).catch(e => e);
 };
 const urlYutuServece = 'http://localhost:8081';
 export const fetchThumbnailVideo = (videoId: string): Promise<Thumbnail> => {

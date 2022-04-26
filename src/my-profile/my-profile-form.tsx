@@ -7,6 +7,7 @@ import UploadFile from "../uploads/app";
 import { FileUploads } from "../uploads/model";
 
 import GeneralInfo from "./general-info";
+import { ModalUploadGallery } from "./modalUploadGallery";
 import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
 import Uploads from "./UploadModal/UploadContainer";
 
@@ -53,10 +54,18 @@ export const MyProfileForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
   const [modalUpload, setModalUpload] = useState(false)
+  const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false)
+
   const [filesUploaded, setFilesUploaded] = useState<FileUploads>();
+  const [filesGalleryUploaded, setFilesGalleryUploaded] = useState<FileUploads[]>();
   const handleFetch = async () => {
     const res = await service.fetchImageUploaded();
-    setFilesUploaded(res??undefined);
+    setFilesUploaded(res ?? undefined);
+  };
+
+  const handleFetchGallery = async () => {
+    const res = await service.fetchImageUploadedGallery();
+    setFilesGalleryUploaded(res ?? []);
   };
 
   useEffect(() => {
@@ -406,9 +415,18 @@ export const MyProfileForm = () => {
     e.preventDefault()
     setModalUpload(false)
   }
+  const openModalUploadGallery = (e: OnClick) => {
+    e.preventDefault()
+    setModalUploadGalleryOpen(true)
+  }
+
+  const closeModalUploadGallery = (e: OnClick) => {
+    e.preventDefault()
+    setModalUploadGalleryOpen(false)
+  }
   const followers = "7 followers"; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
   const following = "10 following"; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
-  console.log('filesUploaded',filesUploaded?.url)
+  console.log('filesUploaded', filesUploaded?.url)
   return (
     <div className="profile view-container">
       <form id="userForm" name="userForm">
@@ -417,7 +435,7 @@ export const MyProfileForm = () => {
             <img
               src={(filesUploaded ? filesUploaded.url : "https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg")}
               alt="cover"
-              style={{objectFit:'cover'}}
+              style={{ objectFit: 'cover' }}
             />
             <div className="contact-group">
               <button id="btnPhone" name="btnPhone" className="btn-phone" />
@@ -1031,6 +1049,20 @@ export const MyProfileForm = () => {
                 </footer>
               )}
             </div>
+            <div className="card border-bottom-highlight">
+              <header>
+                <i className="material-icons highlight btn-camera"></i>
+                Gallery
+           
+                  <button
+                  type="button"
+                  id="btnGallery"
+                  name="btnGallery"
+                  className={"btn-edit"}
+                  onClick={openModalUploadGallery}
+                />
+              </header>
+            </div>
           </div>
         </div>
       </form>
@@ -1071,7 +1103,7 @@ export const MyProfileForm = () => {
                 onClick={closeModalUpload}
               />
             </header>
-            <Uploads handleFetch={handleFetch}
+            <Uploads handleFetch={handleFetch} type="cover"
             />
 
             <footer>
@@ -1128,6 +1160,7 @@ export const MyProfileForm = () => {
           </form>
         </div>
       </ReactModal>
+      <ModalUploadGallery closeModalUploadGallery={closeModalUploadGallery} modalUploadGalleryOpen={modalUploadGalleryOpen} />
     </div>
   );
 };

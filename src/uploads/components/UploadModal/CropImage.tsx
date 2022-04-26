@@ -1,23 +1,43 @@
-import * as React from 'react';
-import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactCrop, { centerCrop, Crop, makeAspectCrop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
 interface Props {
   image: File,
   setCropImage: React.Dispatch<React.SetStateAction<string>>,
+  isPreview: boolean
+}
+
+function centerAspectCrop(
+  mediaWidth: number,
+  mediaHeight: number,
+  aspect: number,
+) {
+  return centerCrop(
+    makeAspectCrop(
+      {
+        unit: '%',
+        width: 90,
+      },
+      aspect,
+      mediaWidth,
+      mediaHeight,
+    ),
+    mediaWidth,
+    mediaHeight,
+  )
 }
 
 export default function CropImage(props: Props) {
-  const [upImg, setUpImg] = React.useState<any>();
-  const imgRef = React.useRef(null);
-  const previewCanvasRef = React.useRef(null);
-  const [crop, setCrop] = React.useState<Crop>({
-    unit: '%', width: 30, x: 25,
-    y: 25, height: 50
-  });
-  const [completedCrop, setCompletedCrop] = React.useState<any>(null);
-
-  React.useEffect(() => {
+  const [upImg, setUpImg] = useState<any>();
+  const imgRef = useRef(null);
+  const previewCanvasRef = useRef(null);
+  const [crop, setCrop] = useState<Crop>();
+  const [completedCrop, setCompletedCrop] = useState<any>(null);
+  const [scale] = useState(1)
+  const [rotate] = useState(0)
+  const [aspect] = useState<number | undefined>(16 / 9)
+  useEffect(() => {
     onSelectFile(props.image);
   }, []);
 
@@ -27,9 +47,12 @@ export default function CropImage(props: Props) {
     reader.readAsDataURL(file);
   };
 
-  const onLoad = React.useCallback((img: any) => {
-    imgRef.current = img;
-  }, []);
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    if (aspect) {
+      const { width, height } = e.currentTarget
+      setCrop(centerAspectCrop(width, height, aspect))
+    }
+  }
 
   React.useEffect(() => {
     if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
@@ -65,28 +88,34 @@ export default function CropImage(props: Props) {
     const imagee = new Image();
     imagee.src = canvas.toDataURL();
     props.setCropImage(imagee.src);
-  }, [completedCrop]);
-
+  }, [completedCrop, props.isPreview]);
   return (
     <div className='Crop-Image'>
       <ReactCrop
-
-        // onImageLoaded={onLoad}
         aspect={16 / 9}
         crop={crop}
-        onChange={(c: PixelCrop) => setCrop(c)}
+        onChange={(_, percentCrop) => setCrop(percentCrop)}
         onComplete={(c: PixelCrop) => setCompletedCrop(c)}
-      />
-      <img src={upImg} />
-      <div style={{ display: 'none' }}>
-        <canvas
-          ref={previewCanvasRef}
-          style={{
-            width: Math.round(completedCrop && completedCrop.width ? completedCrop.width : 0),
-            height: Math.round(completedCrop && completedCrop.height ? completedCrop.height : 0)
-          }}
+      >
+        <img
+          ref={imgRef}
+          src={upImg}
+          onLoad={onImageLoad}
+          style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
         />
-      </div>
+      </ReactCrop>
+      {
+        props.isPreview ? (<div>
+          <canvas
+            ref={previewCanvasRef}
+            style={{
+              width: Math.round(completedCrop && completedCrop.width ? completedCrop.width : 0),
+              height: Math.round(completedCrop && completedCrop.height ? completedCrop.height : 0)
+            }}
+          />
+        </div>) : <></>
+      }
+
     </div>
   );
 }

@@ -1,17 +1,16 @@
 import axios from 'axios';
 import * as React from 'react';
 import { UserAccount } from 'uione';
+import {config} from '../../config'
 
-
-const url = 'http://localhost:8082/my-profile/upload';
 const urlGetImg = 'http://localhost:8082/my-profile/image';
 export interface State {
   success: boolean;
   loading: boolean;
 }
-const user: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
+const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 export const useUpload = () => {
-  
+
   const [file, setFile] = React.useState<File>();
   const [state, setState] = React.useState<State>({
     success: false,
@@ -26,7 +25,7 @@ export const useUpload = () => {
       bodyFormData.append('source', 'google-storage');
       const headers = new Headers();
       headers.append('Content-Type', 'multipart/form-data');
-      return axios.post(url, bodyFormData, { headers }).then(async () => {
+      return axios.post(config.authentication_url+"/my-profile/upload", bodyFormData, { headers }).then(async () => {
         setState((pre) => ({ ...pre, open: false, success: true, loading: false }));
         setFile(undefined);
       }).catch(() => {
@@ -34,8 +33,29 @@ export const useUpload = () => {
       });
     }
   };
-  return { upload, file, setFile, state, setState };
+
+  const uploadGallery = () => {
+    if (file) {
+      setState((pre) => ({ ...pre, loading: true }));
+      const bodyFormData = new FormData();
+      bodyFormData.append('file', file);
+      bodyFormData.append('id', user.id || '');
+      bodyFormData.append('source', 'google-storage');
+      const headers = new Headers();
+      headers.append('Content-Type', 'multipart/form-data');
+      return axios.post(config.authentication_url+"/my-profile/gallery", bodyFormData, { headers }).then(async () => {
+        setState((pre) => ({ ...pre, open: false, success: true, loading: false }));
+        setFile(undefined);
+      }).catch(() => {
+        setState((pre) => ({ ...pre, loading: false }));
+      });
+    }
+  };
+  return { upload, file, setFile, state, setState ,uploadGallery};
 };
+
+
+
 export const getImageAvt = async () => {
   let urlImg = '';
   if (user) {

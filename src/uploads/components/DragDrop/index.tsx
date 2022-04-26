@@ -22,7 +22,7 @@ const DragDrop = (props: Props) => {
       result.source.index,
       result.destination.index
     );
-    await handleUpdateData(newList);
+    updateData(newList);
     props.setList(newList);
   };
 

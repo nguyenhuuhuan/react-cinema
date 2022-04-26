@@ -3,14 +3,26 @@ import { useUpload } from './UploadHook';
 import UploadsModal from './UploadModal';
 import './Uploads.scss';
 
+export type UploadType = 'gallery' | 'cover';
 interface Props {
-  handleFetch: () => Promise<void>
+  handleFetch: () => Promise<void>,
+  type: UploadType
 }
 
 const Uploads = (props: Props) => {
-  const { file, setFile, state, setState, upload } = useUpload();
+  const { file, setFile, state, setState, upload, uploadGallery } = useUpload();
 
   const handleUpload = async () => {
+    switch (props.type) {
+      case 'gallery':
+        uploadGallery()
+        break;
+      case 'cover':
+        upload();
+        break
+      default:
+        upload()
+    }
     await upload();
     await props.handleFetch();
   };
