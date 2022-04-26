@@ -67,6 +67,7 @@ import { Review } from './location/review';
 import { LocationForm } from './location/location-form';
 import { MyProfileForm } from './my-profile/my-profile-form';
 import { MySettingsForm } from './my-profile/my-settings-form';
+import { UsersPage } from './profile/users-page';
 // import "./assets/fonts/Roboto/font.css";
 
 let isInit = false;
@@ -121,6 +122,7 @@ function App() {
           <Route path=':number' element={<AboutPage />} />
           <Route path='my-profile' element={<MyProfileForm />} />
           <Route path='my-profile/settings' element={<MySettingsForm />} />
+          <Route path='profile' element={<UsersPage/>} />
           <Route path='admin/users' element={<UsersForm />} />
           <Route path='admin/users/add' element={<UserForm />} />
           <Route path='admin/users/edit/:id' element={<UserForm />} />

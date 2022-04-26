@@ -95,10 +95,11 @@ export interface UserFilter extends Filter {
   email?: string;
   phone?: string;
   dateOfBirth?: DateRange;
-  /*
+  // interest:string;
+  // skill:string;
   interests: string[];
   skills: Skill[];
-  achievements: Achievement[];
+  /*achievements: Achievement[];
   settings: UserSettings;
   */
   status: string[];
@@ -106,7 +107,6 @@ export interface UserFilter extends Filter {
 export interface UserRepository extends Repository<User, string> {
 }
 export interface UserService extends Service<User, string, UserFilter> {
-  getUserBySearch(obj: any): Promise<User[]|null>;
 }
 export interface ProfileService {
   getMyProfile(id: string): Promise<User | null>;

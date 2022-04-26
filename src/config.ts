@@ -13,7 +13,8 @@ export const config = {
   film_url: 'http://localhost:8080/films',
   location_url: 'http://localhost:8085/locations',
   location_rate_url: 'http://localhost:8085/locationsrate',
-  myprofile_url: 'http://localhost:8082/my-profile'
+  myprofile_url: 'http://localhost:8082/my-profile',
+  profile_url:'http://localhost:8082/users'
 };
 
 export const env = {

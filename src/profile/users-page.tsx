@@ -3,13 +3,13 @@ import * as React from 'react';
 import { checked, OnClick, PageSizeSelect, SearchComponentState, useSearch, value } from 'react-hook-core';
 import { useNavigate } from 'react-router';
 import { Pagination } from 'reactx-pagination';
-import { inputSearch } from 'uione';
+import { alert, inputSearch, setUser } from 'uione';
 import femaleIcon from '../assets/images/female.png';
 import maleIcon from '../assets/images/male.png';
 import { getUserService, User, UserFilter } from './user';
+import { Skill } from './user/user';
 
 interface UserSearch extends SearchComponentState<User, UserFilter> {
-  statusList: Item[];
 }
 const userFilter: UserFilter = {
   id: '',
@@ -17,21 +17,25 @@ const userFilter: UserFilter = {
   displayName: '',
   email: '',
   status: [],
-  q: ''
-};
+  q: '',
+  interests: [],
+  skills: [],
+  };
 const initialState: UserSearch = {
-  statusList: [],
   list: [],
-  filter: userFilter
+  filter: userFilter,
 };
 export const UsersPage = () => {
   const navigate = useNavigate();
   const refForm = React.useRef();
+  const service = getUserService();
+  const [skill,setSkill] = React.useState('');
+  const [interest,setInterest] = React.useState('');
   const getFilter = (): UserFilter => {
     return value(state.filter);
   };
   const p = { getFilter };
-  const { state, resource, component, updateState, search, sort, clearQ, toggleFilter, changeView, pageChanged, pageSizeChanged } = useSearch<User, UserFilter, UserSearch>(refForm, initialState, getUserService(), inputSearch(), p);
+  const { state, resource,search,component, updateState, sort, clearQ, toggleFilter, changeView, pageChanged, pageSizeChanged, setState } = useSearch<User, UserFilter, UserSearch>(refForm, initialState, getUserService(), inputSearch(), p);
   component.viewable = true;
   component.editable = true;
   const edit = (e: OnClick, id: string) => {
@@ -40,6 +44,71 @@ export const UsersPage = () => {
   };
   const filter = value(state.filter);
   const { list } = state;
+  const addInterest = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();    
+    const interests = filter.interests ? filter.interests : [];
+    if (interest && interest.trim() !== "") {
+      if (!inArray(interests,interest)) {
+        interests.push(interest);
+        filter.interests = interests;
+        setInterest('');
+        setState({ filter });
+
+      } else {
+        alert(resource.error_duplicated_interest, resource.error);
+      }
+    }
+  }
+  const addSkill = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();    
+    const skills = filter.skills ? filter.skills : [];
+    if (skill && skill.trim() !== "") {
+      // if (!inArray(skills, filter.skill)) {
+      //   // skills.push({filter.interest);
+      //   // filter.interests = interests;
+      //   // filter.interest = "";
+      //   // setState({ filter });
+
+      // } else {
+      //   alert(resource.error_duplicated_interest, resource.error);
+      // }
+    }
+  }
+  const removeInterest = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    subject: string
+  ) => {
+    e.preventDefault();
+    if (filter.interests) {
+      const interests = filter.interests.filter(
+        (item: string) => item !== subject
+      );
+      filter.interests = interests;
+      setState({ filter });
+    }
+  };
+  const removeSkill = (
+    e: React.MouseEvent<HTMLElement, MouseEvent>,
+    skill: Skill
+  ) => {
+    e.preventDefault();
+    if (filter.skills) {
+      const skills = filter.skills.filter(
+        (item) => item !== skill
+      );
+      filter.skills = skills;
+      setState({ filter });
+    }
+  };
+  // const search = (event: OnClick) => {
+  //   event.preventDefault();
+  //   service.getUserBySearch(filter).then((listUser)=>{
+  //     if(listUser){
+  //       setState({list:listUser})
+  //       console.log(state.list);
+  //     }
+  //   })
+  // };
   return (
     <div className='view-container'>
       <header>
@@ -52,12 +121,12 @@ export const UsersPage = () => {
       <div>
         <form id='usersForm' name='usersForm' noValidate={true} ref={refForm as any}>
           <section className='row search-group'>
-          <label className='col s12 m4 search-input'>
+            <label className='col s12 m4 search-input'>
               <PageSizeSelect size={component.pageSize} sizes={component.pageSizes} onChange={pageSizeChanged} />
-              <input type='text' id='q' name='q' value={filter.q || ''} onChange={updateState} maxLength={255} placeholder={resource.keyword}/>
-              <button type='button' hidden={!filter.q} className='btn-remove-text' onClick={clearQ}/>
-              <button type='button' className='btn-filter' onClick={toggleFilter}/>
-              <button type='submit' className='btn-search' onClick={search}/>
+              <input type='text' id='q' name='q' value={filter.q || ''} onChange={updateState} maxLength={255} placeholder={resource.keyword} />
+              <button type='button' hidden={!filter.q} className='btn-remove-text' onClick={clearQ} />
+              <button type='button' className='btn-filter' onClick={toggleFilter} />
+              <button type='submit' className='btn-search' onClick={search} />
             </label>
             <Pagination className='col s12 m8' total={component.total} size={component.pageSize} max={component.pageMaxSize} page={component.pageIndex} onChange={pageChanged} />
           </section>
@@ -104,6 +173,81 @@ export const UsersPage = () => {
                   {resource.inactive}
                 </label>
               </section>
+            </label>
+
+            <label className='col s12 m4 l4'>
+              {resource.interests}
+              <div className='row'>
+                <div className='inline-input'>
+                  <input
+                    type="text"
+                    name='interest'
+                    className="form-control"
+                    value={interest}
+                    onChange={(e)=>setInterest(e.target.value)}
+                    placeholder={resource.interests}
+                    maxLength={50}
+                  />
+                  <button
+                    type="button"
+                    id="btnAddInterest"
+                    name="btnAddInterest"
+                    className="btn-add"
+                    onClick={addInterest}
+                  />
+                </div>
+                {filter.interests &&
+                  filter.interests.map((item: string, index: number) => {
+                    return (
+                      <div key={index} className="chip" tabIndex={index}>
+                        {item}
+                        <button
+                          type="button"
+                          name="btnRemoveInterest"
+                          className="close"
+                          onClick={(e) => removeInterest(e, item)}
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
+            </label>
+            <label className='col s12 m4 l4'>
+              {resource.skills}
+              <div className='row'>
+                <div className='inline-input'>
+                  <input
+                    type="text"
+                    name='skill'
+                    className="form-control"
+                    value={skill}
+                    onChange={updateState}
+                    placeholder={resource.skills}
+                    maxLength={50}
+                  />
+                  <button
+                    type="button"
+                    id="btnAddInterest"
+                    name="btnAddInterest"
+                    className="btn-add"
+                    onClick={addSkill}
+                  />
+                </div>
+                {filter.skills &&
+                  filter.skills.map((item: Skill, index: number) => {
+                    return (
+                      <div key={index} className="chip" tabIndex={index}>
+                        {item}
+                        <button
+                          type="button"
+                          name="btnRemoveInterest"
+                          className="close"
+                          onClick={(e) => removeSkill(e, item)}
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
             </label>
           </section>
         </form>
@@ -155,3 +299,18 @@ export const UsersPage = () => {
     </div>
   );
 };
+
+export function inArray(arr: string[], item: string): boolean {
+  if (!arr || arr.length === 0) {
+    return false;
+  }
+  const isExist = arr.filter((itemFilter) => itemFilter === item).length > 0;
+  return isExist;
+}
+export function inSkill(arr: Skill[], item: Skill): boolean {
+  if (!arr || arr.length === 0) {
+    return false;
+  }
+  const isExist = arr.filter((itemFilter) => itemFilter === item).length > 0;
+  return isExist;
+}

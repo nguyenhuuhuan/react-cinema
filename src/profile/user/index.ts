@@ -10,17 +10,12 @@ const httpRequest = new HttpRequest(axios, options);
 export class UserClient extends Client<User, string, UserFilter> implements UserService{
   constructor(http:HttpRequest, url: string){
     super(http,url,userModel);
-    this.searchGet=true;
+    this.searchGet=false;
   }
-  getUserBySearch(obj:any):Promise<User[]|null>{
-    return this.http.post<User[]>(this.serviceUrl+'/search',obj).catch(err=>{
-      const data = (err && err.response)?err.response:err;
-      if(data && (data.status === 404||data.status ===410)){
-        return null;
-      }
-      throw err;
-    });
+  postOnly(s: UserFilter): boolean {
+    return true;
   }
+  
 }
 export class ProfileClient implements ProfileService {
   constructor( private http: HttpRequest,private url: string) {
@@ -51,6 +46,7 @@ export class ProfileClient implements ProfileService {
 export interface Config {
   myprofile_url: string;
   user_url:string;
+  profile_url:string;
 }
 class ApplicationContext {
   profileService?: ProfileService;
@@ -68,7 +64,7 @@ class ApplicationContext {
   getUserService():UserService{
     if (!this.userService) {
       const c = this.getConfig();
-      this.userService = new UserClient(httpRequest, c.user_url);
+      this.userService = new UserClient(httpRequest, c.profile_url);
     }
     return this.userService;
   }
