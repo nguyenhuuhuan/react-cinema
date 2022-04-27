@@ -3,7 +3,6 @@ import { clone, OnClick, useUpdate } from "react-hook-core";
 import ReactModal from "react-modal";
 import { alert, message, UserAccount, useResource } from "uione";
 import imageOnline from "../assets/images/online.svg";
-import UploadFile from "../uploads/app";
 import Uploads from "../uploads/components/UploadModal/UploadContainer";
 import { FileUploads } from "../uploads/model";
 
@@ -57,7 +56,7 @@ export const MyProfileForm = () => {
   const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false);
 
   const [filesUploaded, setFilesUploaded] = useState<string>();
-  const [filesGalleryUploaded, setFilesGalleryUploaded] =
+  // const [filesGalleryUploaded, setFilesGalleryUploaded] =
     useState<FileUploads[]>();
   const handleFetch = async () => {
     const res = await fetchImageUploaded();
@@ -65,10 +64,10 @@ export const MyProfileForm = () => {
     setFilesUploaded(res ?? "");
   };
 
-  const handleFetchGallery = async () => {
-    const res = await service.fetchImageUploadedGallery();
-    setFilesGalleryUploaded(res ?? []);
-  };
+  // const handleFetchGallery = async () => {
+  //   const res = await service.fetchImageUploadedGallery();
+  //   setFilesGalleryUploaded(res ?? []);
+  // };
 
   useEffect(() => {
     service.getMyProfile(userAccount.id || "").then((usr) => {

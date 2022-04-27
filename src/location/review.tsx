@@ -6,7 +6,7 @@ import { LocationRate, LocationRateFilter } from './service/location-rate/locati
 import { Location, LocationInfo } from './service/location/location';
 import './rate.css';
 import moment from 'moment';
-import { getLocationRates, getLocations } from './service';
+import { getLocationRates, getLocations } from './service/index';
 import { PostRateForm } from './post-rate-form';
 const customStyles = {
     content: {

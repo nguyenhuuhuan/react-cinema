@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { storage, UserAccount } from "uione";
-import { getLocations } from "./service";
+import { getLocations } from "./service/index";
 import { LocationRate } from "./service/location-rate/location-rate";
 export const PostRateForm = (props: any) => {
   const [review, setReview] = useState("");

@@ -1,6 +1,6 @@
-
-import { Filter, Attributes, Service } from 'onecore';
-import { LocationRate } from '../location-rate/location-rate';
+import { Filter, Attributes, Service } from "onecore";
+import { FileUploads, Thumbnail } from "../../../uploads/model";
+import { LocationRate } from "../location-rate/location-rate";
 export interface Location {
   id: string;
   name: string;
@@ -9,9 +9,9 @@ export interface Location {
   latitude: number;
   type: string;
   info?: LocationInfo;
-  thumbnail?:string;
-  imageURL?:string;
-  status:string;
+  thumbnail?: string;
+  imageURL?: string;
+  status: string;
 }
 // filter
 export interface LocationFilter extends Filter {
@@ -22,39 +22,39 @@ export interface LocationFilter extends Filter {
   latitude: number;
 }
 
-
-export interface LocationService extends Service<Location, string, LocationFilter> {
+export interface LocationService
+  extends Service<Location, string, LocationFilter> {
   getLocationByType(type: string): Promise<Location[]>;
   rateLocation(obj: LocationRate): Promise<any>;
+  fetchImageUploaded(id: string): Promise<FileUploads[]> | FileUploads[];
+  fetchThumbnailVideo(videoId: string): Promise<Thumbnail>;
 }
 
 export const locationModel: Attributes = {
   id: {
     key: true,
     required: true,
-    q: true
+    q: true,
   },
   name: {
     required: true,
-    q: true
+    q: true,
   },
   description: {
     required: true,
-    q: true
+    q: true,
   },
   longitude: {
-    type: 'number',
+    type: "number",
     required: true,
-    q: true
+    q: true,
   },
   latitude: {
-    type: 'number',
+    type: "number",
     required: true,
-    q: true
-  }
+    q: true,
+  },
 };
-
-
 
 export interface LocationInfo {
   locationInfoId?: string; // It's is id

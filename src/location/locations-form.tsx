@@ -16,6 +16,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import * as Leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
 import UserCarousel from "../admin/users_carousel/app";
+import LocationCarousel from "./location-carousel";
 
 interface LocationSearch
   extends SearchComponentState<Location, LocationFilter> {
@@ -210,95 +211,13 @@ export const LocationsForm = () => {
           </section>
         </form>
         <form className="list-result">
-          {viewList && (
-            <section className="btn-group" style={{ paddingLeft: "16px" }}>
-              <div
-                className="btn-search"
-                style={{ textAlign: "center", padding: "6px 0" }}
-                onClick={() => setListStatus((l) => !l)}
-              >
-                {listStatus ? "Carousel" : "Items"}
-              </div>
-            </section>
-          )}
-
-          {component.view === "table" && (
-            <div className="table-responsive">
-              <table>
-                <thead>
-                  <tr>
-                    <th>{resource.sequence}</th>
-                    <th data-field="id">
-                      <button type="button" id="sortId" onClick={sort}>
-                        {resource.user_id}
-                      </button>
-                    </th>
-                    <th data-field="username">
-                      <button type="button" id="sortName" onClick={sort}>
-                        {resource.username}
-                      </button>
-                    </th>
-                  </tr>
-                </thead>
-                {list &&
-                  list.length > 0 &&
-                  list.map((user, i) => {
-                    return (
-                      <tr
-                        key={"table" + i}
-                        onClick={(e) => viewDetail(e, user.id)}
-                      >
-                        <td className="text-right">
-                          {(user as any).sequenceNo}
-                        </td>
-                        <td>{user.id}</td>
-                        <td>{user.name}</td>
-                      </tr>
-                    );
-                  })}
-              </table>
-            </div>
-          )}
-
+         
           {viewList ? (
             <ul className="row list-view 2">
               {list &&
                 list.length > 0 &&
                 list.map((location, i) => (
-                  <>
-                    {" "}
-                    {listStatus ? (
-                      <li key={"list" + i} className="col s12 m6 l4 xl3 card video">
-                        <section>
-                          <div
-                            className="cover"
-                            style={{
-                              backgroundImage: `url('${location.imageURL}')`,
-                            }}
-                          ></div>
-                          <h3 onClick={(e) => viewDetail(e, location.id)}>
-                            {location.name}
-                          </h3>
-                        </section>
-                      </li>
-                    ) : (
-                      <li key={"carousel" + i} className="col s12 m6 l4 xl3 video">
-                        <section>
-                          <UserCarousel
-                            user={{
-                              userId: "9EPCg4J4p",
-                              email: "",
-                              displayName: "",
-                              status: "1",
-                              username: "test",
-                              imageURL:location.imageURL
-                            }}
-                            edit={edit}
-                          />
-                        </section>
-                      </li>
-                    )}
-                  </>
+               <LocationCarousel location={location} edit={edit}/>
                 ))}
             </ul>
           ) : (
@@ -325,6 +244,11 @@ export const LocationsForm = () => {
                     <Marker
                       key={`marker-${idx}`}
                       position={[location.longitude, location.latitude]}
+                      eventHandlers={{
+                        click:(e)=>{
+                          navigate(`${location.id}`);
+                        }
+                      }}
                     >
                       <Popup>
                         <span>{location.name}</span>

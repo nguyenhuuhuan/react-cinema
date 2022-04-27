@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { async } from 'rxjs/internal/scheduler/async';
+// import { async } from 'rxjs/internal/scheduler/async';
 import Uploads, { UploadType } from './components/UploadModal/UploadContainer';
 import './app.scss';
 import DragDrop from './components/DragDrop';
