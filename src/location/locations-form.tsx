@@ -125,8 +125,7 @@ export const LocationsForm = () => {
               type="button"
               id="btnListView"
               name="btnListView"
-              className="btn-list-view"
-              data-view="listview"
+              className="btn-grid"
               onClick={(e) => onSetViewList(e)}
             />
           )}
@@ -262,14 +261,14 @@ export const LocationsForm = () => {
           )}
 
           {viewList ? (
-            <ul className="row list-view">
+            <ul className="row list-view 2">
               {list &&
                 list.length > 0 &&
                 list.map((location, i) => (
                   <>
                     {" "}
                     {listStatus ? (
-                      <li key={"list" + i} className="col s12 m6 l4 xl3 card">
+                      <li key={"list" + i} className="col s12 m6 l4 xl3 card video">
                         <section>
                           <div
                             className="cover"
@@ -277,23 +276,17 @@ export const LocationsForm = () => {
                               backgroundImage: `url('${location.imageURL}')`,
                             }}
                           ></div>
-                          <div style={{ width: "100%", display: "flex" }}>
-                            <h3 onClick={(e) => edit(e, location.id)}>
-                              {location.name}
-                            </h3>
-                            <button
-                              className="btn-detail"
-                              onClick={(e) => viewDetail(e, location.id)}
-                            />
-                          </div>
+                          <h3 onClick={(e) => viewDetail(e, location.id)}>
+                            {location.name}
+                          </h3>
                         </section>
                       </li>
                     ) : (
-                      <li key={"carousel" + i} className="col s12 m6 l4 xl3">
+                      <li key={"carousel" + i} className="col s12 m6 l4 xl3 video">
                         <section>
                           <UserCarousel
                             user={{
-                              userId: "location",
+                              userId: "9EPCg4J4p",
                               email: "",
                               displayName: "",
                               status: "1",

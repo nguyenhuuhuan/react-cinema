@@ -4,13 +4,13 @@ import ReactModal from "react-modal";
 import { alert, message, UserAccount, useResource } from "uione";
 import imageOnline from "../assets/images/online.svg";
 import UploadFile from "../uploads/app";
+import Uploads from "../uploads/components/UploadModal/UploadContainer";
 import { FileUploads } from "../uploads/model";
 
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
 import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
-import Uploads from "./UploadModal/UploadContainer";
-
+import { fetchImageUploaded } from "../uploads/service";
 interface Edit {
   edit: {
     lookingFor: string;
@@ -53,14 +53,16 @@ export const MyProfileForm = () => {
   const [user, setUser] = useState<User>({} as any);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
-  const [modalUpload, setModalUpload] = useState(false)
-  const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false)
+  const [modalUpload, setModalUpload] = useState(false);
+  const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false);
 
-  const [filesUploaded, setFilesUploaded] = useState<FileUploads>();
-  const [filesGalleryUploaded, setFilesGalleryUploaded] = useState<FileUploads[]>();
+  const [filesUploaded, setFilesUploaded] = useState<string>();
+  const [filesGalleryUploaded, setFilesGalleryUploaded] =
+    useState<FileUploads[]>();
   const handleFetch = async () => {
-    const res = await service.fetchImageUploaded();
-    setFilesUploaded(res ?? undefined);
+    const res = await fetchImageUploaded();
+    debugger
+    setFilesUploaded(res ?? "");
   };
 
   const handleFetchGallery = async () => {
@@ -69,7 +71,7 @@ export const MyProfileForm = () => {
   };
 
   useEffect(() => {
-    service.getMyProfile(userAccount.id || '').then((usr) => {
+    service.getMyProfile(userAccount.id || "").then((usr) => {
       if (usr) {
         setUser(usr);
         setBio(usr.bio || "");
@@ -78,7 +80,6 @@ export const MyProfileForm = () => {
     handleFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -245,14 +246,16 @@ export const MyProfileForm = () => {
   const saveChanges = (event: OnClick) => {
     event.preventDefault();
     if (isEditing) {
-      service.saveMyProfile({ ...user, id: userAccount.id || '' }).then((successs) => {
-        if (successs) {
-          message(resource.success_save_my_profile);
-          close();
-        } else {
-          alert(resource.fail_save_my_profile, resource.error);
-        }
-      });
+      service
+        .saveMyProfile({ ...user, id: userAccount.id || "" })
+        .then((successs) => {
+          if (successs) {
+            message(resource.success_save_my_profile);
+            close();
+          } else {
+            alert(resource.fail_save_my_profile, resource.error);
+          }
+        });
     }
   };
 
@@ -407,35 +410,38 @@ export const MyProfileForm = () => {
   };
 
   const openModalUpload = (e: OnClick) => {
-    e.preventDefault()
-    setModalUpload(true)
-  }
+    e.preventDefault();
+    setModalUpload(true);
+  };
 
   const closeModalUpload = (e: OnClick) => {
-    e.preventDefault()
-    setModalUpload(false)
-  }
+    e.preventDefault();
+    setModalUpload(false);
+  };
   const openModalUploadGallery = (e: OnClick) => {
-    e.preventDefault()
-    setModalUploadGalleryOpen(true)
-  }
+    e.preventDefault();
+    setModalUploadGalleryOpen(true);
+  };
 
   const closeModalUploadGallery = (e: OnClick) => {
-    e.preventDefault()
-    setModalUploadGalleryOpen(false)
-  }
+    e.preventDefault();
+    setModalUploadGalleryOpen(false);
+  };
   const followers = "7 followers"; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
   const following = "10 following"; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
-  console.log('filesUploaded', filesUploaded?.url)
   return (
     <div className="profile view-container">
       <form id="userForm" name="userForm">
-        <header className="border-bottom-highlight" >
+        <header className="border-bottom-highlight">
           <div className="cover-image">
             <img
-              src={(filesUploaded ? filesUploaded.url : "https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg")}
+              src={
+                filesUploaded
+                  ? filesUploaded
+                  : "https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg"
+              }
               alt="cover"
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: "cover" }}
             />
             <div className="contact-group">
               <button id="btnPhone" name="btnPhone" className="btn-phone" />
@@ -445,7 +451,12 @@ export const MyProfileForm = () => {
               Follow
             </button>
           </div>
-          <button id="btnCamera" name="btnCamera" className="btn-camera" onClick={openModalUpload} />
+          <button
+            id="btnCamera"
+            name="btnCamera"
+            className="btn-camera"
+            onClick={openModalUpload}
+          />
           <div className="avatar-wrapper">
             <img
               className="avatar"
@@ -1053,8 +1064,7 @@ export const MyProfileForm = () => {
               <header>
                 <i className="material-icons highlight btn-camera"></i>
                 Gallery
-           
-                  <button
+                <button
                   type="button"
                   id="btnGallery"
                   name="btnGallery"
@@ -1103,8 +1113,7 @@ export const MyProfileForm = () => {
                 onClick={closeModalUpload}
               />
             </header>
-            <Uploads handleFetch={handleFetch} type="cover"
-            />
+            <Uploads handleFetch={handleFetch} type="cover" />
 
             <footer>
               <button
@@ -1118,7 +1127,6 @@ export const MyProfileForm = () => {
             </footer>
           </form>
         </div>
-
       </ReactModal>
       <ReactModal
         isOpen={modalConfirmIsOpen}
@@ -1160,7 +1168,10 @@ export const MyProfileForm = () => {
           </form>
         </div>
       </ReactModal>
-      <ModalUploadGallery closeModalUploadGallery={closeModalUploadGallery} modalUploadGalleryOpen={modalUploadGalleryOpen} />
+      <ModalUploadGallery
+        closeModalUploadGallery={closeModalUploadGallery}
+        modalUploadGalleryOpen={modalUploadGalleryOpen}
+      />
     </div>
   );
 };

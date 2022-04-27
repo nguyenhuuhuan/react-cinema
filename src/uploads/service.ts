@@ -3,13 +3,13 @@ import { UserAccount } from 'uione';
 import { FileUploads, Uploads, Thumbnail } from './model';
 import { config } from '../config';
 const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
-export const fetchImageUploaded = (): Promise<FileUploads[]> | FileUploads[] => {
+export const fetchImageUploaded = (): Promise<string> | undefined => {
   if (user) {
     return axios.get(config.authentication_url + `/my-profile/fetchImageUploaded/${user.id}`).then(files => {
-      return files.data as FileUploads[];
+      return files.data as string;
     });
   }
-  return []
+  return undefined
 };
 export const fetchImageGalleryUploaded = (): Promise<FileUploads[]> | FileUploads[] => {
   if (user) {

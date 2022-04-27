@@ -19,6 +19,7 @@ export default function UserCarousel({ user, edit }: Props) {
     }, [user]);
     const handleFetch = async () => {
         const res = await fetchImageUploaded(user.userId);
+        
         if (res && res.length > 0) {
             for (const item of res) {
                 if (item.type === 'youtube') {
