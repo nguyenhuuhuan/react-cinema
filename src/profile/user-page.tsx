@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
+import { buildId } from 'react-hook-core';
+import { useParams } from 'react-router-dom';
 import { useResource } from 'uione';
 import imageOnline from '../assets/images/online.svg';
 import { getMyProfileService, User } from './user';
 
 export function UserPage() {
-  const id = 'XU3rkqafp';
+  const params = useParams();
   const [user, setUser] = useState<User>({} as User);
   const refForm = useRef();
   useEffect(() => {
-    getMyProfileService().getMyProfile(id).then(usr => {
+    const id = buildId<string>(params)||'';    
+    getMyProfileService().getMyProfile(id).then(usr => {      
       if (usr) {
         setUser(usr);
       }

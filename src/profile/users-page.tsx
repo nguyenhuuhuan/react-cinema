@@ -1,16 +1,24 @@
-import { Item } from 'onecore';
+import { Chip, createTheme, TextField, ThemeProvider } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import * as React from 'react';
 import { checked, OnClick, PageSizeSelect, SearchComponentState, useSearch, value } from 'react-hook-core';
 import { useNavigate } from 'react-router';
 import { Pagination } from 'reactx-pagination';
-import { alert, inputSearch, setUser } from 'uione';
+import { inputSearch, setUser } from 'uione';
 import femaleIcon from '../assets/images/female.png';
 import maleIcon from '../assets/images/male.png';
 import { getUserService, User, UserFilter } from './user';
 import { Skill } from './user/user';
-
 interface UserSearch extends SearchComponentState<User, UserFilter> {
 }
+
+const theme = createTheme({
+  palette:{
+    primary:{
+      main: '#4db6ac'
+    }
+  }
+})
 const userFilter: UserFilter = {
   id: '',
   username: '',
@@ -19,8 +27,8 @@ const userFilter: UserFilter = {
   status: [],
   q: '',
   interests: [],
-  skills: [],
-  };
+  // skills: [],
+};
 const initialState: UserSearch = {
   list: [],
   filter: userFilter,
@@ -28,87 +36,23 @@ const initialState: UserSearch = {
 export const UsersPage = () => {
   const navigate = useNavigate();
   const refForm = React.useRef();
-  const service = getUserService();
-  const [skill,setSkill] = React.useState('');
-  const [interest,setInterest] = React.useState('');
+  const [interests, setInterests] = React.useState<string[]>([]);
+  // const [SkillTmpArray, setSkillTmpArray] = React.useState<Skill[]>([]);
   const getFilter = (): UserFilter => {
     return value(state.filter);
   };
   const p = { getFilter };
-  const { state, resource,search,component, updateState, sort, clearQ, toggleFilter, changeView, pageChanged, pageSizeChanged, setState } = useSearch<User, UserFilter, UserSearch>(refForm, initialState, getUserService(), inputSearch(), p);
+  const { state, resource, search, component, updateState, sort, clearQ, toggleFilter, changeView, pageChanged, pageSizeChanged, setState } = useSearch<User, UserFilter, UserSearch>(refForm, initialState, getUserService(), inputSearch(), p);
   component.viewable = true;
   component.editable = true;
   const edit = (e: OnClick, id: string) => {
     e.preventDefault();
     navigate(`${id}`);
   };
+
   const filter = value(state.filter);
   const { list } = state;
-  const addInterest = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.preventDefault();    
-    const interests = filter.interests ? filter.interests : [];
-    if (interest && interest.trim() !== "") {
-      if (!inArray(interests,interest)) {
-        interests.push(interest);
-        filter.interests = interests;
-        setInterest('');
-        setState({ filter });
-
-      } else {
-        alert(resource.error_duplicated_interest, resource.error);
-      }
-    }
-  }
-  const addSkill = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.preventDefault();    
-    const skills = filter.skills ? filter.skills : [];
-    if (skill && skill.trim() !== "") {
-      // if (!inArray(skills, filter.skill)) {
-      //   // skills.push({filter.interest);
-      //   // filter.interests = interests;
-      //   // filter.interest = "";
-      //   // setState({ filter });
-
-      // } else {
-      //   alert(resource.error_duplicated_interest, resource.error);
-      // }
-    }
-  }
-  const removeInterest = (
-    e: React.MouseEvent<HTMLElement, MouseEvent>,
-    subject: string
-  ) => {
-    e.preventDefault();
-    if (filter.interests) {
-      const interests = filter.interests.filter(
-        (item: string) => item !== subject
-      );
-      filter.interests = interests;
-      setState({ filter });
-    }
-  };
-  const removeSkill = (
-    e: React.MouseEvent<HTMLElement, MouseEvent>,
-    skill: Skill
-  ) => {
-    e.preventDefault();
-    if (filter.skills) {
-      const skills = filter.skills.filter(
-        (item) => item !== skill
-      );
-      filter.skills = skills;
-      setState({ filter });
-    }
-  };
-  // const search = (event: OnClick) => {
-  //   event.preventDefault();
-  //   service.getUserBySearch(filter).then((listUser)=>{
-  //     if(listUser){
-  //       setState({list:listUser})
-  //       console.log(state.list);
-  //     }
-  //   })
-  // };
+  
   return (
     <div className='view-container'>
       <header>
@@ -174,45 +118,72 @@ export const UsersPage = () => {
                 </label>
               </section>
             </label>
+            <div className='col s12 m4 l4'>
 
-            <label className='col s12 m4 l4'>
-              {resource.interests}
-              <div className='row'>
-                <div className='inline-input'>
-                  <input
-                    type="text"
-                    name='interest'
-                    className="form-control"
-                    value={interest}
-                    onChange={(e)=>setInterest(e.target.value)}
-                    placeholder={resource.interests}
-                    maxLength={50}
+              <Autocomplete
+                options={[]}
+                multiple
+                id="tags-filled"
+                freeSolo
+                value={interests}
+                onChange={(e, newValue: string[]) => {
+                  if (newValue.length>-1) {
+                    setInterests(newValue);
+                    setState({filter:{...filter,interests:newValue}})
+                  }
+                }}
+                renderTags={(value: readonly string[], getTagProps) =>
+                  value.map((option: string, index: number) => (
+                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                  ))
+                }
+                renderInput={(params) => (
+                 <ThemeProvider theme={theme}>
+                   <TextField
+                 {...params}
+                 variant="standard"
+                 name='interest'
+                 color='primary'
+                 // onChange={(e)=>setInterest(e.target.value)}
+                 label={resource.interests}
+                 placeholder={resource.interests}
+               // value={interest}
+               /></ThemeProvider>
+                )}
+              />
+
+            </div>
+            {/* <div className='col s12 m4 l4'>
+              <Autocomplete
+                options={[]}
+                multiple
+                id="tags-filled"
+                freeSolo
+                value={SkillTmpArray}
+                onChange={(e, newValue: Skill[]) => {
+                  if (newValue.length>-1) {
+                    setSkillTmpArray(newValue);
+                    
+                    setState({filter:{...filter,:newValue}})
+                  }
+                }}
+                renderTags={(value: readonly string[], getTagProps) =>
+                  value.map((option: string, index: number) => (
+                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    name='skill'
+                    label={resource.skills}
+                    placeholder={resource.skills}
                   />
-                  <button
-                    type="button"
-                    id="btnAddInterest"
-                    name="btnAddInterest"
-                    className="btn-add"
-                    onClick={addInterest}
-                  />
-                </div>
-                {filter.interests &&
-                  filter.interests.map((item: string, index: number) => {
-                    return (
-                      <div key={index} className="chip" tabIndex={index}>
-                        {item}
-                        <button
-                          type="button"
-                          name="btnRemoveInterest"
-                          className="close"
-                          onClick={(e) => removeInterest(e, item)}
-                        />
-                      </div>
-                    );
-                  })}
-              </div>
-            </label>
-            <label className='col s12 m4 l4'>
+                )}
+              />
+            </div> */}
+            {/* <label className='col s12 m4 l4'>
               {resource.skills}
               <div className='row'>
                 <div className='inline-input'>
@@ -248,7 +219,7 @@ export const UsersPage = () => {
                     );
                   })}
               </div>
-            </label>
+            </label> */}
           </section>
         </form>
         <form className='list-result'>
@@ -281,7 +252,7 @@ export const UsersPage = () => {
           {component.view !== 'table' && <ul className='row list-view'>
             {list && list.length > 0 && list.map((user, i) => {
               return (
-                <li key={i} className='col s12 m6 l4 xl3' onClick={e => edit(e, user.userId)}>
+                <li key={i} className='col s12 m6 l4 xl3' onClick={e => edit(e, user.id)}>
                   <section>
                     <img src={user.imageURL && user.imageURL.length > 0 ? user.imageURL : (user.gender === 'F' ? femaleIcon : maleIcon)} alt='user' className='round-border' />
                     <div>
