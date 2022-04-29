@@ -6,7 +6,6 @@ import CarouselImageItem from "../component/carousel/CarouselImageItem";
 import CarouselVideoItem from "../component/carousel/CarouselVideoItem";
 import imgDefault from "../assets/images/video-youtube.png";
 import { getLocations } from "./service/index";
-import { fetchImageUploaded, fetchThumbnailVideo } from "./service";
 
 import "./style.css";
 import { Location } from "./service/location/location";
@@ -21,12 +20,16 @@ export default function LocationCarousel({ edit, location }: Props) {
   const [files, setFiles] = useState<FileUploads[]>();
   useEffect(() => {
     handleFetch();
-  }, [location,carousel]);
+  }, [location, carousel]);
   const locationService = getLocations();
   const handleFetch = async () => {
-    if (!carousel||files) return;
-    const res = await locationService.fetchImageUploaded(location.id);
-    console.log('res',res)
+    if (!carousel || files) return;
+    let res
+    try {
+      res = await locationService.fetchImageUploaded(location.id);
+    } catch (error) {
+
+    }
     if (res && res.length > 0) {
       for (const item of res) {
         if (item.type === "youtube") {

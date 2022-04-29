@@ -60,7 +60,6 @@ export const MyProfileForm = () => {
     useState<FileUploads[]>();
   const handleFetch = async () => {
     const res = await fetchImageUploaded();
-    debugger
     setFilesUploaded(res ?? "");
   };
 
