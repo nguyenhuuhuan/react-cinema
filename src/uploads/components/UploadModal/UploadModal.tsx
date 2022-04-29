@@ -33,7 +33,8 @@ const UploadsModal = (props: Props) => {
     }
   };
 
-  const handleSelectCropImage = () => {
+  const handleSelectCropImage = (e:OnClick) => {
+    e.preventDefault()
     if (cropImage && props.file) {
       props.setFile(dataURLtoFile(cropImage, props.file.name));
       setIsCrop(true);
@@ -63,7 +64,7 @@ const UploadsModal = (props: Props) => {
                       ) : (
                         <>
                           <CropImage image={props.file} setCropImage={setCropImage} isPreview={isPreview} />
-                          <button onClick={handleSelectCropImage}>Select</button>
+                          <button onClick={(e)=>handleSelectCropImage(e)}>Select</button>
                         </>
                       )
                     }

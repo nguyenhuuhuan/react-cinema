@@ -3,9 +3,10 @@ import { UserAccount } from 'uione';
 import { FileUploads, Uploads, Thumbnail } from './model';
 import { config } from '../config';
 const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
+
 export const fetchImageUploaded = (): Promise<string> | undefined => {
   if (user) {
-    return axios.get(config.authentication_url + `/my-profile/fetchImageUploaded/${user.id}`).then(files => {
+    return axios.get(config.authentication_url + `/my-profile/${user.id}/fetchImageUploaded`).then(files => {
       return files.data as string;
     });
   }
@@ -13,7 +14,7 @@ export const fetchImageUploaded = (): Promise<string> | undefined => {
 };
 export const fetchImageGalleryUploaded = (): Promise<FileUploads[]> | FileUploads[] => {
   if (user) {
-    return axios.get(config.authentication_url + `/my-profile/fetchImageGalleryUploaded/${user.id}`).then(files => {
+    return axios.get(config.authentication_url + `/my-profile/${user.id}/fetchImageGalleryUploaded`).then(files => {
       return files.data as FileUploads[];
     });
   }
@@ -21,7 +22,7 @@ export const fetchImageGalleryUploaded = (): Promise<FileUploads[]> | FileUpload
 };
 export const deleteFile = (fileUrl: string): Promise<number> | number => {
   if (user) {
-    return axios.delete(config.authentication_url + `/my-profile/uploadGallery?userId=${user.id}&url=${fileUrl}`).then(() => {
+    return axios.delete(config.authentication_url + `/my-profile/${user.id}/gallery?&url=${fileUrl}`).then(() => {
       return 1;
     }).catch(() => 0);
   }
@@ -55,7 +56,7 @@ export const updateData = (data: FileUploads[]): Promise<number> => {
     data,
     userId: user.id
   };
-  return axios.patch(config.authentication_url + '/my-profile/uploadGallery', body).then(r => r.data as number).catch(e => e);
+  return axios.patch(config.authentication_url + `/my-profile/${user.id}/gallery`, body).then(r => r.data as number).catch(e => e);
 };
 const urlYutuServece = 'http://localhost:8081';
 export const fetchThumbnailVideo = (videoId: string): Promise<Thumbnail> => {

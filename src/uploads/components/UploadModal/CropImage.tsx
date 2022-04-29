@@ -104,17 +104,15 @@ export default function CropImage(props: Props) {
           style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
         />
       </ReactCrop>
-      {
-        props.isPreview ? (<div>
-          <canvas
-            ref={previewCanvasRef}
-            style={{
-              width: Math.round(completedCrop && completedCrop.width ? completedCrop.width : 0),
-              height: Math.round(completedCrop && completedCrop.height ? completedCrop.height : 0)
-            }}
-          />
-        </div>) : <></>
-      }
+      <div style={{ display: props.isPreview ? "block" : "none" }}>
+        <canvas
+          ref={previewCanvasRef}
+          style={{
+            width: Math.round(completedCrop && completedCrop.width ? completedCrop.width : 0),
+            height: Math.round(completedCrop && completedCrop.height ? completedCrop.height : 0)
+          }}
+        />
+      </div>
 
     </div>
   );

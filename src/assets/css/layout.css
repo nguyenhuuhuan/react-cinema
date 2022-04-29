@@ -176,6 +176,12 @@
   margin-top: -1px;
   padding-top: 4px;
 }
+.dropdown-upload-cover {
+  display: inline-block;
+  position: absolute;
+  top: 39px;
+  right: 12px;
+}
 
 .dropdown-content-profile li {
   display: inline-flex;

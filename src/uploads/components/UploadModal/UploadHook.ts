@@ -1,15 +1,25 @@
 import axios from 'axios';
 import * as React from 'react';
-import { UserAccount } from 'uione';
-import {config} from '../../../config'
+import { UserAccount, options } from 'uione';
+import { config } from '../../../config'
+import { HttpRequest } from 'axios-core';
+import { FileUploads } from '../../model';
+
 
 const urlGetImg = 'http://localhost:8082/my-profile/image';
 export interface State {
   success: boolean;
   loading: boolean;
 }
+
+interface Props {
+  post: (url: string, obj: any, options?: {
+    headers?: Headers | undefined,
+  } | undefined) => Promise<any>,
+  setURL?: (u: string) => void
+}
 const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
-export const useUpload = () => {
+export const useUpload = (props: Props) => {
 
   const [file, setFile] = React.useState<File>();
   const [state, setState] = React.useState<State>({
@@ -25,16 +35,21 @@ export const useUpload = () => {
       bodyFormData.append('source', 'google-storage');
       const headers = new Headers();
       headers.append('Content-Type', 'multipart/form-data');
-      return axios.post(config.authentication_url+"/my-profile/upload", bodyFormData, { headers }).then(async () => {
+      return props.post(config.authentication_url + `/my-profile/${user.id}/cover`, bodyFormData).then(async (res: any) => {
         setState((pre) => ({ ...pre, open: false, success: true, loading: false }));
         setFile(undefined);
+        if (props.setURL) {
+          props.setURL(res)
+        }
       }).catch(() => {
         setState((pre) => ({ ...pre, loading: false }));
+        return undefined
       });
     }
+    return undefined
   };
 
-  const uploadGallery = () => {
+  const uploadGallery = (): Promise<FileUploads[]> | FileUploads[] => {
     if (file) {
       setState((pre) => ({ ...pre, loading: true }));
       const bodyFormData = new FormData();
@@ -43,7 +58,27 @@ export const useUpload = () => {
       bodyFormData.append('source', 'google-storage');
       const headers = new Headers();
       headers.append('Content-Type', 'multipart/form-data');
-      return axios.post(config.authentication_url+"/my-profile/uploadGallery", bodyFormData, { headers }).then(async () => {
+      return props.post(config.authentication_url + `/my-profile/${user.id}/gallery`, bodyFormData).then(async (res: any) => {
+        setState((pre) => ({ ...pre, open: false, success: true, loading: false }));
+        setFile(undefined);
+        return res
+      }).catch(() => {
+        setState((pre) => ({ ...pre, loading: false }));
+      });
+    }
+    return []
+  };
+
+  const uploadAvatar = () => {
+    if (file) {
+      setState((pre) => ({ ...pre, loading: true }));
+      const bodyFormData = new FormData();
+      bodyFormData.append('file', file);
+      bodyFormData.append('id', user.id || '');
+      bodyFormData.append('source', 'google-storage');
+      const headers = new Headers();
+      headers.append('Content-Type', 'multipart/form-data');
+      return props.post(config.authentication_url + `/my-profile/${user.id}/upload`, bodyFormData).then(async () => {
         setState((pre) => ({ ...pre, open: false, success: true, loading: false }));
         setFile(undefined);
       }).catch(() => {
@@ -51,10 +86,8 @@ export const useUpload = () => {
       });
     }
   };
-  return { upload, file, setFile, state, setState ,uploadGallery};
+  return { upload, file, setFile, state, setState, uploadGallery, uploadAvatar };
 };
-
-
 
 export const getImageAvt = async () => {
   let urlImg = '';

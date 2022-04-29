@@ -15,7 +15,8 @@ export interface User {
 
   title?: string;
   image?: string;
-  coverImage?: string;
+  coverURL?: string;
+  imageURL?: string;
   nationality?: string;
   alternativeEmail?: string;
   address?: string;
@@ -104,8 +105,8 @@ export interface MyProfileService {
   getMySettings(id: string): Promise<UserSettings | null>;
   saveMySettings(id: string, settings: UserSettings): Promise<number>;
   saveMyProfile(user: User): Promise<number>;
-  fetchImageUploaded(): Promise<FileUploads|null>;
-  fetchImageUploadedGallery(): Promise<FileUploads[]|null>;
+  fetchImageUploaded(): Promise<FileUploads | null>;
+  fetchImageUploadedGallery(): Promise<FileUploads[] | null>;
 }
 
 export const skillsModel: Attributes = {

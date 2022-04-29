@@ -56,7 +56,6 @@ export const LocationForm = () => {
 
   const onClick = (e: Leaflet.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng;
-    debugger
     setState({ location: { ...location, longitude: lat, latitude: lng } })
   }
 

@@ -5,42 +5,42 @@ import './app.scss';
 import DragDrop from './components/DragDrop';
 import { FileUploads } from './model';
 import { deleteFile, deleteFileYoutube, fetchImageGalleryUploaded, fetchImageUploaded, getUser, uploadVideoYoutube } from './service';
-
+import Axios from 'axios';
+import { HttpRequest } from 'axios-core';
+import { options } from 'uione';
 interface Props {
-  type?: UploadType
+  type?: UploadType,
+  post?: (url: string, obj: any, options?: {
+    headers?: Headers | undefined,
+  } | undefined) => Promise<any>
 }
 
-const UploadFile = ({ type = "gallery" }: Props) => {
+const httpRequest = new HttpRequest(Axios, options);
+const httpPost = (url: string, obj: any, options?: { headers?: Headers | undefined, } | undefined): Promise<any> => {
+  return httpRequest.post(url, obj, options)
+}
+const UploadFile = ({ type = "gallery", post = httpPost }: Props) => {
   const [filesUploaded, setFilesUploaded] = React.useState<FileUploads[]>();
   const [videoIdInput, setVideoIdInput] = React.useState<string>('');
   React.useEffect(() => {
-    handleFetch();
+    fecthGallery()
   }, []);
 
-  const handleFetch = async () => {
-    let res: any
-    switch (type) {
-      case 'gallery':
-        res = await fetchImageGalleryUploaded();
-        break;
-      case 'cover':
-        res = await fetchImageUploaded();
-        break;
-      default:
-        res = await fetchImageUploaded();
-    }
-
-    // const user = await getUser();
-    setFilesUploaded(res);
+  const fecthGallery = async () => {
+    const rs = await fetchImageGalleryUploaded()
+    setFilesUploaded(rs)
+  }
+  const handleFetch = async (data: FileUploads[]) => {
+    setFilesUploaded(data);
   };
 
   const handleDeleteFile = async (url: string, source: string) => {
     if (source === 'youtube') {
       await deleteFileYoutube(url);
-      await handleFetch();
+      setFilesUploaded(filesUploaded?.filter(file => file.url !== url))
     } else {
       await deleteFile(url);
-      await handleFetch();
+      setFilesUploaded(filesUploaded?.filter(file => file.url !== url))
     }
   };
 
@@ -60,7 +60,7 @@ const UploadFile = ({ type = "gallery" }: Props) => {
       <div className='row'>
         <div className='col xl4 l5 m12 s12'>
           <div style={{ textAlign: 'center' }}>
-            <Uploads handleFetch={handleFetch} type={type} />
+            <Uploads post={post} setFileGallery={handleFetch} type={type} />
             <div className='youtube-add'>
               <input onChange={handleInput} value={videoIdInput} className='input-video-id' type='type' placeholder='Input youtube video id' />
               <button className='btn-add-youtube' onClick={handleAddVideoYoutube}>

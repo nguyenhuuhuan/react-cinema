@@ -10,6 +10,10 @@ import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
 import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
 import { fetchImageUploaded } from "../uploads/service";
+import Axios from 'axios';
+import { HttpRequest } from 'axios-core';
+import { options } from 'uione';
+const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
     lookingFor: string;
@@ -56,123 +60,34 @@ export const MyProfileForm = () => {
   const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false);
 
   const [filesUploaded, setFilesUploaded] = useState<string>();
+
+  const [dropdownCover, setDropdownCover] = useState<string>('')
   // const [filesGalleryUploaded, setFilesGalleryUploaded] =
-    useState<FileUploads[]>();
-  const handleFetch = async () => {
-    const res = await fetchImageUploaded();
-    setFilesUploaded(res ?? "");
+  useState<FileUploads[]>();
+  const handleChangeFile = (data: string | undefined) => {
+    // const res = await fetchImageUploaded();
+    setFilesUploaded(data);
   };
 
-  // const handleFetchGallery = async () => {
-  //   const res = await service.fetchImageUploadedGallery();
-  //   setFilesGalleryUploaded(res ?? []);
-  // };
+
 
   useEffect(() => {
-    service.getMyProfile(userAccount.id || "").then((usr) => {
-      if (usr) {
-        setUser(usr);
-        setBio(usr.bio || "");
+    service.getMyProfile(userAccount.id || "").then((data) => {
+      if (data) {
+        setUser(data);
+        setBio(data.bio || "");
+        setFilesUploaded(data.coverURL);
       }
     });
-    handleFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const closeModal = () => {
     setModalIsOpen(false);
   };
-
-  // private readonly skillService = applicationContext.useGetMyProfileService();
-  // private readonly chipSkillSuggestionsService = new DefaultSuggestionService<any>(this.skillService, MAX_LOOK_UP, 'skill', 'skill');
-  // /*
-  //   initData() {
-  //     zip(
-  //         this.skillService.getAll1(),
-  //     ).subscribe(([skills]) => {
-  //       this.setState({skills}, () => {
-  //         const promise = new Promise((resolve, reject) => {
-  //           this.loadData();
-  //           resolve('Success!');
-  //         });
-  //         promise.then(() => {
-  //           const chipsSkill = this.state.skills.filter((skill) =>
-  //               this.state.skillsList.includes(skill.skill));
-  //           this.setState({chipsSkill});
-  //         });
-  //       });
-  //     }, this.handleError);
-  //   }
-  //   onChangeSkillChips = chipsSkill => {
-  //     // this.skillService.getAll1().subscribe(
-  //     //     ( result: any ) => {
-  //     //       this.setState({skills: result});
-  //     //     });
-  //     let { skillsList } = this.state;
-  //     const { skills } = this.state;
-  //     console.log('UUUU', skills);
-  //     skillsList = [];
-  //     chipsSkill.map((value, index) => {
-  //       const x = skills.find((v) => v.skill === value.skill);
-  //       skillsList.push(x.skill);
-  //     });
-  //     this.setState({ chipsSkill, skillsList });
-  //   }
-
-  // fetchSuggestions = (keyWords) => {
-  //   return new Promise((resolve, reject) => {
-  //     const { skillsList, preSkillSuggestions } = this.state;
-  //       this.chipSkillSuggestionsService.getSuggestion(keyWords, preSkillSuggestions, skillsList).subscribe(result => {
-  //         const skill = keyWords;
-  //         this.setState({ preSkillSuggestions: result.previousSuggestion , skill});
-  //         resolve(result.response);
-  //       });
-  //   });
-  // }
-
-  // onRemoveChips = (id:string) => {
-  //   let { skillsList, chipsSkill } = this.state;
-  //   skillsList = skillsList.filter(skill => skill !== id);
-  //    chipsSkill = chipsSkill.filter(chip => chip.skill !== id);
-  //   this.setState({ skillsList, chipsSkill });
-  // }
-
-  //   openSkillModal = () => {
-  //     this.setState({ modalSkillIsOpen: true });
-  //   }
-
-  //   loadData() {
-  //     const userId = storage.getUserId();
-  //     applicationContext.useGetMyProfileService().getMyProfile(userId).subscribe((user: User) => {
-  //       this.setState({ user, objectUser: ReflectionUtil.clone(user) });
-  //     }, err => {
-  //       UIUtil.alertError(ResourceManager.getString('error_load_user_profile'), ResourceManager.getString('error'));
-  //     });
-  //   }
-
-  //   // loadData() {
-  //   //   const userId = storage.getUserId();
-  //   //   zip(
-  //   //       this.skillService.getAll1(),
-  //   //       applicationContext.useGetMyProfileService().getMyProfile(userId),
-  //   //   ).subscribe(([skills, user]) => {
-  //   //     this.setState({skills, user, objectUser: ReflectionUtil.clone(user)}, () => {
-  //   //       const promise = new Promise((resolve, reject) => {
-  //   //         this.loadData();
-  //   //         resolve('Success!');
-  //   //       });
-  //   //       promise.then(() => {
-  //   //         const chipsSkill = this.state.skills.filter((skill) =>
-  //   //             this.state.skillsList.includes(skill.skill));
-  //   //         this.setState({chipsSkill});
-  //   //       });
-  //   //     });
-  //   //   }, this.handleError);
-  //   // }
-
-  //   showChangeStatus = () => {
-
-  //   }
+  const httpPost = (url: string, obj: any, options?: { headers?: Headers | undefined, } | undefined): Promise<any> => {
+    return httpRequest.post(url, obj, options)
+  }
 
   const showPopup = (e: OnClick) => {
     e.preventDefault();
@@ -221,26 +136,7 @@ export const MyProfileForm = () => {
       }
     }
   };
-  //   addSkill = (e) => {
-  //     e.preventDefault();
-  //     this.onRemoveChips(this.state.skillsList[0]);
-  //     const { user, hirable } = this.state;
-  //     const skill = this.state.skillsList.length !== 0 ? this.state.skillsList[0] : this.state.skill;
-  //     const skillsEditing = user.skills ? user.skills : [];
-  //     if (skill) {
-  //       const item = {
-  //         hirable: hirable,
-  //         skill
-  //       };
-  //       if (!this.isExistInArray(e, skillsEditing, item, 'skill')) {
-  //         skillsEditing.push(item);
-  //         user.skills = skillsEditing;
-  //         this.setState({ skill: '', user });
-  //       } else {
-  //         UIUtil.alertError(ResourceManager.getString('error_duplicated_skill'), ResourceManager.getString('error'));
-  //       }
-  //     }
-  //   }
+
   const saveChanges = (event: OnClick) => {
     event.preventDefault();
     if (isEditing) {
@@ -268,8 +164,7 @@ export const MyProfileForm = () => {
 
   const toggleBio = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
-
-    if (user.bio !== bio) {
+    if (user.bio !== bio && isEditingBio) {
       setModalConfirmIsOpen(true);
     } else {
       setIsEditingBio(!isEditingBio);
@@ -425,6 +320,11 @@ export const MyProfileForm = () => {
     e.preventDefault();
     setModalUploadGalleryOpen(false);
   };
+
+  const toggleDropdownCover = (e: OnClick) => {
+    e.preventDefault();
+    setDropdownCover('show')
+  }
   const followers = "7 followers"; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
   const following = "10 following"; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
   return (
@@ -455,6 +355,13 @@ export const MyProfileForm = () => {
             className="btn-camera"
             onClick={openModalUpload}
           />
+
+          <ul id='dropdown-basic' className={` dropdown-content-profile ${dropdownCover}`}>
+            <li className='menu' onClick={openModalUpload}>Upload</li>
+            <hr style={{ margin: 0 }} />
+            <li className='menu' >Choose from gallery</li>
+          </ul>
+
           <div className="avatar-wrapper">
             <img
               className="avatar"
@@ -1111,7 +1018,7 @@ export const MyProfileForm = () => {
                 onClick={closeModalUpload}
               />
             </header>
-            <Uploads handleFetch={handleFetch} type="cover" />
+            <Uploads post={httpPost} setFileCover={handleChangeFile} setURL={data => setFilesUploaded(data)} type="cover" />
 
             <footer>
               <button
@@ -1167,6 +1074,7 @@ export const MyProfileForm = () => {
         </div>
       </ReactModal>
       <ModalUploadGallery
+
         closeModalUploadGallery={closeModalUploadGallery}
         modalUploadGalleryOpen={modalUploadGalleryOpen}
       />
