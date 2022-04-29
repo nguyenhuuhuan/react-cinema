@@ -331,7 +331,7 @@ export const LayoutComponent = () => {
               <section className='quick-nav'>
                 {/*<button type='button' className='notifications'><i className='material-icons'>notifications</i></button>
                 <button type='button' className='mail'><i className='material-icons'>mail</i></button>*/}
-                {location.pathname !== '/' && location.pathname !== '' && <Link to=''><i className='material-icons'>home</i></Link>}
+                {location.pathname !== '/' && location.pathname !== '' && <Link to='/profile'><i className='material-icons'>home</i></Link>}
                 <div className='dropdown-menu-profile'>
                   {(!user || !user.imageURL) && (
                     <i className='material-icons' onClick={toggleProfile}>

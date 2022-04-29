@@ -98,7 +98,7 @@ export interface UserFilter extends Filter {
   // interest:string;
   // skill:string;
   interests: string[];
-  skills: Skill[];
+  // skills: Skill[];
   /*achievements: Achievement[];
   settings: UserSettings;
   */
