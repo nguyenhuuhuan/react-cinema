@@ -147,8 +147,8 @@ function App() {
           <Route path='location/:id' element={<LocationHome />} />
           <Route path='location/:id/review' element={<LocationHome />} />
           <Route path='locations/:id/review' element={<Review />} />
-          <Route path={'upload/:id/image'} element={<UploadFile />} />
-          <Route path={'upload'} element={<UploadFile />} />
+          {/* <Route path={'upload/:id/image'} element={<UploadFile />} />
+          <Route path={'upload'} element={<UploadFile />} /> */}
         </Route>
         <Route path='/' element={<HomePage />} />
       </Routes>

@@ -1,14 +1,13 @@
 import * as React from "react";
 
 import { FileUploads } from "../../model";
-import { useUpload } from "./UploadHook";
+import { typeFile, useUpload } from "./UploadHook";
 import UploadsModal from "./UploadModal";
 import "./Uploads.scss";
 
-export type UploadType = "gallery" | "cover" | "avatar";
 interface Props {
   setFileGallery?: (data: FileUploads[]) => void;
-  type: UploadType;
+  type: typeFile;
   setURL?: (u: string) => void;
   post: (
     url: string,
@@ -19,28 +18,26 @@ interface Props {
         }
       | undefined
   ) => Promise<any>;
+  url: string;
+  id: string;
 }
 
 const Uploads = (props: Props) => {
-  const { file, setFile, state, uploadCover, uploadGallery,uploadImage } = useUpload({
+  const { file, setFile, state, upload } = useUpload({
     post: props.post,
     setURL: props.setURL,
+    type: props.type,
+    url: props.url,
+    id: props.id,
   });
 
   const handleUpload = async () => {
-    switch (props.type) {
-      case "gallery":
-        const gallery = await uploadGallery();
-        if (props.setFileGallery) props.setFileGallery(gallery);
-        break;
-      case "cover":
-        await uploadCover();
-        break;
-      case "avatar":
-        await uploadImage();
-        break;
-      default:
-        await uploadCover();
+
+    if (props.type === "gallery") {
+      const gallery = await upload();
+      if (props.setFileGallery) props.setFileGallery(gallery);
+    } else {
+      await upload();
     }
   };
 

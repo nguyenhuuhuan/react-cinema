@@ -14,8 +14,9 @@ import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options } from "uione";
 import { ModalSelectCover } from "./modal-select-cover/modal-select-cover";
+import { config } from "../config";
+import { typeFile } from "../uploads/components/UploadModal/UploadHook";
 const httpRequest = new HttpRequest(Axios, options);
-export type typeFile = "cover" | "avatar";
 interface Edit {
   edit: {
     lookingFor: string;
@@ -414,7 +415,7 @@ export const MyProfileForm = () => {
               id="btnCamera"
               name="btnCamera"
               className="btn-camera"
-              onClick={(e) => openModalUpload(e, "avatar")}
+              onClick={(e) => openModalUpload(e, "upload")}
             />
 
             <img className="profile-status" src={imageOnline} alt="status" />
@@ -1068,6 +1069,8 @@ export const MyProfileForm = () => {
               post={httpPost}
               setURL={(data) => handleChangeFile(data)}
               type={typeUpload}
+              id={user.id}
+              url={config.authentication_url+"/my-profile"}
             />
 
             <footer>

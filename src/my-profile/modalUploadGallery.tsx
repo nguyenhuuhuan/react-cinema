@@ -1,21 +1,31 @@
-import React from 'react'
-import { OnClick } from 'react-hook-core'
-import ReactModal from 'react-modal'
-import { FileUploads } from '../admin/users_carousel/model'
-import UploadFile from '../uploads/app'
-import Axios from 'axios';
-import { HttpRequest } from 'axios-core';
-import { options } from 'uione';
+import React from "react";
+import { OnClick } from "react-hook-core";
+import ReactModal from "react-modal";
+import { FileUploads } from "../admin/users_carousel/model";
+import UploadFile from "../uploads/app";
+import Axios from "axios";
+import { HttpRequest } from "axios-core";
+import { options, UserAccount } from "uione";
+import { config } from "../config";
 const httpRequest = new HttpRequest(Axios, options);
-
+const user: UserAccount = JSON.parse(
+  sessionStorage.getItem("authService") || "{}"
+) as UserAccount;
 interface Props {
-  modalUploadGalleryOpen: boolean,
-  closeModalUploadGallery: (e: OnClick) => void
+  modalUploadGalleryOpen: boolean;
+  closeModalUploadGallery: (e: OnClick) => void;
 }
-export const ModalUploadGallery = ({ modalUploadGalleryOpen, closeModalUploadGallery }: Props) => {
-  const httpPost = (url: string, obj: any, options?: { headers?: Headers | undefined, } | undefined): Promise<any> => {
-    return httpRequest.post(url, obj, options)
-  }
+export const ModalUploadGallery = ({
+  modalUploadGalleryOpen,
+  closeModalUploadGallery,
+}: Props) => {
+  const httpPost = (
+    url: string,
+    obj: any,
+    options?: { headers?: Headers | undefined } | undefined
+  ): Promise<any> => {
+    return httpRequest.post(url, obj, options);
+  };
   return (
     <ReactModal
       isOpen={modalUploadGalleryOpen}
@@ -38,7 +48,12 @@ export const ModalUploadGallery = ({ modalUploadGalleryOpen, closeModalUploadGal
               onClick={closeModalUploadGallery}
             />
           </header>
-          <UploadFile type="gallery" post={httpPost} />
+          <UploadFile
+            type="gallery"
+            post={httpPost}
+            id={user.id || ""}
+            url={config.authentication_url + "/my-profile"}
+          />
 
           <footer>
             <button
@@ -52,7 +67,6 @@ export const ModalUploadGallery = ({ modalUploadGalleryOpen, closeModalUploadGal
           </footer>
         </form>
       </div>
-
     </ReactModal>
-  )
-}
+  );
+};
