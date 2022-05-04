@@ -25,6 +25,7 @@ export interface User {
   occupation?: string;
   company?: string;
   lookingFor: string[];
+  gallery?:FileUploads[];
 
   dribbbleLink: string;
   skypeLink: string;

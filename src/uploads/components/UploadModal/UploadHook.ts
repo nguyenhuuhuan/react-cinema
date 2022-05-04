@@ -16,7 +16,8 @@ interface Props {
   post: (url: string, obj: any, options?: {
     headers?: Headers | undefined,
   } | undefined) => Promise<any>,
-  setURL?: (u: string) => void
+  setURL?: (u: string) => void,
+  // file
 }
 const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 export const useUpload = (props: Props) => {
@@ -26,7 +27,7 @@ export const useUpload = (props: Props) => {
     success: false,
     loading: false
   });
-  const upload = () => {
+  const uploadCover = () => {
     if (file) {
       setState((pre) => ({ ...pre, loading: true }));
       const bodyFormData = new FormData();
@@ -36,6 +37,29 @@ export const useUpload = (props: Props) => {
       const headers = new Headers();
       headers.append('Content-Type', 'multipart/form-data');
       return props.post(config.authentication_url + `/my-profile/${user.id}/cover`, bodyFormData).then(async (res: any) => {
+        setState((pre) => ({ ...pre, open: false, success: true, loading: false }));
+        setFile(undefined);
+        if (props.setURL) {
+          props.setURL(res)
+        }
+      }).catch(() => {
+        setState((pre) => ({ ...pre, loading: false }));
+        return undefined
+      });
+    }
+    return undefined
+  };
+
+  const uploadImage = () => {
+    if (file) {
+      setState((pre) => ({ ...pre, loading: true }));
+      const bodyFormData = new FormData();
+      bodyFormData.append('file', file);
+      bodyFormData.append('id', user.id || '');
+      bodyFormData.append('source', 'google-storage');
+      const headers = new Headers();
+      headers.append('Content-Type', 'multipart/form-data');
+      return props.post(config.authentication_url + `/my-profile/${user.id}/upload`, bodyFormData).then(async (res: any) => {
         setState((pre) => ({ ...pre, open: false, success: true, loading: false }));
         setFile(undefined);
         if (props.setURL) {
@@ -86,7 +110,7 @@ export const useUpload = (props: Props) => {
       });
     }
   };
-  return { upload, file, setFile, state, setState, uploadGallery, uploadAvatar };
+  return { uploadCover,uploadImage, file, setFile, state, setState, uploadGallery, uploadAvatar };
 };
 
 export const getImageAvt = async () => {

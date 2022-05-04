@@ -58,6 +58,9 @@ export const updateData = (data: FileUploads[]): Promise<number> => {
   };
   return axios.patch(config.authentication_url + `/my-profile/${user.id}/gallery`, body).then(r => r.data as number).catch(e => e);
 };
+
+
+
 const urlYutuServece = 'http://localhost:8081';
 export const fetchThumbnailVideo = (videoId: string): Promise<Thumbnail> => {
   return axios.get(urlYutuServece + `/tube/video/${videoId}&thumbnail,standardThumbnail,mediumThumbnail,maxresThumbnail,highThumbnail`).then(thumbnail => {

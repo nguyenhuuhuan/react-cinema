@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import { async } from 'rxjs/internal/scheduler/async';
 import Uploads, { UploadType } from './components/UploadModal/UploadContainer';
-import './app.scss';
+import './app.css';
 import DragDrop from './components/DragDrop';
 import { FileUploads } from './model';
 import { deleteFile, deleteFileYoutube, fetchImageGalleryUploaded, fetchImageUploaded, getUser, uploadVideoYoutube } from './service';

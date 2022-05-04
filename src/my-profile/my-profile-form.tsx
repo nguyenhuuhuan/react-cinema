@@ -10,10 +10,12 @@ import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
 import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
 import { fetchImageUploaded } from "../uploads/service";
-import Axios from 'axios';
-import { HttpRequest } from 'axios-core';
-import { options } from 'uione';
+import Axios from "axios";
+import { HttpRequest } from "axios-core";
+import { options } from "uione";
+import { ModalSelectCover } from "./modal-select-cover/modal-select-cover";
 const httpRequest = new HttpRequest(Axios, options);
+export type typeFile = "cover" | "avatar";
 interface Edit {
   edit: {
     lookingFor: string;
@@ -57,26 +59,27 @@ export const MyProfileForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
   const [modalUpload, setModalUpload] = useState(false);
+  const [typeUpload, setTypeUpload] = useState<typeFile>("cover");
   const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false);
+  const [modalSelectGalleryOpen, setModalSelectGalleryOpen] = useState(false);
+  const [uploadedCover, setUploadedCover] = useState<string>();
+  const [uploadedAvatar, setUploadedAvatar] = useState<string>();
 
-  const [filesUploaded, setFilesUploaded] = useState<string>();
-
-  const [dropdownCover, setDropdownCover] = useState<string>('')
+  const [dropdownCover, setDropdownCover] = useState<boolean>(false);
   // const [filesGalleryUploaded, setFilesGalleryUploaded] =
   useState<FileUploads[]>();
   const handleChangeFile = (data: string | undefined) => {
-    // const res = await fetchImageUploaded();
-    setFilesUploaded(data);
+    if (typeUpload=== "cover") setUploadedCover(data);
+    else setUploadedAvatar(data);
   };
-
-
 
   useEffect(() => {
     service.getMyProfile(userAccount.id || "").then((data) => {
       if (data) {
         setUser(data);
         setBio(data.bio || "");
-        setFilesUploaded(data.coverURL);
+        setUploadedCover(data.coverURL);
+        setUploadedAvatar(data.imageURL)
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,9 +88,13 @@ export const MyProfileForm = () => {
   const closeModal = () => {
     setModalIsOpen(false);
   };
-  const httpPost = (url: string, obj: any, options?: { headers?: Headers | undefined, } | undefined): Promise<any> => {
-    return httpRequest.post(url, obj, options)
-  }
+  const httpPost = (
+    url: string,
+    obj: any,
+    options?: { headers?: Headers | undefined } | undefined
+  ): Promise<any> => {
+    return httpRequest.post(url, obj, options);
+  };
 
   const showPopup = (e: OnClick) => {
     e.preventDefault();
@@ -302,9 +309,10 @@ export const MyProfileForm = () => {
     setModalConfirmIsOpen(false);
   };
 
-  const openModalUpload = (e: OnClick) => {
+  const openModalUpload = (e: OnClick, type: typeFile) => {
     e.preventDefault();
     setModalUpload(true);
+    setTypeUpload(type);
   };
 
   const closeModalUpload = (e: OnClick) => {
@@ -323,8 +331,30 @@ export const MyProfileForm = () => {
 
   const toggleDropdownCover = (e: OnClick) => {
     e.preventDefault();
-    setDropdownCover('show')
-  }
+    setDropdownCover(!dropdownCover);
+  };
+
+  const saveImageCover = (e: OnClick, url: string) => {
+    e.preventDefault();
+    setUser({ ...user, coverURL: url });
+    setUploadedCover(url);
+    service
+      .saveMyProfile({ ...user, coverURL: url, id: userAccount.id || "" })
+      .then((successs) => {
+        if (successs) {
+          message(resource.success_save_my_profile);
+          close();
+        } else {
+          alert(resource.fail_save_my_profile, resource.error);
+        }
+      });
+  };
+
+  const toggleSelectGallery = (e: OnClick) => {
+    e.preventDefault();
+    setModalSelectGalleryOpen(!modalSelectGalleryOpen);
+  };
+
   const followers = "7 followers"; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
   const following = "10 following"; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
   return (
@@ -334,8 +364,8 @@ export const MyProfileForm = () => {
           <div className="cover-image">
             <img
               src={
-                filesUploaded
-                  ? filesUploaded
+                uploadedCover
+                  ? uploadedCover
                   : "https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg"
               }
               alt="cover"
@@ -353,24 +383,40 @@ export const MyProfileForm = () => {
             id="btnCamera"
             name="btnCamera"
             className="btn-camera"
-            onClick={openModalUpload}
+            onClick={toggleDropdownCover}
           />
 
-          <ul id='dropdown-basic' className={` dropdown-content-profile ${dropdownCover}`}>
-            <li className='menu' onClick={openModalUpload}>Upload</li>
+          <ul
+            id="dropdown-basic"
+            className={`dropdown-content-profile dropdown-upload-cover ${
+              dropdownCover ? "show-upload-cover" : ""
+            }`}
+          >
+            <li className="menu" onClick={(e) => openModalUpload(e, "cover")}>
+              Upload
+            </li>
             <hr style={{ margin: 0 }} />
-            <li className='menu' >Choose from gallery</li>
+            <li className="menu" onClick={toggleSelectGallery}>
+              Choose from gallery
+            </li>
           </ul>
 
           <div className="avatar-wrapper">
             <img
               className="avatar"
               src={
-                user.image ||
+                uploadedAvatar ||
                 "https://www.bluebridgewindowcleaning.co.uk/wp-content/uploads/2016/04/default-avatar.png"
               }
               alt="avatar"
             />
+            <button
+              id="btnCamera"
+              name="btnCamera"
+              className="btn-camera"
+              onClick={(e) => openModalUpload(e, "avatar")}
+            />
+
             <img className="profile-status" src={imageOnline} alt="status" />
           </div>
           <div className="profile-title">
@@ -1018,7 +1064,11 @@ export const MyProfileForm = () => {
                 onClick={closeModalUpload}
               />
             </header>
-            <Uploads post={httpPost} setFileCover={handleChangeFile} setURL={data => setFilesUploaded(data)} type="cover" />
+            <Uploads
+              post={httpPost}
+              setURL={(data) => handleChangeFile(data)}
+              type={typeUpload}
+            />
 
             <footer>
               <button
@@ -1074,9 +1124,14 @@ export const MyProfileForm = () => {
         </div>
       </ReactModal>
       <ModalUploadGallery
-
         closeModalUploadGallery={closeModalUploadGallery}
         modalUploadGalleryOpen={modalUploadGalleryOpen}
+      />
+      <ModalSelectCover
+        list={user.gallery ?? []}
+        modalSelectGalleryOpen={modalSelectGalleryOpen}
+        closeModalUploadGallery={toggleSelectGallery}
+        setImageCover={saveImageCover}
       />
     </div>
   );
