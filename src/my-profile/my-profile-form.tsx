@@ -8,12 +8,14 @@ import { FileUploads } from "../uploads/model";
 
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
-import { Achievement, Skill, useGetMyProfileService, User, useSkillService } from "./my-profile";
+import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
 import { fetchImageUploaded } from "../uploads/service";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options } from "uione";
 import { ModalSelectCover } from "./modal-select-cover/modal-select-cover";
+import { DefaultSuggestionService } from "./service/suggestion";
+import { useSkillService } from "./service";
 const httpRequest = new HttpRequest(Axios, options);
 export type typeFile = "cover" | "avatar";
 interface Edit {
@@ -75,7 +77,6 @@ export const MyProfileForm = () => {
     if (typeUpload === "cover") setUploadedCover(data);
     else setUploadedAvatar(data);
   };
-
   useEffect(() => {
     service.getMyProfile(userAccount.id || "").then((data) => {
       if (data) {
@@ -97,6 +98,10 @@ export const MyProfileForm = () => {
     }
 
   }, [state.edit.skill])
+  // useEffect(()=>{
+    
+
+  // },[max])
   const closeModal = () => {
     setModalIsOpen(false);
   };

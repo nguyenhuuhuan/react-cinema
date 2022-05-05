@@ -78,11 +78,9 @@ export class MyProfileClient implements MyProfileService {
 
 export interface Config {
   myprofile_url: string;
-  skill_url:string;
 }
 class ApplicationContext {
   userService?: MyProfileService;
-  skillService?:SkillService;
   getConfig(): Config {
     return storage.config();
   }
@@ -93,13 +91,7 @@ class ApplicationContext {
     }
     return this.userService;
   }
-  getSkillService():SkillService{
-    if(!this.skillService){
-      const c = this.getConfig();
-      this.skillService = new SkillClient(httpRequest, c.skill_url);
-    }
-    return this.skillService;
-  }
+ 
 }
 
 export const context = new ApplicationContext();
@@ -107,7 +99,4 @@ export function useGetMyProfileService(): MyProfileService {
   const [service] = useState(() => { return context.getMyProfileService() })
   return service;
 }
-export function useSkillService():SkillService{
-  const [service] = useState(()=> {return context.getSkillService()})
-  return service;
-}
+
