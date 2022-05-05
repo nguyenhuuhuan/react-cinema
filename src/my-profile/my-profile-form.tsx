@@ -8,7 +8,7 @@ import { FileUploads } from "../uploads/model";
 
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
-import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
+import { Achievement, Skill, useGetMyProfileService, User, useSkillService } from "./my-profile";
 import { fetchImageUploaded } from "../uploads/service";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
@@ -43,6 +43,7 @@ const userAccount: UserAccount = JSON.parse(
 ) as UserAccount;
 export const MyProfileForm = () => {
   const service = useGetMyProfileService();
+  const skillService = useSkillService();
   const { state, setState, updateState } = useUpdate<Edit>(data, "edit");
 
   const resource = useResource();
@@ -67,9 +68,11 @@ export const MyProfileForm = () => {
 
   const [dropdownCover, setDropdownCover] = useState<boolean>(false);
   // const [filesGalleryUploaded, setFilesGalleryUploaded] =
+
+  const [listSkill, setListSkill] = useState<string[]>([]);
   useState<FileUploads[]>();
   const handleChangeFile = (data: string | undefined) => {
-    if (typeUpload=== "cover") setUploadedCover(data);
+    if (typeUpload === "cover") setUploadedCover(data);
     else setUploadedAvatar(data);
   };
 
@@ -84,7 +87,16 @@ export const MyProfileForm = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (state.edit.skill && state.edit.skill.length > 0) {
+      skillService.getSkills(state.edit.skill).then((data) => {
+        if (data && data.length > 0) {
+          setListSkill(data);
+        }
+      })
+    }
 
+  }, [state.edit.skill])
   const closeModal = () => {
     setModalIsOpen(false);
   };
@@ -388,9 +400,8 @@ export const MyProfileForm = () => {
 
           <ul
             id="dropdown-basic"
-            className={`dropdown-content-profile dropdown-upload-cover ${
-              dropdownCover ? "show-upload-cover" : ""
-            }`}
+            className={`dropdown-content-profile dropdown-upload-cover ${dropdownCover ? "show-upload-cover" : ""
+              }`}
           >
             <li className="menu" onClick={(e) => openModalUpload(e, "cover")}>
               Upload
@@ -520,6 +531,7 @@ export const MyProfileForm = () => {
                   <section>
                     <div className="form-group">
                       <input
+                        list="listSkill"
                         type="text"
                         name="skill"
                         className="form-control"
@@ -528,8 +540,27 @@ export const MyProfileForm = () => {
                         placeholder={resource.placeholder_user_profile_skill}
                         maxLength={50}
                         required={true}
+                        autoComplete="on"
                       />
                     </div>
+                    {listSkill && listSkill.length > 0 &&
+                      <datalist id="listSkill">
+
+                        {
+                          listSkill.map((item, index) => {
+                            return (
+                              <option key={index} value={item} />
+                            )
+                          })
+                        }
+                      </datalist>}
+                    {/* <datalist id="listSkill">
+                      <option value="angular" />
+                      <option value="vue" />
+                      <option value="java" />
+                      <option value="c" />
+                      <option value="c++" />
+                    </datalist> */}
                     <div className="btn-group">
                       <button
                         type="button"

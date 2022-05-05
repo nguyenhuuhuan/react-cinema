@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { options, storage, UserAccount } from 'uione';
 import { Client } from 'web-clients';
 import { FileUploads } from '../../uploads/model';
-import { MyProfileService, User, UserFilter, userModel, UserService, UserSettings } from './user';
+import { SkillClient } from '../service/skill';
+import { MyProfileService, Skill, SkillService, User, UserFilter, userModel, UserService, UserSettings } from './user';
 
 export * from './user';
 
@@ -74,11 +75,14 @@ export class MyProfileClient implements MyProfileService {
     });
   }
 }
+
 export interface Config {
   myprofile_url: string;
+  skill_url:string;
 }
 class ApplicationContext {
   userService?: MyProfileService;
+  skillService?:SkillService;
   getConfig(): Config {
     return storage.config();
   }
@@ -89,11 +93,21 @@ class ApplicationContext {
     }
     return this.userService;
   }
-
+  getSkillService():SkillService{
+    if(!this.skillService){
+      const c = this.getConfig();
+      this.skillService = new SkillClient(httpRequest, c.skill_url);
+    }
+    return this.skillService;
+  }
 }
 
 export const context = new ApplicationContext();
 export function useGetMyProfileService(): MyProfileService {
   const [service] = useState(() => { return context.getMyProfileService() })
+  return service;
+}
+export function useSkillService():SkillService{
+  const [service] = useState(()=> {return context.getSkillService()})
   return service;
 }
