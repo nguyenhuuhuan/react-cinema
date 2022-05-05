@@ -4,9 +4,7 @@ import { useState } from "react";
 import { options, storage } from "uione";
 import { SkillClient } from "./skill";
 import { SkillService } from "./skill/skill";
-import { DefaultSuggestionService } from "./suggestion";
 const httpRequest = new HttpRequest(axios, options);
-
 export interface Config {
     skill_url:string;
   }
@@ -30,3 +28,4 @@ class ApplicationContext {
     const [service] = useState(()=> {return context.getSkillService()})
     return service;
   }
+ 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { clone, OnClick, useUpdate } from "react-hook-core";
 import ReactModal from "react-modal";
-import { alert, message, UserAccount, useResource } from "uione";
+import { alert, handleError, message, UserAccount, useResource } from "uione";
 import imageOnline from "../assets/images/online.svg";
 import Uploads from "../uploads/components/UploadModal/UploadContainer";
 import { FileUploads } from "../uploads/model";
@@ -9,12 +9,11 @@ import { FileUploads } from "../uploads/model";
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
 import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
-import { fetchImageUploaded } from "../uploads/service";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options } from "uione";
 import { ModalSelectCover } from "./modal-select-cover/modal-select-cover";
-import { DefaultSuggestionService } from "./service/suggestion";
+import { SuggestionService } from "./service/suggestion";
 import { useSkillService } from "./service";
 const httpRequest = new HttpRequest(Axios, options);
 export type typeFile = "cover" | "avatar";
@@ -67,10 +66,9 @@ export const MyProfileForm = () => {
   const [modalSelectGalleryOpen, setModalSelectGalleryOpen] = useState(false);
   const [uploadedCover, setUploadedCover] = useState<string>();
   const [uploadedAvatar, setUploadedAvatar] = useState<string>();
-
+  const [suggestionService,setSuggestionService] = useState<SuggestionService<string>>();
   const [dropdownCover, setDropdownCover] = useState<boolean>(false);
   // const [filesGalleryUploaded, setFilesGalleryUploaded] =
-
   const [listSkill, setListSkill] = useState<string[]>([]);
   useState<FileUploads[]>();
   const handleChangeFile = (data: string | undefined) => {
@@ -78,6 +76,8 @@ export const MyProfileForm = () => {
     else setUploadedAvatar(data);
   };
   useEffect(() => {
+    const suggestionService = new SuggestionService<string>(skillService.loadData,20);
+    setSuggestionService(suggestionService);
     service.getMyProfile(userAccount.id || "").then((data) => {
       if (data) {
         setUser(data);
@@ -88,20 +88,30 @@ export const MyProfileForm = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    if (state.edit.skill && state.edit.skill.length > 0) {
-      skillService.getSkills(state.edit.skill).then((data) => {
-        if (data && data.length > 0) {
-          setListSkill(data);
-        }
-      })
+  const [previous, setPrevious] = useState({
+    previousKeyWord: "",
+    result: [] as string[]
+  });
+  const updateSuggest = (e: any) => {
+    updateState(e);
+    let newSkill = e.target.value;
+    if (newSkill) {
+      if (suggestionService) {
+        suggestionService.getSuggestion(newSkill, previous).then((res) => {
+          if (res !== null) {
+            setPrevious(res.previous);
+            setListSkill(res.response);
+          }
+
+        }).catch(handleError);
+      }
     }
 
-  }, [state.edit.skill])
-  // useEffect(()=>{
-    
+  }
 
-  // },[max])
+
+
+
   const closeModal = () => {
     setModalIsOpen(false);
   };
@@ -541,7 +551,7 @@ export const MyProfileForm = () => {
                         name="skill"
                         className="form-control"
                         value={state.edit.skill}
-                        onChange={updateState}
+                        onChange={updateSuggest}
                         placeholder={resource.placeholder_user_profile_skill}
                         maxLength={50}
                         required={true}
