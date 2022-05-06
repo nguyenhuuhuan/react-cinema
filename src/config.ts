@@ -14,7 +14,8 @@ export const config = {
   location_url: 'http://localhost:8085/locations',
   location_rate_url: 'http://localhost:8084/locationsrate',
   myprofile_url: 'http://localhost:8082/my-profile',
-  profile_url:'http://localhost:8082/users'
+  profile_url:'http://localhost:8082/users',
+  skill_url:'http://localhost:8082/skills'
 };
 
 export const env = {

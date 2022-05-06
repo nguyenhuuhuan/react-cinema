@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { options, storage, UserAccount } from 'uione';
 import { Client } from 'web-clients';
 import { FileUploads } from '../../uploads/model';
-import { MyProfileService, User, UserFilter, userModel, UserService, UserSettings } from './user';
+import { SkillClient } from '../service/skill';
+import { MyProfileService, Skill, SkillService, User, UserFilter, userModel, UserService, UserSettings } from './user';
 
 export * from './user';
 
@@ -74,6 +75,7 @@ export class MyProfileClient implements MyProfileService {
     });
   }
 }
+
 export interface Config {
   myprofile_url: string;
 }
@@ -89,7 +91,7 @@ class ApplicationContext {
     }
     return this.userService;
   }
-
+ 
 }
 
 export const context = new ApplicationContext();
@@ -97,3 +99,4 @@ export function useGetMyProfileService(): MyProfileService {
   const [service] = useState(() => { return context.getMyProfileService() })
   return service;
 }
+
