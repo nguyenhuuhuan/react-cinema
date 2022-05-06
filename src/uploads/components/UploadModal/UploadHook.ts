@@ -102,73 +102,25 @@ export const useUpload = (props: Props) => {
             width: Math.floor(cur.width * 0.5),
             height: Math.floor(cur.height * 0.5),
           };
-          octx!.drawImage(
-            oc,
-            0,
-            0,
-            cur.width * 2,
-            cur.height * 2,
-            0,
-            0,
-            cur.width,
-            cur.height
+          octx!.drawImage(oc, 0, 0,cur.width * 2,cur.height * 2,  0, 0,cur.width,cur.height
           );
         }
-        ctx!.drawImage(
-          oc,
-          0,
-          0,
-          cur.width,
-          cur.height,
-          0,
-          0,
-          canvas.width,
-          canvas.height
+        ctx!.drawImage( oc,0,0, cur.width,cur.height, 0,0, canvas.width,canvas.height
         );
         
         const imagee = new Image();
-        imagee.src = oc.toDataURL("image/jpeg", 0.85);
+        imagee.src = canvas.toDataURL("image/jpeg");
         const ext = getFileExtension(file?.name || "");
         const newFile = dataURLtoFile(
           imagee.src,
           removeFileExtension(file?.name || "") + "_xs." + ext
         );
         setFile2(newFile);
-        // console.log("origin", file);
-        // console.log("resize", newFile);
       };
       image.src = readerEvent.target!.result?.toString() || "";
     };
     if (file) reader.readAsDataURL(file);
   };
-  // config.authentication_url + `/my-profile/${user.id}/cover`
-  // config.authentication_url + `/my-profile/${user.id}/gallery`
-  // config.authentication_url + `/my-profile/${user.id}/upload`
-  // const upload = (url: string) => {
-  //   if (file) {
-  //     setState((pre) => ({ ...pre, loading: true }));
-  //     const bodyFormData = new FormData();
-  //     bodyFormData.append("file", file);
-  //     bodyFormData.append("id", user.id || "");
-  //     // bodyFormData.append('source', 'google-storage');
-  //     const headers = new Headers();
-  //     headers.append("Content-Type", "multipart/form-data");
-  //     return props
-  //       .post(url, bodyFormData)
-  //       .then(async () => {
-  //         setState((pre) => ({
-  //           ...pre,
-  //           open: false,
-  //           success: true,
-  //           loading: false,
-  //         }));
-  //         setFile(undefined);
-  //       })
-  //       .catch(() => {
-  //         setState((pre) => ({ ...pre, loading: false }));
-  //       });
-  //   }
-  // };
   return { file, setFile, state, setState, upload, resize };
 };
 

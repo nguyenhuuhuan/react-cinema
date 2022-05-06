@@ -6,7 +6,7 @@ import ReactCrop, {
   PixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { dataURLtoFile } from "./UploadHook";
+import { dataURLtoFile, getFileExtension, removeFileExtension } from "./UploadHook";
 
 interface Props {
   image: File;
@@ -49,7 +49,7 @@ export default function CropImage(props: Props) {
 
   const onSelectFile = (file: Blob) => {
     const reader = new FileReader();
-    reader.addEventListener("load", () =>setUpImg(reader.result) );
+    reader.addEventListener("load", () => setUpImg(reader.result));
     reader.readAsDataURL(file);
   };
 
@@ -93,14 +93,14 @@ export default function CropImage(props: Props) {
     const imagee = new Image();
     imagee.src = canvas.toDataURL();
     props.setCropImage(imagee.src);
-    console.log('setCropImage',imagee.src)
-    
+    console.log('setCropImage', imagee.src)
+
     const reader = new FileReader();
     // reader.addEventListener("load", () => resizeImage(reader.result,480));
     reader.readAsDataURL(props.image);
   }, [completedCrop, props.isPreview]);
 
-  
+ 
 
   return (
     <div className="Crop-Image">
@@ -117,6 +117,7 @@ export default function CropImage(props: Props) {
           style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
         />
       </ReactCrop>
+     
       <div style={{ display: props.isPreview ? "block" : "none" }}>
         <canvas
           ref={previewCanvasRef}
@@ -129,6 +130,7 @@ export default function CropImage(props: Props) {
             ),
           }}
         />
+      
       </div>
     </div>
   );
