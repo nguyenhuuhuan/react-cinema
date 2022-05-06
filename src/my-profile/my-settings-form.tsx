@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { OnClick, useUpdate } from 'react-hook-core';
 import { confirm, handleError, message, UserAccount, useResource } from 'uione';
-import { useGetMyProfileService, UserSettings } from './my-profile';
+import { useMyProfileService, UserSettings } from './my-profile';
 
 interface InternalState {
   settings: UserSettings;
@@ -12,7 +12,7 @@ const data: InternalState = {
 };
 const user: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
 export const MySettingsForm = () => {
-  const service = useGetMyProfileService();
+  const service = useMyProfileService();
   const resource = useResource();
   // const service = useGetMyProfileService();
   const { state, setState, updateState } = useUpdate<InternalState>(data, 'settings');
