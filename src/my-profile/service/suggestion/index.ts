@@ -1,11 +1,11 @@
 export interface PreviousSuggestion<T> {
-  previousKeyWord: string;
-  result: T[];
+  keyword: string;
+  list: T[];
 }
 
 export interface Suggestion<T> {
-  response: T[];
-  previous: PreviousSuggestion<T>;
+  list: T[];
+  last: PreviousSuggestion<T>;
 }
 
 export class SuggestionService<T> {
@@ -20,17 +20,17 @@ export class SuggestionService<T> {
   getSuggestion(keyword: string, previous: PreviousSuggestion<T>, excludingValues?: T[]): Promise<Suggestion<T>> {
     
     if (
-      keyword.length > 1 && keyword.startsWith(previous.previousKeyWord) &&
-      previous.result.length < this.max
+      keyword.length > 1 && keyword.startsWith(previous.keyword) &&
+      previous.list.length < this.max
     ) {
       let response;
       keyword = keyword.toUpperCase();
       if (this.displayField !== '') {
-        response = previous.result.filter(item => (item as any)[this.displayField].toUpperCase().includes(keyword));
+        response = previous.list.filter(item => (item as any)[this.displayField].toUpperCase().includes(keyword));
       } else {
-        response = previous.result.filter(item => String(item).toUpperCase().includes(keyword));
+        response = previous.list.filter(item => String(item).toUpperCase().includes(keyword));
       }
-      return Promise.resolve({ response, previous });
+      return Promise.resolve({ list:response, last:previous });
     } else {
       return this.loadData(keyword, this.max).then(response => {
         if (excludingValues &&excludingValues.length > 0) {
@@ -40,9 +40,9 @@ export class SuggestionService<T> {
             response = response.filter(obj => !excludingValues.find(item => obj === item));
           }
         }
-        previous.previousKeyWord = keyword;
-        previous.result = response;
-        return { response, previous };
+        previous.keyword = keyword;
+        previous.list = response;
+        return { list:response, last:previous };
       })
     }
   }

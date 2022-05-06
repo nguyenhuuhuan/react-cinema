@@ -89,8 +89,8 @@ export const MyProfileForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [previous, setPrevious] = useState({
-    previousKeyWord: "",
-    result: [] as string[]
+    keyword: "",
+    list: [] as string[]
   });
   const updateSuggest = (e: any) => {
     updateState(e);
@@ -99,8 +99,8 @@ export const MyProfileForm = () => {
       if (suggestionService) {
         suggestionService.getSuggestion(newSkill, previous).then((res) => {
           if (res !== null) {
-            setPrevious(res.previous);
-            setListSkill(res.response);
+            setPrevious(res.last);
+            setListSkill(res.list);
           }
 
         }).catch(handleError);
