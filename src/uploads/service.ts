@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { UserAccount } from 'uione';
-import { FileUploads, Uploads, Thumbnail } from './model';
+import { FileUploads, Thumbnail } from './model';
 import { config } from '../config';
 const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 

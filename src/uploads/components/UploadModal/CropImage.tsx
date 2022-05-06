@@ -6,7 +6,6 @@ import ReactCrop, {
   PixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { dataURLtoFile, getFileExtension, removeFileExtension } from "./UploadHook";
 
 interface Props {
   image: File;
@@ -45,6 +44,7 @@ export default function CropImage(props: Props) {
   const [aspect] = useState<number | undefined>(16 / 9);
   useEffect(() => {
     onSelectFile(props.image);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSelectFile = (file: Blob) => {
@@ -98,6 +98,7 @@ export default function CropImage(props: Props) {
     const reader = new FileReader();
     // reader.addEventListener("load", () => resizeImage(reader.result,480));
     reader.readAsDataURL(props.image);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completedCrop, props.isPreview]);
 
  
@@ -113,6 +114,7 @@ export default function CropImage(props: Props) {
         <img
           ref={imgRef}
           src={upImg}
+          alt=""
           onLoad={onImageLoad}
           style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
         />

@@ -16,6 +16,7 @@ export function UserPage() {
         setUser(usr);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const resource = useResource();

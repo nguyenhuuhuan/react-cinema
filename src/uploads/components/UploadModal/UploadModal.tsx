@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {   useState } from 'react';
 import { OnClick } from 'react-hook-core';
 import CropImage from './CropImage';
 import Loading from './Loading';
-import { dataURLtoFile, getFileExtension, removeFileExtension, State } from './UploadHook';
+import { dataURLtoFile,  State } from './UploadHook';
 
 interface Props {
   file: File | undefined,
@@ -16,7 +16,6 @@ const UploadsModal = (props: Props) => {
   const [select, setSelect] = useState<boolean>(false);
   const [isCrop, setIsCrop] = useState<boolean>(false);
   const [isPreview, setIsPreview] = useState(false)
-  const previewCanvasRef= useRef<any>()
   const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const data = event.target.files
     if (!data) return

@@ -33,10 +33,6 @@ const DragDrop = (props: Props) => {
     return result as FileUploads[];
   };
 
-  const handleUpdateData = async (data: FileUploads[]) => {
-    await updateData(data);
-  };
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId='droppable' direction='vertical'>

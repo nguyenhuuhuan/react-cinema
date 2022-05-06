@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { FileUploads } from '../model';
 
 const RenderItem = (props: {item: FileUploads}) => {
