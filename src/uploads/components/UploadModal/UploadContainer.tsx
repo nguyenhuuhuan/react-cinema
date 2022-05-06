@@ -23,7 +23,7 @@ interface Props {
 }
 
 const Uploads = (props: Props) => {
-  const { file, setFile, state, upload } = useUpload({
+  const { file, setFile, state, upload ,resize} = useUpload({
     post: props.post,
     setURL: props.setURL,
     type: props.type,
@@ -32,7 +32,7 @@ const Uploads = (props: Props) => {
   });
 
   const handleUpload = async () => {
-
+    // resize(480)
     if (props.type === "gallery") {
       const gallery = await upload();
       if (props.setFileGallery) props.setFileGallery(gallery);

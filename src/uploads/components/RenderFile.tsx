@@ -2,7 +2,8 @@ import * as React from 'react';
 import { FileUploads } from '../model';
 
 const RenderItem = (props: {item: FileUploads}) => {
-  if (props.item.source === 'youtube' && props.item.type === 'video') {
+  console.log('item',props.item)
+  if (props.item.type === 'youtube' ) {
     return (
       <div className='col xl11 l11 m11 s11'>
         <div className='data-item'>

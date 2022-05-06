@@ -30,23 +30,19 @@ export const deleteFile = (fileUrl: string): Promise<number> | number => {
 };
 export const deleteFileYoutube = (fileUrl: string): Promise<number> | number => {
   if (user) {
-    return axios.delete(config.authentication_url + `/my-profile/uploadGallery/youtube?userId=${user.id}&url=${fileUrl}`).then(() => {
+    return axios.delete(config.authentication_url + `/my-profile/${user.id}/youtube/${fileUrl}`).then(() => {
       return 1;
     }).catch(() => 0);
   }
   return 0;
 };
 export const uploadVideoYoutube = (videoId: string): Promise<number> | number => {
-  const body: Uploads = {
-    userId: user.id || '',
-    data: [{
-      source: 'youtube',
-      type: 'video',
+  const body: FileUploads = {
+      type: 'youtube',
       url: 'https://www.youtube.com/embed/' + videoId
-    }]
   };
   const headers = new Headers();
-  return axios.post(config.authentication_url + '/my-profile/uploadGallery/youtube', body, { headers }).then(() => 1).catch(() => 0);
+  return axios.post(config.authentication_url + `/my-profile/${user.id}/youtube`, body, { headers }).then(() => 1).catch(() => 0);
 };
 export const getUser = (): Promise<string> => {
   return axios.get(config.authentication_url + '/image/users/' + user.id).then(r => r.data).catch(e => e);

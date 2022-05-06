@@ -13,6 +13,7 @@
 .card-image {
   position: relative;
   padding: 6px;
+  min-height: 180px;
 }
 
 .card-image .button-area {

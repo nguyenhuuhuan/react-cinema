@@ -16,6 +16,7 @@ import { HttpRequest } from "axios-core";
 import { options } from "uione";
 import { typeFile } from "./components/UploadModal/UploadHook";
 import Uploads from "./components/UploadModal/UploadContainer";
+import { OnClick } from "react-hook-core";
 interface Props {
   type?: typeFile;
   post?: (
@@ -54,8 +55,8 @@ const UploadFile = ({ type = "gallery", post = httpPost, url, id }: Props) => {
     setFilesUploaded(data);
   };
 
-  const handleDeleteFile = async (url: string, source: string) => {
-    if (source === "youtube") {
+  const handleDeleteFile = async (url: string, type: string) => {
+    if (type === "youtube") {
       await deleteFileYoutube(url);
       setFilesUploaded(filesUploaded?.filter((file) => file.url !== url));
     } else {
@@ -68,7 +69,8 @@ const UploadFile = ({ type = "gallery", post = httpPost, url, id }: Props) => {
     setVideoIdInput(e.target.value);
   };
 
-  const handleAddVideoYoutube = async () => {
+  const handleAddVideoYoutube = async (e:OnClick) => {
+    e.preventDefault()
     if (videoIdInput !== "") {
       const r = await uploadVideoYoutube(videoIdInput);
       setVideoIdInput("");

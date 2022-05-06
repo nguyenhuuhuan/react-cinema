@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { User } from "../admin/service";
-import { FileUploads } from "../admin/users_carousel/model";
 import Carousel from "../component/carousel/Carousel";
 import CarouselImageItem from "../component/carousel/CarouselImageItem";
 import CarouselVideoItem from "../component/carousel/CarouselVideoItem";
@@ -10,6 +9,7 @@ import { getLocations } from "./service/index";
 import "./style.css";
 import { Location } from "./service/location/location";
 import { OnClick } from "react-hook-core";
+import { FileUploads } from "../uploads/model";
 
 interface Props {
   edit: (e: any, id: string) => void;

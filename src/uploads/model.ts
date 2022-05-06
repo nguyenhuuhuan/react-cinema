@@ -10,7 +10,7 @@ export interface Thumbnail {
   hightThumbnail?: string;
 }
 export interface FileUploads extends Thumbnail{
-  source: string;
+  source?: string;
   type: string;
   url: string;
 }
