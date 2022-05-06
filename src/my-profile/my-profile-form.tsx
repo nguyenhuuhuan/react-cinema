@@ -8,15 +8,15 @@ import { FileUploads } from "../uploads/model";
 
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
-import { Achievement, Skill, useGetMyProfileService, User } from "./my-profile";
+import { Achievement, Skill, useInterestService, useMyProfileService, User } from "./my-profile";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options } from "uione";
 import { ModalSelectCover } from "./modal-select-cover/modal-select-cover";
 import { config } from "../config";
 import { typeFile } from "../uploads/components/UploadModal/UploadHook";
-import { SuggestionService } from "./service/suggestion";
-import { useSkillService } from "./service";
+import { SuggestionService } from "suggestion-service";
+import { useSkillService } from "./my-profile";
 const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
@@ -44,8 +44,9 @@ const userAccount: UserAccount = JSON.parse(
   sessionStorage.getItem("authService") || "{}"
 ) as UserAccount;
 export const MyProfileForm = () => {
-  const service = useGetMyProfileService();
+  const service = useMyProfileService();
   const skillService = useSkillService();
+  const interestService = useInterestService();
   const { state, setState, updateState } = useUpdate<Edit>(data, "edit");
 
   const resource = useResource();
@@ -67,18 +68,22 @@ export const MyProfileForm = () => {
   const [modalSelectGalleryOpen, setModalSelectGalleryOpen] = useState(false);
   const [uploadedCover, setUploadedCover] = useState<string>();
   const [uploadedAvatar, setUploadedAvatar] = useState<string>();
-  const [suggestionService,setSuggestionService] = useState<SuggestionService<string>>();
+  const [skillSuggestionService, setSkillSuggestionService] = useState<SuggestionService<string>>();
+  const [interestSuggestionService, setInterestSuggestionService] = useState<SuggestionService<string>>();
   const [dropdownCover, setDropdownCover] = useState<boolean>(false);
   // const [filesGalleryUploaded, setFilesGalleryUploaded] =
   const [listSkill, setListSkill] = useState<string[]>([]);
+  const [listInterest, setListInterest] = useState<string[]>([]);
   useState<FileUploads[]>();
   const handleChangeFile = (data: string | undefined) => {
     if (typeUpload === "cover") setUploadedCover(data);
     else setUploadedAvatar(data);
   };
   useEffect(() => {
-    const suggestionService = new SuggestionService<string>(skillService.loadData,20);
-    setSuggestionService(suggestionService);
+    const skillSuggestionService = new SuggestionService<string>(skillService.query, 20);
+    setSkillSuggestionService(skillSuggestionService);
+    const interestSuggestionService = new SuggestionService<string>(interestService.query,20);
+    setInterestSuggestionService(interestSuggestionService);
     service.getMyProfile(userAccount.id || "").then((data) => {
       if (data) {
         setUser(data);
@@ -89,19 +94,39 @@ export const MyProfileForm = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const [previous, setPrevious] = useState({
+  const [previousSkill, setPreviousSkill] = useState({
     keyword: "",
     list: [] as string[]
   });
-  const updateSuggest = (e: any) => {
+  const [previousInterest, setPreviousInterest] = useState({
+    keyword: "",
+    list: [] as string[]
+  });
+  const onChangeSkill = (e:React.FormEvent<HTMLInputElement>) => {
     updateState(e);
-    let newSkill = e.target.value;
+    let newSkill = e.currentTarget.value;
     if (newSkill) {
-      if (suggestionService) {
-        suggestionService.getSuggestion(newSkill, previous).then((res) => {
+      if (skillSuggestionService) {
+        skillSuggestionService.load(newSkill, previousSkill).then((res) => {
           if (res !== null) {
-            setPrevious(res.last);
+            setPreviousSkill(res.last);
             setListSkill(res.list);
+          }
+
+        }).catch(handleError);
+      }
+    }
+
+  }
+  const onChangeInterest = (e: React.FormEvent<HTMLInputElement>) => {
+    updateState(e);
+    let newInterest = e.currentTarget.value;
+    if (newInterest) {
+      if (interestSuggestionService) {
+        interestSuggestionService.load(newInterest, previousInterest).then((res) => {
+          if (res !== null) {
+            setPreviousInterest(res.last);
+            setListInterest(res.list);
           }
 
         }).catch(handleError);
@@ -552,7 +577,7 @@ export const MyProfileForm = () => {
                         name="skill"
                         className="form-control"
                         value={state.edit.skill}
-                        onChange={updateSuggest}
+                        onChange={onChangeSkill}
                         placeholder={resource.placeholder_user_profile_skill}
                         maxLength={50}
                         required={true}
@@ -570,13 +595,6 @@ export const MyProfileForm = () => {
                           })
                         }
                       </datalist>}
-                    {/* <datalist id="listSkill">
-                      <option value="angular" />
-                      <option value="vue" />
-                      <option value="java" />
-                      <option value="c" />
-                      <option value="c++" />
-                    </datalist> */}
                     <div className="btn-group">
                       <button
                         type="button"
@@ -910,13 +928,26 @@ export const MyProfileForm = () => {
                     })}
                   <label className="col s12 inline-input">
                     <input
+                      list="listInterest"
                       type="text"
                       name="interest"
-                      onChange={updateState}
+                      onChange={onChangeInterest}
                       placeholder={resource.placeholder_user_profile_interest}
                       value={state.edit.interest}
                       maxLength={100}
+                      autoComplete="on"
                     />
+                    {listInterest && listInterest.length > 0 &&
+                      <datalist id="listInterest">
+
+                        {
+                          listInterest.map((item, index) => {
+                            return (
+                              <option key={index} value={item} />
+                            )
+                          })
+                        }
+                      </datalist>}
                     <button
                       type="button"
                       id="btnAddInterest"
@@ -1116,7 +1147,7 @@ export const MyProfileForm = () => {
               setURL={(data) => handleChangeFile(data)}
               type={typeUpload}
               id={user.id}
-              url={config.authentication_url+"/my-profile"}
+              url={config.authentication_url + "/my-profile"}
             />
 
             <footer>

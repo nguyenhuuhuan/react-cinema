@@ -1,7 +1,7 @@
 import { OnClick, useUpdate } from 'react-hook-core';
 import { UserAccount } from 'uione';
 import './general-info.css';
-import { useGetMyProfileService, User } from './my-profile';
+import { useMyProfileService, User } from './my-profile';
 interface Props {
   user: User;
   resource: any;
@@ -14,7 +14,7 @@ interface State {
 }
 const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
 export const GeneralInfo = ({ resource, user, close, saveEmit }: Props) => {
-  const service = useGetMyProfileService();
+  const service = useMyProfileService();
   const { state, setState, updateState } = useUpdate<State>({ user }, 'user');
 
   const closeModal = () => {

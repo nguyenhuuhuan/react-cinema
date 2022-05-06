@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { HttpRequest } from 'axios-core';
+import { QueryService } from 'onecore';
 import { useState } from 'react';
 import { options, storage, UserAccount } from 'uione';
-import { Client } from 'web-clients';
+import { QueryClient } from 'web-clients';
 import { FileUploads } from '../../uploads/model';
-import { SkillClient } from '../service/skill';
-import { MyProfileService, Skill, SkillService, User, UserFilter, userModel, UserService, UserSettings } from './user';
+import { MyProfileService, SkillService, User, UserSettings } from './user';
 
 export * from './user';
 
@@ -78,9 +78,13 @@ export class MyProfileClient implements MyProfileService {
 
 export interface Config {
   myprofile_url: string;
+  skill_url:string;
+  interest_url:string;
 }
 class ApplicationContext {
   userService?: MyProfileService;
+  skillService?: QueryService<string>;
+  interestService?: QueryService<string>;
   getConfig(): Config {
     return storage.config();
   }
@@ -91,12 +95,33 @@ class ApplicationContext {
     }
     return this.userService;
   }
- 
+  getSkillService():QueryService<string>{
+    if(!this.skillService){
+      const c = this.getConfig();
+      this.skillService = new QueryClient<string>(httpRequest, c.skill_url);
+    }
+    return this.skillService;
+  }
+  getInterestService():QueryService<string>{
+    if(!this.interestService){
+      const c = this.getConfig();
+      this.interestService = new QueryClient<string>(httpRequest, c.interest_url);
+    }
+    return this.interestService;
+  }
 }
 
 export const context = new ApplicationContext();
-export function useGetMyProfileService(): MyProfileService {
+export function useMyProfileService(): MyProfileService {
   const [service] = useState(() => { return context.getMyProfileService() })
   return service;
 }
 
+export function useSkillService():QueryService<string>{
+  const [service] = useState(()=> {return context.getSkillService()})
+  return service;
+}
+export function useInterestService():QueryService<string>{
+  const [service] = useState(()=> {return context.getInterestService()})
+  return service;
+}
