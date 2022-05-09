@@ -21,7 +21,7 @@
     "leaflet": "^1.8.0",
     "locale-service": "^0.0.6",
     "moment": "^2.29.2",
-    "onecore": "0.0.36",
+    "onecore": "^0.0.36",
     "password-client": "^0.1.1",
     "phonecodes": "^0.0.2",
     "query-string": "^7.0.1",
