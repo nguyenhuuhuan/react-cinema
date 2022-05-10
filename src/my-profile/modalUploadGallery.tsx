@@ -53,6 +53,7 @@ export const ModalUploadGallery = ({
             post={httpPost}
             id={user.id || ""}
             url={config.authentication_url + "/my-profile"}
+            sizes={[]}
           />
 
           <footer>

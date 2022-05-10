@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as React from "react";
+import { PixelCrop } from "react-image-crop";
 import { UserAccount } from "uione";
 import { FileUploads } from "../../model";
 
@@ -8,11 +9,7 @@ export interface State {
   success: boolean;
   loading: boolean;
 }
-export interface ImageInfo {
-  width: number,
-  height: number,
-  image: HTMLImageElement
-}
+
 export type typeFile = "cover" | "upload" | "gallery";
 interface Props {
   post: (
@@ -28,19 +25,41 @@ interface Props {
   type: typeFile;
   url: string;
   id: string;
+  aspect: number,
+  sizes: number[]
+  validateFile: React.Dispatch<React.SetStateAction<boolean>>
+
 }
 const user: UserAccount = JSON.parse(
   sessionStorage.getItem("authService") || "{}"
 ) as UserAccount;
 export const useUpload = (props: Props) => {
   const [file, setFile] = React.useState<File>();
+  const [completedCrop, setCompletedCrop] = React.useState<PixelCrop>();
+  const [image, setImage] = React.useState<HTMLImageElement>();
   const [state, setState] = React.useState<State>({
     success: false,
     loading: false,
   });
 
+  React.useEffect(() => {
+    validateFile()
+  }, [file])
+
+  const validateFile = async () => {
+    const image = await readFileAsync(file)
+    if (!image) return
+    for (const size of props.sizes) {
+      const height = size / props.aspect
+      if (image.naturalHeight < height || image.naturalWidth < size) {
+        props.validateFile(true)
+        setFile(undefined)
+      }
+    }
+  }
+
   const upload = async (): Promise<FileUploads[]> => {
-    const fileCustomSizes: File[] = await resizes([40, 400])
+    const fileCustomSizes: File[] = await resizes(props.sizes)
     if (file && fileCustomSizes) {
       setState((pre) => ({ ...pre, loading: true }));
       const bodyFormData = new FormData();
@@ -74,18 +93,14 @@ export const useUpload = (props: Props) => {
     return [];
   };
 
-  function readFileAsync(file: File): Promise<ImageInfo> {
-    return new Promise<ImageInfo>((resolve, reject) => {
+  function readFileAsync(file: File | undefined): Promise<HTMLImageElement> {
+    return new Promise<HTMLImageElement>((resolve, reject) => {
       let reader = new FileReader();
 
       reader.onload = function (readerEvent) {
         var image = new Image();
         image.onload = function (imageEvent) {
-          resolve({
-            width: image.width,
-            height: image.height,
-            image
-          })
+          resolve(image)
         }
         image.onerror = reject;
         image.src = readerEvent.target!.result?.toString() || "";
@@ -97,10 +112,52 @@ export const useUpload = (props: Props) => {
     })
   }
 
+  const cropImage = async (): Promise<File | undefined> => {
+    if (!completedCrop || !file || !image) {
+      return;
+    }
+
+    // if(!props.isPreview) return
+    if (props.aspect === 0) {
+      return;
+    }
+    const canvas: HTMLCanvasElement = document.createElement("canvas");
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+    if (!ctx) return;
+    const pixelRatio = window.devicePixelRatio;
+
+    canvas.width = completedCrop.width * pixelRatio;
+    canvas.height = completedCrop.height * pixelRatio;
+
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    ctx.imageSmoothingQuality = "high";
+
+    ctx.drawImage(
+      image,
+      completedCrop.x * scaleX,
+      completedCrop.y * scaleY,
+      completedCrop.width * scaleX,
+      completedCrop.height * scaleY,
+      0,
+      0,
+      completedCrop.width,
+      completedCrop.height
+    );
+    const imagee = new Image();
+    imagee.src = canvas.toDataURL(file?.type);
+    const newFile = dataURLtoFile(
+      imagee.src,
+      file?.name ?? ''
+    );
+    return newFile
+  }
+
   const resizes = async (sizes: number[]): Promise<File[]> => {
-    if (!file) return []
-    
-    let { width, height, image } = await readFileAsync(file);
+    const croptedFile = await cropImage()
+    if (!croptedFile) return []
+    let image = await readFileAsync(croptedFile);
     //
     let files: File[] = []
     sizes.forEach(size => {
@@ -110,14 +167,14 @@ export const useUpload = (props: Props) => {
         octx = oc.getContext("2d");
 
       canvas.width = size; // destination canvas size
-      canvas.height = (canvas.width * height) / width;
+      canvas.height = (canvas.width * image.height) / image.width;
       // var cur = {
       //   width: Math.floor(width * 0.5),
       //   height: Math.floor(height * 0.5),
       // };
       var cur = {
-        width: Math.floor(width),
-        height: Math.floor(height),
+        width: Math.floor(image.width),
+        height: Math.floor(image.height),
       };
 
       oc.width = cur.width;
@@ -126,7 +183,6 @@ export const useUpload = (props: Props) => {
       octx!.drawImage(image, 0, 0, cur.width, cur.height);
 
       while (cur.width * 0.5 > size) {
-        debugger
         cur = {
           width: Math.floor(cur.width * 0.5),
           height: Math.floor(cur.height * 0.5),
@@ -136,67 +192,19 @@ export const useUpload = (props: Props) => {
       }
       ctx!.drawImage(oc, 0, 0, cur.width, cur.height, 0, 0, canvas.width, canvas.height
       );
-      
+
       const imagee = new Image();
-      imagee.src = canvas.toDataURL(file.type);
-      const ext = getFileExtension(file?.name || "");
+      imagee.src = canvas.toDataURL(croptedFile.type);
+      const ext = getFileExtension(croptedFile?.name || "");
       const newFile = dataURLtoFile(
         imagee.src,
-        removeFileExtension(file?.name || "") + `_${size.toString()}.` + ext
+        removeFileExtension(croptedFile?.name || "") + `_${size.toString()}.` + ext
       );
       files.push(newFile)
     })
     return files
   };
-
-  const resize = (width: number) => {
-    var reader = new FileReader();
-    reader.onload = function (readerEvent) {
-      var image = new Image();
-      image.onload = function (imageEvent) {
-        var canvas = document.createElement("canvas"),
-          ctx = canvas.getContext("2d"),
-          oc = document.createElement("canvas"),
-          octx = oc.getContext("2d");
-
-        canvas.width = width; // destination canvas size
-        canvas.height = (canvas.width * image.height) / image.width;
-
-        var cur = {
-          width: Math.floor(image.width * 0.5),
-          height: Math.floor(image.height * 0.5),
-        };
-
-        oc.width = cur.width;
-        oc.height = cur.height;
-
-        octx!.drawImage(image, 0, 0, cur.width, cur.height);
-
-        while (cur.width * 0.5 > width) {
-          cur = {
-            width: Math.floor(cur.width * 0.5),
-            height: Math.floor(cur.height * 0.5),
-          };
-          octx!.drawImage(oc, 0, 0, cur.width * 2, cur.height * 2, 0, 0, cur.width, cur.height
-          );
-        }
-        ctx!.drawImage(oc, 0, 0, cur.width, cur.height, 0, 0, canvas.width, canvas.height
-        );
-
-        const imagee = new Image();
-        imagee.src = canvas.toDataURL("image/jpeg");
-        const ext = getFileExtension(file?.name || "");
-        const newFile = dataURLtoFile(
-          imagee.src,
-          removeFileExtension(file?.name || "") + "_xs." + ext
-        );
-        // setFileCustomSizes([newFile]);
-      };
-      image.src = readerEvent.target!.result?.toString() || "";
-    };
-    if (file) reader.readAsDataURL(file);
-  };
-  return { file, setFile, state, setState, upload, resize };
+  return { file, setFile, state, setState, upload, setCompletedCrop, setImage };
 };
 
 

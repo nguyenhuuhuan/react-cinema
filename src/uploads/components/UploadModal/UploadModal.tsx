@@ -1,5 +1,6 @@
 import React, {   useState } from 'react';
 import { OnClick } from 'react-hook-core';
+import { PixelCrop } from 'react-image-crop';
 import CropImage from './CropImage';
 import Loading from './Loading';
 import { dataURLtoFile,  State } from './UploadHook';
@@ -8,7 +9,10 @@ interface Props {
   file: File | undefined,
   setFile: React.Dispatch<React.SetStateAction<File | undefined>>,
   upload: () => Promise<void>,
-  state: State
+  state: State,
+  aspect:number,
+  setCompletedCrop: React.Dispatch<React.SetStateAction<PixelCrop | undefined>>,
+  setImage:React.Dispatch<React.SetStateAction<HTMLImageElement | undefined>>
 }
 
 const UploadsModal = (props: Props) => {
@@ -62,7 +66,7 @@ const UploadsModal = (props: Props) => {
                         <img className='image-cut' src={URL.createObjectURL(props.file)} alt='file' />
                       ) : (
                         <>
-                          <CropImage image={props.file} setCropImage={setCropImage} isPreview={isPreview} />
+                          <CropImage setImage={props.setImage} setCompletedCropHook={props.setCompletedCrop} aspect={props.aspect} image={props.file} setCropImage={setCropImage} isPreview={isPreview} />
                           <button onClick={(e)=>handleSelectCropImage(e)}>Select</button>
                         </>
                       )

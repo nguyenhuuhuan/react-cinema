@@ -14,7 +14,7 @@ import { HttpRequest } from "axios-core";
 import { options } from "uione";
 import { ModalSelectCover } from "./modal-select-cover/modal-select-cover";
 import { config } from "../config";
-import { typeFile } from "../uploads/components/UploadModal/UploadHook";
+import { getFileExtension, removeFileExtension, typeFile } from "../uploads/components/UploadModal/UploadHook";
 import { SuggestionService } from "suggestion-service";
 import { useSkillService } from "./my-profile";
 const httpRequest = new HttpRequest(Axios, options);
@@ -64,6 +64,7 @@ export const MyProfileForm = () => {
   const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
   const [modalUpload, setModalUpload] = useState(false);
   const [typeUpload, setTypeUpload] = useState<typeFile>("cover");
+  const [aspect, setAspect] = useState<number>(1)
   const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false);
   const [modalSelectGalleryOpen, setModalSelectGalleryOpen] = useState(false);
   const [uploadedCover, setUploadedCover] = useState<string>();
@@ -71,6 +72,7 @@ export const MyProfileForm = () => {
   const [skillSuggestionService, setSkillSuggestionService] = useState<SuggestionService<string>>();
   const [interestSuggestionService, setInterestSuggestionService] = useState<SuggestionService<string>>();
   const [dropdownCover, setDropdownCover] = useState<boolean>(false);
+  const [sizes, setSizes] = useState<number[]>([])
   // const [filesGalleryUploaded, setFilesGalleryUploaded] =
   const [listSkill, setListSkill] = useState<string[]>([]);
   const [listInterest, setListInterest] = useState<string[]>([]);
@@ -82,7 +84,7 @@ export const MyProfileForm = () => {
   useEffect(() => {
     const skillSuggestionService = new SuggestionService<string>(skillService.query, 20);
     setSkillSuggestionService(skillSuggestionService);
-    const interestSuggestionService = new SuggestionService<string>(interestService.query,20);
+    const interestSuggestionService = new SuggestionService<string>(interestService.query, 20);
     setInterestSuggestionService(interestSuggestionService);
     service.getMyProfile(userAccount.id || "").then((data) => {
       if (data) {
@@ -102,7 +104,7 @@ export const MyProfileForm = () => {
     keyword: "",
     list: [] as string[]
   });
-  const onChangeSkill = (e:React.FormEvent<HTMLInputElement>) => {
+  const onChangeSkill = (e: React.FormEvent<HTMLInputElement>) => {
     updateState(e);
     let newSkill = e.currentTarget.value;
     if (newSkill) {
@@ -366,6 +368,13 @@ export const MyProfileForm = () => {
     e.preventDefault();
     setModalUpload(true);
     setTypeUpload(type);
+    if (type === 'cover') {
+      setAspect(2.7)
+      setSizes([576, 768])
+    }
+    else
+      setAspect(1)
+    setSizes([40, 400])
   };
 
   const closeModalUpload = (e: OnClick) => {
@@ -407,6 +416,11 @@ export const MyProfileForm = () => {
     e.preventDefault();
     setModalSelectGalleryOpen(!modalSelectGalleryOpen);
   };
+
+  const getImageBySize = (url: string | undefined, size: number): string => {
+    if (!url) return ''
+    return removeFileExtension(url) + `_${size}.` + getFileExtension(url)
+  }
 
   const followers = "7 followers"; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
   const following = "10 following"; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
@@ -457,7 +471,7 @@ export const MyProfileForm = () => {
             <img
               className="avatar"
               src={
-                uploadedAvatar ||
+                getImageBySize(uploadedAvatar, 400) ||
                 "https://www.bluebridgewindowcleaning.co.uk/wp-content/uploads/2016/04/default-avatar.png"
               }
               alt="avatar"
@@ -1101,6 +1115,9 @@ export const MyProfileForm = () => {
                   onClick={openModalUploadGallery}
                 />
               </header>
+              {/* <section className="row">
+                <img src={user.coverURL} alt="" />
+              </section> */}
             </div>
           </div>
         </div>
@@ -1148,6 +1165,8 @@ export const MyProfileForm = () => {
               type={typeUpload}
               id={user.id}
               url={config.authentication_url + "/my-profile"}
+              aspect={aspect}
+              sizes={sizes}
             />
 
             <footer>

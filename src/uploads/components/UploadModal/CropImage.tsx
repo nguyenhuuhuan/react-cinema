@@ -6,11 +6,15 @@ import ReactCrop, {
   PixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { dataURLtoFile, getFileExtension } from "./UploadHook";
 
 interface Props {
   image: File;
   setCropImage: React.Dispatch<React.SetStateAction<string>>;
   isPreview: boolean;
+  aspect: number
+  setCompletedCropHook: React.Dispatch<React.SetStateAction<PixelCrop | undefined>>
+  setImage: React.Dispatch<React.SetStateAction<HTMLImageElement | undefined>>
 }
 
 function centerAspectCrop(
@@ -38,10 +42,9 @@ export default function CropImage(props: Props) {
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
   const [crop, setCrop] = useState<Crop>();
-  const [completedCrop, setCompletedCrop] = useState<any>(null);
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const [scale] = useState(1);
   const [rotate] = useState(0);
-  const [aspect] = useState<number | undefined>(16 / 9);
   useEffect(() => {
     onSelectFile(props.image);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,17 +57,27 @@ export default function CropImage(props: Props) {
   };
 
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
-    if (aspect) {
+    if (props.aspect) {
       const { width, height } = e.currentTarget;
-      setCrop(centerAspectCrop(width, height, aspect));
+      setCrop(centerAspectCrop(width, height, props.aspect));
     }
   }
 
   React.useEffect(() => {
+    props.setCompletedCropHook(completedCrop)
+    props.setImage(imgRef.current ?? undefined)
+    cropImage()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [completedCrop, props.isPreview]);
+
+  const cropImage = () => {
     if (!completedCrop || !previewCanvasRef.current || !imgRef.current) {
       return;
     }
-
+    if(!props.isPreview) return
+    if (props.aspect === 0) {
+      return
+    }
     const image: HTMLImageElement = imgRef.current;
     const canvas: HTMLCanvasElement = previewCanvasRef.current;
     const scaleX = image.naturalWidth / image.width;
@@ -90,23 +103,12 @@ export default function CropImage(props: Props) {
       completedCrop.width,
       completedCrop.height
     );
-    const imagee = new Image();
-    imagee.src = canvas.toDataURL();
-    props.setCropImage(imagee.src);
-    console.log('setCropImage', imagee.src)
-
-    const reader = new FileReader();
-    // reader.addEventListener("load", () => resizeImage(reader.result,480));
-    reader.readAsDataURL(props.image);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [completedCrop, props.isPreview]);
-
- 
+  }
 
   return (
     <div className="Crop-Image">
       <ReactCrop
-        aspect={16 / 9}
+        aspect={props.aspect}
         crop={crop}
         onChange={(_, percentCrop) => setCrop(percentCrop)}
         onComplete={(c: PixelCrop) => setCompletedCrop(c)}
@@ -119,7 +121,7 @@ export default function CropImage(props: Props) {
           style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
         />
       </ReactCrop>
-     
+
       <div style={{ display: props.isPreview ? "block" : "none" }}>
         <canvas
           ref={previewCanvasRef}
@@ -132,7 +134,7 @@ export default function CropImage(props: Props) {
             ),
           }}
         />
-      
+
       </div>
     </div>
   );
