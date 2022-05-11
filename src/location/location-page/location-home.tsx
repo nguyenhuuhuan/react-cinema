@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Routes, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 // import { Review } from './review'
-import { getLocations } from './service/index'
-import { Location } from './service/location/location'
-import imageOnline from '../assets/images/online.svg';
+import { getLocations } from '../service/index'
+import { Location } from '../service/location/location'
+import imageOnline from '../../assets/images/online.svg';
 import { Review } from './review';
 import { Overview } from './overview';
 export const LocationHome = () => {

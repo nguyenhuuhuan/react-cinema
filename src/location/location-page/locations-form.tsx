@@ -10,12 +10,10 @@ import { PageSizeSelect } from "react-page-size-select";
 import { useNavigate } from "react-router-dom";
 import { Pagination } from "reactx-pagination";
 import { inputSearch } from "uione";
-import { Location, LocationFilter } from "./service/location/location";
-import { getLocations } from "./service/index";
+import { Location, LocationFilter } from "../service/location/location";
+import { getLocations } from "../service/index";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import * as Leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
-import UserCarousel from "../admin/users_carousel/app";
 import LocationCarousel from "./location-carousel";
 
 interface LocationSearch
@@ -44,9 +42,7 @@ export const LocationsForm = () => {
     updateState,
 
     search,
-    sort,
     toggleFilter,
-    changeView,
     pageChanged,
     pageSizeChanged,
   } = useSearch<Location, LocationFilter, LocationSearch>(
@@ -57,7 +53,6 @@ export const LocationsForm = () => {
   );
   component.viewable = true;
   component.editable = true;
-  const [listStatus, setListStatus] = React.useState(true);
   React.useEffect(() => {
     const L = require("leaflet");
 
@@ -70,13 +65,13 @@ export const LocationsForm = () => {
     });
   }, []);
 
-  const viewDetail = (
-    e: React.MouseEvent<HTMLElement, MouseEvent>,
-    id: string
-  ) => {
-    e.preventDefault();
-    navigate(`${id}`);
-  };
+  // const viewDetail = (
+  //   e: React.MouseEvent<HTMLElement, MouseEvent>,
+  //   id: string
+  // ) => {
+  //   e.preventDefault();
+  //   navigate(`${id}`);
+  // };
 
   const edit = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
     e.preventDefault();
@@ -97,20 +92,6 @@ export const LocationsForm = () => {
     setViewList(!viewList);
   };
 
-  const addMarker = (e: Leaflet.LeafletMouseEvent) => {
-    const currentPos = e.latlng;
-    console.log(currentPos);
-    const newLocation = {
-      longitude: currentPos.lat,
-      latitude: currentPos.lng,
-      id: currentPos.lng.toString(),
-      name: "you are here",
-      description: "description",
-      type: "",
-      status: "1",
-    };
-    setList([...list, newLocation]);
-  };
   const add = (e: OnClick) => {
     e.preventDefault();
     navigate(`add`);

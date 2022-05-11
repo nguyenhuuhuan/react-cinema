@@ -1,12 +1,11 @@
 import * as Leaflet from 'leaflet';
-import { ValueText } from 'onecore';
 import React, { useState } from 'react';
 import { createModel, DispatchWithCallback, EditComponentParam, OnClick, useEdit } from 'react-hook-core';
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import ReactModal from 'react-modal';
 import { inputEdit, Status } from 'uione';
-import { getLocations } from './service/index';
-import { Location } from "./service/location/location";
+import { getLocations } from '../service/index';
+import { Location } from "../service/location/location";
 interface InternalState {
   location: Location;
 }
@@ -23,7 +22,7 @@ const initialize = (id: string | null, load: (id: string | null) => void, set: D
 
 const initialState: InternalState = {
   location: {} as Location
-};
+}; 
 
 const param: EditComponentParam<Location, string, InternalState> = {
   createModel: createLocation,
@@ -52,22 +51,6 @@ export const LocationForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
   const { resource, setState, updateState, flag, save, back, state } = useEdit<Location, string, InternalState>(refForm, initialState, getLocations(), inputEdit(), param);
   const location = state.location;
-  console.log('resource', resource)
-
-  const onClick = (e: Leaflet.LeafletMouseEvent) => {
-    const { lat, lng } = e.latlng;
-    setState({ location: { ...location, longitude: lat, latitude: lng } })
-  }
-
-
-
-
-  // const save = (e:OnClick) => {
-  //   e.preventDefault()
-  //   console.log('state', state)
-  // }
-
-
 
   const closeModal = () => {
     setModalIsOpen(false)

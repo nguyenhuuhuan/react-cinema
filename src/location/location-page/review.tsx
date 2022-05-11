@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import { storage } from 'uione';
-import { LocationRate, LocationRateFilter } from './service/location-rate/location-rate';
-import { Location, LocationInfo } from './service/location/location';
+import { LocationRate, LocationRateFilter } from '../service/location-rate/location-rate';
+import { Location, LocationInfo } from '../service/location/location';
 import './rate.css';
 import moment from 'moment';
-import { getLocationRates, getLocations } from './service/index';
+import { getLocationRates, getLocations } from '../service/index';
 import { PostRateForm } from './post-rate-form';
 const customStyles = {
     content: {

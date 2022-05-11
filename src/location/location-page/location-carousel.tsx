@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { User } from "../admin/service";
-import Carousel from "../component/carousel/Carousel";
-import CarouselImageItem from "../component/carousel/CarouselImageItem";
-import CarouselVideoItem from "../component/carousel/CarouselVideoItem";
-import imgDefault from "../assets/images/video-youtube.png";
-import { getLocations } from "./service/index";
+import Carousel from "../../component/carousel/Carousel";
+import CarouselImageItem from "../../component/carousel/CarouselImageItem";
+import CarouselVideoItem from "../../component/carousel/CarouselVideoItem";
+import imgDefault from "../../assets/images/video-youtube.png";
+import { getLocations } from "../service/index";
 
 import "./style.css";
-import { Location } from "./service/location/location";
+import { Location } from "../service/location/location";
 import { OnClick } from "react-hook-core";
-import { FileUploads } from "../uploads/model";
+import { FileUploads } from "../../uploads/model";
 
 interface Props {
   edit: (e: any, id: string) => void;
@@ -20,16 +19,15 @@ export default function LocationCarousel({ edit, location }: Props) {
   const [files, setFiles] = useState<FileUploads[]>();
   useEffect(() => {
     handleFetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, carousel]);
   const locationService = getLocations();
   const handleFetch = async () => {
     if (!carousel || files) return;
-    let res
+    let res;
     try {
       res = await locationService.fetchImageUploaded(location.id);
-    } catch (error) {
-
-    }
+    } catch (error) {}
     if (res && res.length > 0) {
       for (const item of res) {
         if (item.type === "youtube") {
@@ -104,7 +102,7 @@ export default function LocationCarousel({ edit, location }: Props) {
                         />
                       );
                     default:
-                      break;
+                      return <></>;
                   }
                 })}
               </Carousel>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { storage, UserAccount } from "uione";
-import { getLocations } from "./service/index";
-import { LocationRate } from "./service/location-rate/location-rate";
+import { getLocations } from "../service/index";
+import { LocationRate } from "../service/location-rate/location-rate";
 export const PostRateForm = (props: any) => {
   const [review, setReview] = useState("");
   const locationService = getLocations();
@@ -36,7 +36,7 @@ export const PostRateForm = (props: any) => {
       locationRate.rate = props.value;
       locationRate.review = review;
       locationRate.rateTime=   new Date();
-      const res = await locationService.rateLocation(locationRate);
+      await locationService.rateLocation(locationRate);
       storage.message("Your review is submited");
       closeModal(1);
       props.loadData();
