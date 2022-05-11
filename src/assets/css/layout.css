@@ -177,19 +177,6 @@
   padding-top: 4px;
 }
 
-
-.dropdown-upload-cover {
-  display: none;
-  position: absolute;
-  top: 39px;
-  right: 12px;
-  color: #999999;
-}
-
-.show-upload-cover{
-  display: inline-block
-}
-
 .dropdown-content-profile li {
   display: inline-flex;
   flex-direction: row;
@@ -264,7 +251,6 @@ span.dropdown-item-profile:hover {
 .dropdown-menu-profile .show {
   display: block;
 }
-
 
 @media screen and (max-width: 600px) {
   .page-header .dropdown-content-profile {

@@ -58,9 +58,11 @@ ul.list-view.row>li.col {
 ul.list-view.row>li.col.card,
 ul.list-view.row>li.col.video {
   margin-top: 5px;
+  margin-bottom: 5px;
+}
+ul.list-view.row>li.col.card {
   margin-bottom: 10px;
 }
-
 ul.list-view.row>li.col>h3,
 ul.list-view.row>li.col>h4,
 ul.list-view.row>li.col>p,
