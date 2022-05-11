@@ -42,10 +42,10 @@ const Uploads = (props: Props) => {
   const handleUpload = async () => {
     // resize(480)
     if (props.type === "gallery") {
-      const gallery = await upload();
+      const gallery = await upload(props.id);
       if (props.setFileGallery) props.setFileGallery(gallery);
     } else {
-      await upload();
+      await upload(props.id);
     }
   };
 

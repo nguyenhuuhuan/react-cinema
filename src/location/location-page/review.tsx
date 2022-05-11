@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import { storage } from 'uione';
-import { LocationRate, LocationRateFilter } from '../service/location-rate/location-rate';
-import { Location, LocationInfo } from '../service/location/location';
+import { Location, LocationInfo } from '../../backoffice/service/location/location';
 import './rate.css';
 import moment from 'moment';
-import { getLocationRates, getLocations } from '../service/index';
 import { PostRateForm } from './post-rate-form';
+import { LocationRate, LocationRateFilter } from '../../backoffice/service/location-rate/location-rate';
+import { getLocationRates, getLocations } from '../../backoffice/service';
 const customStyles = {
     content: {
         top: '50%',

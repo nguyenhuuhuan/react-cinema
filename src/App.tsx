@@ -60,14 +60,14 @@ import { CategoriesForm } from './backoffice/categories-form';
 import { CategoryForm } from './backoffice/category-form';
 import { FilmForm } from './backoffice/film-form';
 import { FilmsForm } from './backoffice/films-form';
-import { LocationsForm } from './location/location-page/locations-form';
+import { LocationsForm } from './backoffice/locations-form';
 import { LocationHome } from './location/location-page/location-home';
 import { Review } from './location/location-page/review';
-import { LocationForm } from './location/location-page/location-form';
 import { MyProfileForm } from './my-profile/my-profile-page/my-profile-form';
 import { MySettingsForm } from './my-profile/my-profile-page/my-settings-form';
 import { UsersPage } from './profile/users-page';
 import { UserPage } from './profile/user-page';
+import { LocationForm } from './backoffice/location-form';
 // import "./assets/fonts/Roboto/font.css";
 
 let isInit = false;

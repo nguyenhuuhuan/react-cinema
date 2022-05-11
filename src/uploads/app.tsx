@@ -24,14 +24,14 @@ interface Props {
     obj: any,
     options?:
       | {
-        headers?: Headers | undefined;
-      }
+          headers?: Headers | undefined;
+        }
       | undefined
   ) => Promise<any>;
   url: string;
   id: string;
-  sizes:number[];
-  setGallery:(file:FileUploads[])=>void;
+  sizes: number[];
+  setGallery: (file: FileUploads[]) => void;
 }
 
 const httpRequest = new HttpRequest(Axios, options);
@@ -42,14 +42,21 @@ const httpPost = (
 ): Promise<any> => {
   return httpRequest.post(url, obj, options);
 };
-const UploadFile = ({ type = "gallery", post = httpPost, url, id ,sizes=[],setGallery}: Props) => {
+const UploadFile = ({
+  type = "gallery",
+  post = httpPost,
+  url,
+  id,
+  sizes = [],
+  setGallery,
+}: Props) => {
   const [filesUploaded, setFilesUploaded] = React.useState<FileUploads[]>();
   const [videoIdInput, setVideoIdInput] = React.useState<string>("");
   React.useEffect(() => {
     fecthGallery();
   }, []);
   React.useEffect(() => {
-    setGallery(filesUploaded??[]);
+    setGallery(filesUploaded ?? []);
   }, [filesUploaded]);
 
   const fecthGallery = async () => {
@@ -75,14 +82,13 @@ const UploadFile = ({ type = "gallery", post = httpPost, url, id ,sizes=[],setGa
   };
 
   const handleAddVideoYoutube = async (e: OnClick) => {
-    e.preventDefault()
+    e.preventDefault();
     if (videoIdInput !== "") {
       const r = await uploadVideoYoutube(videoIdInput);
       setVideoIdInput("");
-      fecthGallery()
+      fecthGallery();
     }
   };
-
   return (
     <div className="container">
       <div className="row">

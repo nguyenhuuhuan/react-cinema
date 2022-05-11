@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Route, Routes, useParams } from 'react-router-dom'
+import { getLocations } from '../../backoffice/service';
 // import { Review } from './review'
-import { Location } from '../service/location/location'
+import { Location } from '../../backoffice/service/location/location'
 import imageOnline from '../assets/images/status/online.svg';
-import { getLocations } from '../service/index';
 export const TourForm = () => {
     const { id = '' } = useParams()
     const [location, setLocation] = useState<Location>();

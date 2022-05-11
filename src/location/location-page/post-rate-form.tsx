@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { storage, UserAccount } from "uione";
-import { getLocations } from "../service/index";
-import { LocationRate } from "../service/location-rate/location-rate";
+import { getLocations } from "../../backoffice/service";
+import { LocationRate } from "../../backoffice/service/location-rate/location-rate";
 export const PostRateForm = (props: any) => {
   const [review, setReview] = useState("");
   const locationService = getLocations();

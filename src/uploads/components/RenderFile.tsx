@@ -16,11 +16,11 @@ const RenderItem = (props: {item: FileUploads}) => {
       </div>
       </div>
     );
-  } else if (props.item.source === 'google-storage' && props.item.type === 'video') {
+  } else if (props.item.type === 'video') {
     return (
       <div className='col xl11 l11 m11 s11'>
         <div className='data-item'>
-          <video controls={true} width='338' height='190' className='video-uploaded' src={props.item.url} />
+          <video controls={true}  className='video-uploaded' src={props.item.url} />
         </div>
       </div>
     );

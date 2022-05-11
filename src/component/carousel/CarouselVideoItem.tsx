@@ -32,7 +32,7 @@ export default function CarouselVideoItem({
       case "video":
         btnVideoRef.current.insertAdjacentHTML(
           "afterend",
-          `<video src="${srcVideo}" poster="${srcPoster}" controls controlsList='nodownload' autoPlay ></video>`
+          `<video className="carousel-video" src="${srcVideo}" poster="${srcPoster}" controls controlsList='nodownload' autoPlay ></video>`
         );
         break;
       case "youtube":

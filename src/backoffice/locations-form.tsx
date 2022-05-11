@@ -10,11 +10,11 @@ import { PageSizeSelect } from "react-page-size-select";
 import { useNavigate } from "react-router-dom";
 import { Pagination } from "reactx-pagination";
 import { inputSearch } from "uione";
-import { Location, LocationFilter } from "../service/location/location";
-import { getLocations } from "../service/index";
+import { Location, LocationFilter } from "./service/location/location";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import LocationCarousel from "./location-carousel";
+import LocationCarousel from "../location/location-page/location-carousel";
+import { getLocations } from "./service";
 
 interface LocationSearch
   extends SearchComponentState<Location, LocationFilter> {
@@ -40,7 +40,6 @@ export const LocationsForm = () => {
     resource,
     component,
     updateState,
-
     search,
     toggleFilter,
     pageChanged,

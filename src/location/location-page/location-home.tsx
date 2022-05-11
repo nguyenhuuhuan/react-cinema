@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 // import { Review } from './review'
-import { getLocations } from '../service/index'
-import { Location } from '../service/location/location'
+import { Location } from '../../backoffice/service/location/location'
 import imageOnline from '../../assets/images/online.svg';
 import { Review } from './review';
 import { Overview } from './overview';
+import { getLocations } from '../../backoffice/service';
 export const LocationHome = () => {
     const { id = '' } = useParams()
     const [location, setLocation] = useState<Location>();

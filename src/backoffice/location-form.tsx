@@ -4,8 +4,8 @@ import { createModel, DispatchWithCallback, EditComponentParam, OnClick, useEdit
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import ReactModal from 'react-modal';
 import { inputEdit, Status } from 'uione';
-import { getLocations } from '../service/index';
-import { Location } from "../service/location/location";
+import { getLocations } from './service';
+import { Location } from './service/location/location';
 interface InternalState {
   location: Location;
 }

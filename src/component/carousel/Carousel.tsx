@@ -180,10 +180,10 @@ export default function Carousel(props: Props) {
       {
         children.length > 1 && (
           <>
-            <span id='btn-prev' onClick={prev}>
+            <span className='btn-prev' onClick={prev}>
               &lt;
             </span>
-            <span id='btn-next' onClick={next}>
+            <span className='btn-next' onClick={next}>
               &gt;
             </span>
           </>

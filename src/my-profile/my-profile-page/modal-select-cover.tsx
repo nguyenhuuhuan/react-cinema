@@ -7,13 +7,13 @@ interface Props {
   modalSelectGalleryOpen: boolean;
   closeModalUploadGallery: (e: OnClick) => void;
   list: FileUploads[];
-  setImageCover:(e:OnClick,url:string)=>void
+  setImageCover: (e: OnClick, url: string) => void;
 }
 export const ModalSelectCover = ({
   list,
   modalSelectGalleryOpen,
   closeModalUploadGallery,
-  setImageCover
+  setImageCover,
 }: Props) => {
   const resource = useResource();
 
@@ -43,25 +43,28 @@ export const ModalSelectCover = ({
             <ul className="row list-view">
               {list &&
                 list.length > 0 &&
-                list.map((gallery, i) => (
-                  <div key={i} className="col s12 m6 l4 xl3 card-gallery">
-                    <img
-                      className="image-uploaded"
-                      src={gallery.url}
-                      alt="image_uploads"
-                    />
-                    <div key={i} className="mask">
-                      <section className="btn-group ">
-                        <button
-                          className="btn-search"
-                          onClick={(e) => setImageCover(e, gallery.url)} 
-                        >
-                          {resource.button_select}
-                        </button>
-                      </section>
-                    </div>
-                  </div>
-                ))}
+                list.map((gallery, i) => {
+                  if (gallery.type === "image")
+                    return (
+                      <div key={i} className="col s12 m6 l4 xl3 card-gallery">
+                        <img
+                          className="image-uploaded"
+                          src={gallery.url}
+                          alt="image_uploads"
+                        />
+                        <div key={i} className="mask">
+                          <section className="btn-group ">
+                            <button
+                              className="btn-search"
+                              onClick={(e) => setImageCover(e, gallery.url)}
+                            >
+                              {resource.button_select}
+                            </button>
+                          </section>
+                        </div>
+                      </div>
+                    );
+                })}
             </ul>
           </body>
 

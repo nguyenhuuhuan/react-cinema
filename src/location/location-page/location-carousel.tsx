@@ -3,12 +3,12 @@ import Carousel from "../../component/carousel/Carousel";
 import CarouselImageItem from "../../component/carousel/CarouselImageItem";
 import CarouselVideoItem from "../../component/carousel/CarouselVideoItem";
 import imgDefault from "../../assets/images/video-youtube.png";
-import { getLocations } from "../service/index";
 
 import "./style.css";
-import { Location } from "../service/location/location";
+import { Location } from "../../backoffice/service/location/location";
 import { OnClick } from "react-hook-core";
 import { FileUploads } from "../../uploads/model";
+import { getLocations } from "../../backoffice/service";
 
 interface Props {
   edit: (e: any, id: string) => void;
