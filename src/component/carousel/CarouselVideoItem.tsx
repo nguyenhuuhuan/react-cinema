@@ -6,56 +6,43 @@ const urlYoutube = "https://www.youtube.com/embed/";
 
 interface Props {
   type: string;
-  srcVideo: string;
+  src: string;
   srcPoster: string;
   namePorster: string;
 }
 
 export default function CarouselVideoItem({
   type,
-  srcVideo,
+  src,
   srcPoster,
   namePorster,
 }: Props) {
+  const [active, setActive] = React.useState<boolean>(false);
   const btnVideoRef = React.useRef<HTMLDivElement>(null);
   // React.useEffect(() => {
   //   const a = btnVideoRef.current.querySelector('iframe');
   // }, []);
   const handlePlayVideo = (e: OnClick) => {
     e.preventDefault();
-    if (!btnVideoRef || !btnVideoRef.current) return;
-    const btnPlay = btnVideoRef.current.querySelector(".btn-play");
-    const thumbnailContainer = btnVideoRef.current.querySelector(
-      ".thumbnail-container"
-    );
-    switch (type) {
-      case "video":
-        btnVideoRef.current.insertAdjacentHTML(
-          "afterend",
-          `<video className="carousel-video" src="${srcVideo}" poster="${srcPoster}" controls controlsList='nodownload' autoPlay ></video>`
-        );
-        break;
-      case "youtube":
-        btnVideoRef.current.insertAdjacentHTML(
-          "afterend",
-          ` <div className='data-item'>
-          <iframe
-            width='338'
-            height='190'
-            src="${srcVideo}"
-            title='YouTube video player'
-            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;'
-          />
-        </div>`
-        );
-        break;
-      default:
-        return;
-    }
-    btnPlay?.classList.add("displayNone");
-    thumbnailContainer?.classList.add("opacity-0");
+    setActive(true);
   };
-  return (
+  return active ? (
+    <div className="video-container">
+      {type === "video" ? (
+        <video src={src} controls={true} controlsList="nodownload" autoPlay></video>
+      ) : (
+        <div className="data-item">
+          <iframe
+            width="338"
+            height="190"
+            src={src}
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
+          />
+        </div>
+      )}
+    </div>
+  ) : (
     <div ref={btnVideoRef} className="panel-container">
       <button className="btn-play" onClick={handlePlayVideo}>
         <svg
@@ -68,10 +55,8 @@ export default function CarouselVideoItem({
         </svg>
       </button>
       <div className="thumbnail-container">
-        <img src={srcPoster} alt={namePorster} draggable={false} />
+        <img src={srcPoster} alt={"namePorster"} draggable={false} />
       </div>
-
-     
     </div>
   );
 }

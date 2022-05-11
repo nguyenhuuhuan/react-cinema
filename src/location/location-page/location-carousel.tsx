@@ -75,7 +75,7 @@ export default function LocationCarousel({ edit, location }: Props) {
                         <CarouselVideoItem
                           key={index}
                           type={itemData.type}
-                          srcVideo={itemData.url}
+                          src={itemData.url}
                           srcPoster={imgDefault}
                           namePorster={imgDefault}
                         />
@@ -96,7 +96,7 @@ export default function LocationCarousel({ edit, location }: Props) {
                         <CarouselVideoItem
                           key={index}
                           type={itemData.type}
-                          srcVideo={itemData.url}
+                          src={itemData.url}
                           srcPoster={thumbnail || ""}
                           namePorster={thumbnail || ""}
                         />

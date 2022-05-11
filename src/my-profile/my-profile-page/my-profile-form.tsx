@@ -1138,7 +1138,7 @@ export const MyProfileForm = () => {
                                 <CarouselVideoItem
                                   key={index}
                                   type={itemData.type}
-                                  srcVideo={itemData.url}
+                                  src={itemData.url}
                                   srcPoster={imgDefault}
                                   namePorster={imgDefault}
                                 />
