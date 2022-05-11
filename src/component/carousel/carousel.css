@@ -47,6 +47,13 @@
   right: -3%;
 }
 
+.user-carousel-container{
+  height: 100%;
+  width: 100%;
+  opacity: 1;
+  transition: all 0.5s ease-in-out 0s;
+}
+
 .slider-content-wrapper{
   display: flex;
   box-sizing: border-box;

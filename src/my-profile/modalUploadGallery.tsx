@@ -1,12 +1,12 @@
 import React from "react";
 import { OnClick } from "react-hook-core";
 import ReactModal from "react-modal";
-import { FileUploads } from "../admin/users_carousel/model";
 import UploadFile from "../uploads/app";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options, UserAccount } from "uione";
 import { config } from "../config";
+import { FileUploads } from "../uploads/model";
 const httpRequest = new HttpRequest(Axios, options);
 const user: UserAccount = JSON.parse(
   sessionStorage.getItem("authService") || "{}"
@@ -14,10 +14,12 @@ const user: UserAccount = JSON.parse(
 interface Props {
   modalUploadGalleryOpen: boolean;
   closeModalUploadGallery: (e: OnClick) => void;
+  setGallery:(file:FileUploads[])=>void;
 }
 export const ModalUploadGallery = ({
   modalUploadGalleryOpen,
   closeModalUploadGallery,
+  setGallery
 }: Props) => {
   const httpPost = (
     url: string,
@@ -49,6 +51,7 @@ export const ModalUploadGallery = ({
             />
           </header>
           <UploadFile
+            setGallery={setGallery}
             type="gallery"
             post={httpPost}
             id={user.id || ""}
