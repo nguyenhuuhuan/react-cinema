@@ -64,5 +64,11 @@ export const vi = {
   user_settings_post_mentions: 'When you have a post mention',
   user_settings_comments_of_your_posts: 'When you have a new comment of your post',
   user_settings_event_invitations: 'When you have a new event invitations',
-  user_settings_when_new_events_around: 'When you have a new event around'
+  user_settings_when_new_events_around: 'When you have a new event around',
+  button_modal_ok:'Ok',
+  title_modal_uploads:'Uploads',
+  warning_message_delete_bio:'Data will not be saved, are you sure to continue?',
+  title_modal_gallery:'Gallery',
+  title_select_gallery:'Select gallery',
+  button_select:'Select'
 };
