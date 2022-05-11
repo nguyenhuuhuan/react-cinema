@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { clone, OnClick, useUpdate } from "react-hook-core";
 import ReactModal from "react-modal";
 import { alert, handleError, message, UserAccount, useResource } from "uione";
-import imageOnline from "../assets/images/online.svg";
-import Uploads from "../uploads/components/UploadModal/UploadContainer";
-import { FileUploads } from "../uploads/model";
-import imgDefault from "../assets/images/video-youtube.png";
+import imageOnline from "../../assets/images/online.svg";
+import Uploads from "../../uploads/components/UploadModal/UploadContainer";
+import { FileUploads } from "../../uploads/model";
+import imgDefault from "../../assets/images/video-youtube.png";
 
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
@@ -15,22 +15,22 @@ import {
   useInterestService,
   useMyProfileService,
   User,
-} from "./my-profile";
+} from "../my-profile";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options } from "uione";
-import { ModalSelectCover } from "./modal-select-cover/modal-select-cover";
-import { config } from "../config";
+import { ModalSelectCover } from "./modal-select-cover";
+import { config } from "../../config";
 import {
   getFileExtension,
   removeFileExtension,
   typeFile,
-} from "../uploads/components/UploadModal/UploadHook";
+} from "../../uploads/components/UploadModal/UploadHook";
 import { SuggestionService } from "suggestion-service";
-import { useSkillService } from "./my-profile";
-import Carousel from "../component/carousel/Carousel";
-import CarouselImageItem from "../component/carousel/CarouselImageItem";
-import CarouselVideoItem from "../component/carousel/CarouselVideoItem";
+import { useSkillService } from "../my-profile";
+import Carousel from "../../component/carousel/Carousel";
+import CarouselImageItem from "../../component/carousel/CarouselImageItem";
+import CarouselVideoItem from "../../component/carousel/CarouselVideoItem";
 const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
@@ -1118,7 +1118,7 @@ export const MyProfileForm = () => {
             <div className="card border-bottom-highlight">
               <header>
                 <i className="material-icons highlight btn-camera"></i>
-                Gallery
+                {resource.title_modal_gallery}
                 <button
                   type="button"
                   id="btnGallery"
@@ -1164,7 +1164,7 @@ export const MyProfileForm = () => {
                                 </div>
                               );
                             default:
-                              break;
+                              return <></>;
                           }
                         })
                       : [<></>]}
@@ -1179,7 +1179,6 @@ export const MyProfileForm = () => {
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Modal"
-        // portalClassName='modal-portal'
         className="modal-portal-content"
         bodyOpenClassName="modal-portal-open"
         overlayClassName="modal-portal-backdrop"
@@ -1203,7 +1202,7 @@ export const MyProfileForm = () => {
         <div className="view-container profile-info">
           <form model-name="data">
             <header>
-              <h2>Uploads</h2>
+              <h2>{resource.title_modal_uploads}</h2>
               <button
                 type="button"
                 id="btnClose"
@@ -1229,7 +1228,7 @@ export const MyProfileForm = () => {
                 name="btnSave"
                 onClick={closeModalUpload}
               >
-                OK
+                {resource.button_modal_ok}
               </button>
             </footer>
           </form>
@@ -1257,7 +1256,7 @@ export const MyProfileForm = () => {
             </header>
             <div>
               <section className="row">
-                <div> Data will not be saved, are you sure to continue?</div>
+                <div> {resource.warning_message_delete_bio}</div>
               </section>
             </div>
 
@@ -1268,7 +1267,7 @@ export const MyProfileForm = () => {
                 name="btnSave"
                 onClick={revertBioChages}
               >
-                OK
+                {resource.button_modal_ok}
               </button>
             </footer>
           </form>

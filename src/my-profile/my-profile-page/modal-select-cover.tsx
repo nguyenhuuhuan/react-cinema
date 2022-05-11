@@ -1,7 +1,6 @@
-import Axios from "axios";
-import React from "react";
 import { OnClick } from "react-hook-core";
 import ReactModal from "react-modal";
+import { useResource } from "uione";
 import { FileUploads } from "../../uploads/model";
 import "./modal-select-cover.css";
 interface Props {
@@ -16,7 +15,7 @@ export const ModalSelectCover = ({
   closeModalUploadGallery,
   setImageCover
 }: Props) => {
-
+  const resource = useResource();
 
   return (
     <ReactModal
@@ -31,7 +30,7 @@ export const ModalSelectCover = ({
       <div className="view-container profile-info">
         <form model-name="data">
           <header>
-            <h2>Select gallery</h2>
+            <h2>{resource.title_select_gallery}</h2>
             <button
               type="button"
               id="btnClose"
@@ -49,15 +48,15 @@ export const ModalSelectCover = ({
                     <img
                       className="image-uploaded"
                       src={gallery.url}
-                      alt="image-uploads"
+                      alt="image_uploads"
                     />
                     <div key={i} className="mask">
                       <section className="btn-group ">
                         <button
                           className="btn-search"
-                          onClick={(e) => setImageCover(e, gallery.url)}
+                          onClick={(e) => setImageCover(e, gallery.url)} 
                         >
-                          Select
+                          {resource.button_select}
                         </button>
                       </section>
                     </div>
@@ -73,7 +72,7 @@ export const ModalSelectCover = ({
               name="btnSave"
               onClick={closeModalUploadGallery}
             >
-              OK
+              {resource.button_modal_ok}
             </button>
           </footer>
         </form>
