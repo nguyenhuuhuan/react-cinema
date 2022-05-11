@@ -1115,9 +1115,9 @@ export const MyProfileForm = () => {
                   onClick={openModalUploadGallery}
                 />
               </header>
-              {/* <section className="row">
+              <section className="row">
                 <img src={user.coverURL} alt="" />
-              </section> */}
+              </section>
             </div>
           </div>
         </div>

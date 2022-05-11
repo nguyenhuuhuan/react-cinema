@@ -6,7 +6,6 @@ import ReactCrop, {
   PixelCrop,
 } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { dataURLtoFile, getFileExtension } from "./UploadHook";
 
 interface Props {
   image: File;
@@ -75,9 +74,6 @@ export default function CropImage(props: Props) {
       return;
     }
     if(!props.isPreview) return
-    if (props.aspect === 0) {
-      return
-    }
     const image: HTMLImageElement = imgRef.current;
     const canvas: HTMLCanvasElement = previewCanvasRef.current;
     const scaleX = image.naturalWidth / image.width;
@@ -91,7 +87,6 @@ export default function CropImage(props: Props) {
 
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
     ctx.imageSmoothingQuality = "high";
-
     ctx.drawImage(
       image,
       completedCrop.x * scaleX,

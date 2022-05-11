@@ -91,7 +91,7 @@ const UploadFile = ({ type = "gallery", post = httpPost, url, id ,sizes=[]}: Pro
               post={post}
               setFileGallery={handleFetch}
               type={type}
-              aspect={1}
+              aspect={0}
             />
             <div className="youtube-add">
               <input
