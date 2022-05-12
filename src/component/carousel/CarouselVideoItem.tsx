@@ -7,15 +7,15 @@ const urlYoutube = "https://www.youtube.com/embed/";
 interface Props {
   type: string;
   src: string;
-  srcPoster: string;
-  namePorster: string;
+  thumbnail: string;
+  description: string;
 }
 
 export default function CarouselVideoItem({
   type,
   src,
-  srcPoster,
-  namePorster,
+  thumbnail,
+  description,
 }: Props) {
   const [active, setActive] = React.useState<boolean>(false);
   const btnVideoRef = React.useRef<HTMLDivElement>(null);
@@ -29,7 +29,7 @@ export default function CarouselVideoItem({
   return active ? (
     <div className="video-wrapper">
       {type === "video" ? (
-        <video src={src} controls={true} controlsList="nodownload" autoPlay></video>
+        <video className="video-carousel" src={src} controls={true} controlsList="nodownload" autoPlay></video>
       ) : (
         <div className="data-item">
           <iframe
@@ -55,7 +55,7 @@ export default function CarouselVideoItem({
         </svg>
       </button>
       <div className="thumbnail-container">
-        <img src={srcPoster} alt={"namePorster"} draggable={false} />
+        <img src={thumbnail} alt={description} draggable={false} />
       </div>
     </div>
   );

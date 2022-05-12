@@ -1,7 +1,7 @@
 import { OnClick, useUpdate } from 'react-hook-core';
 import { UserAccount } from 'uione';
 import './general-info.css';
-import { useMyProfileService, User } from '../my-profile';
+import { useMyProfileService, User } from './my-profile';
 interface Props {
   user: User;
   resource: any;

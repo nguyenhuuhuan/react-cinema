@@ -3,34 +3,33 @@ import { clone, OnClick, useUpdate } from "react-hook-core";
 import ReactModal from "react-modal";
 import { alert, handleError, message, UserAccount, useResource } from "uione";
 import imageOnline from "../../assets/images/online.svg";
-import Uploads from "../../uploads/components/UploadModal/UploadContainer";
-import { FileUploads } from "../../uploads/model";
+import Uploads from "../uploads/components/UploadModal/UploadContainer";
+import { FileUploads } from "../uploads/model";
 import imgDefault from "../../assets/images/video-youtube.png";
 import GeneralInfo from "./general-info";
-import { ModalUploadGallery } from "./modalUploadGallery";
+import { ModalUploadGallery } from "./modal-upload-gallery";
 import {
   Achievement,
   Skill,
   useInterestService,
   useMyProfileService,
   User,
-} from "../my-profile";
+} from "./my-profile";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options } from "uione";
 import { ModalSelectCover } from "./modal-select-cover";
-import { config } from "../../config";
+import { config } from "../config";
 import {
   getFileExtension,
   removeFileExtension,
   typeFile,
-} from "../../uploads/components/UploadModal/UploadHook";
+} from "../uploads/components/UploadModal/UploadHook";
 import { SuggestionService } from "suggestion-service";
-import { useSkillService } from "../my-profile";
-import Carousel from "../../component/carousel/Carousel";
-import CarouselImageItem from "../../component/carousel/CarouselImageItem";
-import CarouselVideoItem from "../../component/carousel/CarouselVideoItem";
-import { VideoPlayer } from "./youtube-player";
+import { useSkillService } from "./my-profile";
+import Carousel from "../component/carousel/Carousel";
+import CarouselImageItem from "../component/carousel/CarouselImageItem";
+import CarouselVideoItem from "../component/carousel/CarouselVideoItem";
 const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
@@ -1139,8 +1138,8 @@ export const MyProfileForm = () => {
                                   key={index}
                                   type={itemData.type}
                                   src={itemData.url}
-                                  srcPoster={imgDefault}
-                                  namePorster={imgDefault}
+                                  thumbnail={imgDefault}
+                                  description={imgDefault}
                                 />
                               );
                             case "image":
@@ -1153,7 +1152,14 @@ export const MyProfileForm = () => {
                               );
                             case "youtube":
                               return (
-                                <VideoPlayer key={index} src={itemData.url} />
+                                <div className="data-item-youtube">
+                                  <iframe
+                                    src={itemData.url}
+                                    frameBorder="0"
+                                    className="iframe-youtube"
+                                  ></iframe>
+                                  ;
+                                </div>
                               );
                             default:
                               return <></>;

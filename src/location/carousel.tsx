@@ -76,8 +76,8 @@ export default function LocationCarousel({ edit, location }: Props) {
                           key={index}
                           type={itemData.type}
                           src={itemData.url}
-                          srcPoster={imgDefault}
-                          namePorster={imgDefault}
+                          thumbnail={imgDefault}
+                          description={imgDefault}
                         />
                       );
                     case "image":
@@ -97,8 +97,8 @@ export default function LocationCarousel({ edit, location }: Props) {
                           key={index}
                           type={itemData.type}
                           src={itemData.url}
-                          srcPoster={thumbnail || ""}
-                          namePorster={thumbnail || ""}
+                          thumbnail={thumbnail || ""}
+                          description={thumbnail || ""}
                         />
                       );
                     default:

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { OnClick, useUpdate } from 'react-hook-core';
 import { confirm, handleError, message, useResource } from 'uione';
-import { useMyProfileService, UserSettings } from '../my-profile';
+import { useMyProfileService, UserSettings } from './my-profile';
 
 interface InternalState {
   settings: UserSettings;

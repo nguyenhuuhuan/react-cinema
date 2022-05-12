@@ -63,12 +63,12 @@ import { FilmsForm } from './backoffice/films-form';
 import { LocationsForm } from './backoffice/locations-form';
 import { LocationPage } from './location/location-page';
 import { Review } from './location/location-page/review';
-import { MyProfileForm } from './my-profile/my-profile-page/my-profile-form';
-import { MySettingsForm } from './my-profile/my-profile-page/my-settings-form';
 import { UsersPage } from './profile/users-page';
 import { UserPage } from './profile/user-page';
 import { LocationForm } from './backoffice/location-form';
 import { LocationsPage } from './location/locations-page';
+import { MySettingsForm } from './my-profile/my-settings-form';
+import { MyProfileForm } from './my-profile/my-profile-form';
 // import "./assets/fonts/Roboto/font.css";
 
 let isInit = false;

@@ -1,12 +1,12 @@
 import React from "react";
 import { OnClick } from "react-hook-core";
 import ReactModal from "react-modal";
-import UploadFile from "../../uploads/app";
+import UploadFile from "../uploads/app";
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options, UserAccount, useResource } from "uione";
-import { config } from "../../config";
-import { FileUploads } from "../../uploads/model";
+import { config } from "../config";
+import { FileUploads } from "../uploads/model";
 const httpRequest = new HttpRequest(Axios, options);
 const user: UserAccount = JSON.parse(
   sessionStorage.getItem("authService") || "{}"

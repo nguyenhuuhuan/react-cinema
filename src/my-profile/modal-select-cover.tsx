@@ -1,7 +1,7 @@
 import { OnClick } from "react-hook-core";
 import ReactModal from "react-modal";
 import { useResource } from "uione";
-import { FileUploads } from "../../uploads/model";
+import { FileUploads } from "../uploads/model";
 import "./modal-select-cover.css";
 interface Props {
   modalSelectGalleryOpen: boolean;
