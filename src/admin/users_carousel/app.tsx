@@ -49,7 +49,7 @@ export default function UserCarousel({ user, edit }: Props) {
                         switch (itemData.type) {
                             case 'video':
                                 return (
-                                    <CarouselVideoItem key={index} type={itemData.type} src={itemData.url} thumbnail={imgDefault} description={imgDefault} />
+                                    <CarouselVideoItem key={index} type={itemData.type} src={itemData.url}  />
                                 );
                             case 'image':
                                 return (
@@ -57,9 +57,8 @@ export default function UserCarousel({ user, edit }: Props) {
                                     <CarouselImageItem key={index} url={itemData.url} />
                                 );
                             case 'youtube':
-                                const thumbnail = itemData.standardThumbnail || itemData.mediumThumbnail || itemData.thumbnail || itemData.maxresThumbnail || itemData.hightThumbnail;
                                 return (
-                                    <CarouselVideoItem key={index} type={itemData.type} src={itemData.url} thumbnail={thumbnail || ''} description={thumbnail || ''} />
+                                    <CarouselVideoItem key={index} type={itemData.type} src={itemData.url}  />
                                 );
                             default:
                                 break;

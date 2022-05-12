@@ -5,15 +5,11 @@ import "./carousel.css";
 interface Props {
   type: string;
   src: string;
-  thumbnail: string;
-  description: string;
 }
 
 export default function CarouselVideoItem({
   type,
-  src,
-  thumbnail,
-  description,
+  src
 }: Props) {
   const [active, setActive] = React.useState<boolean>(false);
   const btnVideoRef = React.useRef<any>(null);

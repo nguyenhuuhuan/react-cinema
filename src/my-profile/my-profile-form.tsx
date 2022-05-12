@@ -1138,8 +1138,6 @@ export const MyProfileForm = () => {
                                   key={index}
                                   type={itemData.type}
                                   src={itemData.url}
-                                  thumbnail={imgDefault}
-                                  description={imgDefault}
                                 />
                               );
                             case "image":
@@ -1154,7 +1152,7 @@ export const MyProfileForm = () => {
                               return (
                                 <div className="data-item-youtube">
                                   <iframe
-                                    src={itemData.url}
+                                    src={itemData.url+"?enablejsapi=1"}
                                     frameBorder="0"
                                     className="iframe-youtube"
                                   ></iframe>

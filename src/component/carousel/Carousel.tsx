@@ -99,9 +99,17 @@ export default function Carousel(props: Props) {
 
   const handleTransitionEnd = () => {
     let sliderParent = document.querySelector(".slider-container");
+    sliderParent!.querySelectorAll(".data-item-youtube").forEach((child) => {
+      let iframe = child.querySelector("iframe");
+      if (iframe !== null) {
+        // var iframeSrc = iframe.src;
+        // iframe.src = iframeSrc;
+        iframe.contentWindow?.postMessage('{"event":"command","func":"stopVideo","args":""}', '*')
+      }
+    });
     sliderParent!.querySelectorAll(".play-video-wrapper").forEach((child) => {
       let video = child.querySelector("video");
-      video?.pause()
+      video?.pause();
     });
 
     if (!sliderContainer.current) return;

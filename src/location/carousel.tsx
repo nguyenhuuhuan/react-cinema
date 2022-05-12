@@ -76,8 +76,6 @@ export default function LocationCarousel({ edit, location }: Props) {
                           key={index}
                           type={itemData.type}
                           src={itemData.url}
-                          thumbnail={imgDefault}
-                          description={imgDefault}
                         />
                       );
                     case "image":
@@ -86,19 +84,11 @@ export default function LocationCarousel({ edit, location }: Props) {
                         <CarouselImageItem key={index} url={itemData.url} />
                       );
                     case "youtube":
-                      const thumbnail =
-                        itemData.standardThumbnail ||
-                        itemData.mediumThumbnail ||
-                        itemData.thumbnail ||
-                        itemData.maxresThumbnail ||
-                        itemData.hightThumbnail;
                       return (
                         <CarouselVideoItem
                           key={index}
                           type={itemData.type}
                           src={itemData.url}
-                          thumbnail={thumbnail || ""}
-                          description={thumbnail || ""}
                         />
                       );
                     default:
