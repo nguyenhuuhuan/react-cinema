@@ -48,7 +48,7 @@ export const useUpload = (props: Props) => {
   }, [props.type]);
 
   const validateFile = async () => {
-    if (file?.type.indexOf("image") === -1) return;
+    if (props.type !== "gallery") return;
     const image = await readFileAsync(file);
     if (!image) return;
     for (const size of props.sizes) {
@@ -61,11 +61,12 @@ export const useUpload = (props: Props) => {
   };
 
   const upload = async (id: string): Promise<FileUploads[]> => {
+    debugger;
     if (!file) return [];
     let fileCustomSizes: File[] = [];
     setState((pre) => ({ ...pre, loading: true }));
     const bodyFormData = new FormData();
-    if (file.type.indexOf("image") > -1) {
+    if (props.type !== "gallery") {
       fileCustomSizes = await resizes(props.sizes);
       bodyFormData.append("files", file);
       fileCustomSizes.forEach((fileCustom) => {
@@ -97,8 +98,6 @@ export const useUpload = (props: Props) => {
       .catch(() => {
         setState((pre) => ({ ...pre, loading: false }));
       });
-
-    return [];
   };
 
   function readFileAsync(file: File | undefined): Promise<HTMLImageElement> {
