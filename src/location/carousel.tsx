@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Carousel from "../component/carousel/Carousel";
-import CarouselImageItem from "../component/carousel/CarouselImageItem";
-import CarouselVideoItem from "../component/carousel/CarouselVideoItem";
+import { Carousel, CarouselImageItem, CarouselVideoItem } from "reactx-carousel";
 import imgDefault from "../assets/images/video-youtube.png";
 
 import "./carousel.css";
@@ -81,7 +79,7 @@ export default function LocationCarousel({ edit, location }: Props) {
                     case "image":
                       return (
                         // <img className='image-carousel' src={itemData.url} key={index} alt={itemData.url} draggable={false}/>
-                        <CarouselImageItem key={index} url={itemData.url} />
+                        <CarouselImageItem key={index} src={itemData.url} />
                       );
                     case "youtube":
                       return (

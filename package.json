@@ -37,6 +37,7 @@
     "react-page-size-select": "0.0.3",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
+    "reactx-carousel": "0.0.0",
     "reactx-nav": "^0.1.1",
     "reactx-pagination": "^0.0.0",
     "rxjs": "^7.5.5",

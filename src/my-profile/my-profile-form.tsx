@@ -27,9 +27,7 @@ import {
 } from "../uploads/components/UploadModal/UploadHook";
 import { SuggestionService } from "suggestion-service";
 import { useSkillService } from "./my-profile";
-import Carousel from "../component/carousel/Carousel";
-import CarouselImageItem from "../component/carousel/CarouselImageItem";
-import CarouselVideoItem from "../component/carousel/CarouselVideoItem";
+import { Carousel, CarouselImageItem, CarouselVideoItem } from "reactx-carousel";
 const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
@@ -1145,7 +1143,7 @@ export const MyProfileForm = () => {
                                 // <img className='image-carousel' src={itemData.url} key={index} alt={itemData.url} draggable={false}/>
                                 <CarouselImageItem
                                   key={index}
-                                  url={itemData.url}
+                                  src={itemData.url}
                                 />
                               );
                             case "youtube":

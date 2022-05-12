@@ -1,7 +1,5 @@
 import * as React from 'react';
-import Carousel from '../../component/carousel/Carousel';
-import CarouselImageItem from '../../component/carousel/CarouselImageItem';
-import CarouselVideoItem from '../../component/carousel/CarouselVideoItem';
+import { Carousel, CarouselImageItem, CarouselVideoItem } from "reactx-carousel";
 import { User } from '../service';
 import imgDefault from './img/video-youtube.png';
 import { FileUploads } from './model';
@@ -54,7 +52,7 @@ export default function UserCarousel({ user, edit }: Props) {
                             case 'image':
                                 return (
                                     // <img className='image-carousel' src={itemData.url} key={index} alt={itemData.url} draggable={false}/>
-                                    <CarouselImageItem key={index} url={itemData.url} />
+                                    <CarouselImageItem key={index} src={itemData.url} />
                                 );
                             case 'youtube':
                                 return (
