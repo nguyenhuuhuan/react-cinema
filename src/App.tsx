@@ -61,13 +61,14 @@ import { CategoryForm } from './backoffice/category-form';
 import { FilmForm } from './backoffice/film-form';
 import { FilmsForm } from './backoffice/films-form';
 import { LocationsForm } from './backoffice/locations-form';
-import { LocationHome } from './location/location-page/location-home';
+import { LocationPage } from './location/location-page';
 import { Review } from './location/location-page/review';
 import { MyProfileForm } from './my-profile/my-profile-page/my-profile-form';
 import { MySettingsForm } from './my-profile/my-profile-page/my-settings-form';
 import { UsersPage } from './profile/users-page';
 import { UserPage } from './profile/user-page';
 import { LocationForm } from './backoffice/location-form';
+import { LocationsPage } from './location/locations-page';
 // import "./assets/fonts/Roboto/font.css";
 
 let isInit = false;
@@ -140,12 +141,12 @@ function App() {
           <Route path='backoffice/films' element={<FilmsForm />} />
           <Route path='backoffice/films/add' element={<FilmForm />} />
           <Route path='backoffice/films/edit/:id' element={<FilmForm />} />
-          <Route path='location' element={<LocationsForm />} />
+          <Route path='location' element={<LocationsPage />} />
           <Route path='backoffice/location' element={<LocationsForm />} />
           <Route path='location/add' element={<LocationForm />} />
           <Route path='location/edit/:id' element={<LocationForm />} />
-          <Route path='location/:id' element={<LocationHome />} />
-          <Route path='location/:id/review' element={<LocationHome />} />
+          <Route path='location/:id' element={<LocationPage />} />
+          <Route path='location/:id/review' element={<LocationPage />} />
           <Route path='locations/:id/review' element={<Review />} />
           {/* <Route path={'upload/:id/image'} element={<UploadFile />} />
           <Route path={'upload'} element={<UploadFile />} /> */}

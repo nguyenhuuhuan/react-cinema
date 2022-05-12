@@ -14,8 +14,9 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { LocationFilter } from "../backoffice/service/location/location";
 import { getLocations } from "./service";
-import { LocationCarousel } from "./location-page";
+// import { LocationCarousel } from "./location-carousel";
 import { Location } from "./service/location/location";
+import LocationCarousel from "./carousel";
 
 interface LocationSearch
   extends SearchComponentState<Location, LocationFilter> {
@@ -33,7 +34,7 @@ const initialState: LocationSearch = {
   list: [],
   filter: userFilter,
 };
-export const LocationsForm = () => {
+export const LocationsPage = () => {
   const refForm = React.useRef();
   const navigate = useNavigate();
   const {

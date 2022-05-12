@@ -13,7 +13,7 @@ import { inputSearch } from "uione";
 import { Location, LocationFilter } from "./service/location/location";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import LocationCarousel from "../location/location-page/location-carousel";
+import LocationCarousel from "../location/carousel";
 import { getLocations } from "./service";
 
 interface LocationSearch

@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { OnClick } from 'react-hook-core';
 import './carousel.css';
 
 interface Props {
@@ -122,18 +123,19 @@ export default function Carousel(props: Props) {
     clearVideo();
   };
 
-  // const handleDots = (index) => {
-  //   if (infiniteLoop) {
-  //     index++;
-  //   }
-  //   if (counter.current !== index) {
-  //     counter.current = index;
-  //     sliderContainer.current.style.transition = 'transform 0.4s ease-in-out';
-  //     sliderContainer.current.style.transform =
-  //       'translate3d(' + -widthItem.current * counter.current + 'px, 0px, 0px)';
-  //   }
-  //   clearVideo();
-  // };
+  const handleDots = (index:any,e:OnClick) => {
+    e.preventDefault()
+    if (infiniteLoop) {
+      index++;
+    }
+    if (counter.current !== index) {
+      counter.current = index;
+      sliderContainer.current!.style.transition = 'transform 0.4s ease-in-out';
+      sliderContainer.current!.style.transform =
+        'translate3d(' + -widthItem.current * counter.current + 'px, 0px, 0px)';
+    }
+    clearVideo();
+  };
 
   const handleTouchStart = (e: any) => {
     if (!touchPosition.current) return
@@ -227,7 +229,7 @@ export default function Carousel(props: Props) {
       {/* <div className='slider-dots'>
         {
            children.map((item, index) => (
-              <button key={index} onClick={() => handleDots(index)}>
+              <button key={index} onClick={(e) => handleDots(index,e)}>
                 {index}
               </button>
             ))}
