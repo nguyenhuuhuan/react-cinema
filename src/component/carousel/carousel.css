@@ -150,14 +150,18 @@
   transform: translate(-50%,-50%);
 }
 
-.video-wrapper{
+.play-video-wrapper{
   display: flex;
   justify-content: center;
   height: 100%;
 }
 
-.video-wrapper video{
+.play-video-wrapper video{
   width: 100%;
+}
+
+.video-wrapper {
+  position: relative;
 }
 
 iframe {

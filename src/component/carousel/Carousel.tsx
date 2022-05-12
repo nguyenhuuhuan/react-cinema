@@ -99,7 +99,7 @@ export default function Carousel(props: Props) {
 
   const handleTransitionEnd = () => {
     let sliderParent = document.querySelector(".slider-container");
-    sliderParent!.querySelectorAll(".video-wrapper").forEach((child) => {
+    sliderParent!.querySelectorAll(".play-video-wrapper").forEach((child) => {
       let video = child.querySelector("video");
       video?.pause()
     });

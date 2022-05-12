@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { clone, OnClick, useUpdate } from "react-hook-core";
 import ReactModal from "react-modal";
 import { alert, handleError, message, UserAccount, useResource } from "uione";
-import imageOnline from "../../assets/images/online.svg";
+import imageOnline from "../assets/images/online.svg";
 import Uploads from "../uploads/components/UploadModal/UploadContainer";
 import { FileUploads } from "../uploads/model";
-import imgDefault from "../../assets/images/video-youtube.png";
+import imgDefault from "../assets/images/video-youtube.png";
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modal-upload-gallery";
 import {
@@ -68,7 +68,7 @@ export const MyProfileForm = () => {
   const [isEditingInterest, setIsEditingInterest] = useState<boolean>(false);
   const [isEditingLookingFor, setIsEditingLookingFor] =
     useState<boolean>(false);
-  const [isEditingSkill, setIsEditingSkill] = useState<boolean>(false);
+  const [isEditingSkill, setIsEditingSkill] = useState<boolean>(false); 
   const [isEditingAchievement, setIsEditingAchievement] =
     useState<boolean>(false);
   const [bio, setBio] = useState<string>("");
