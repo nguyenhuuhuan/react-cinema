@@ -27,7 +27,7 @@ export default function CarouselVideoItem({
     setActive(true);
   };
   return active ? (
-    <div className="video-container">
+    <div className="video-wrapper">
       {type === "video" ? (
         <video src={src} controls={true} controlsList="nodownload" autoPlay></video>
       ) : (

@@ -88,6 +88,29 @@
   height: 100%;
 }
 
+.data-item-youtube{
+  position: relative;
+  padding-bottom: 54.0%;
+  overflow: hidden;
+}
+
+.data-item-gallery{
+  position: relative;
+  padding-bottom: 56.25%;
+  overflow: hidden;
+}
+
+.iframe-youtube{
+  overflow: hidden;
+  border: 0;
+  align-self: center;
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .thumbnail-container img {
   width: 100%;
 }
@@ -127,9 +150,14 @@
   transform: translate(-50%,-50%);
 }
 
-.video-container{
+.video-wrapper{
   display: flex;
   justify-content: center;
+  height: 100%;
+}
+
+.video-wrapper video{
+  width: 100%;
 }
 
 iframe {

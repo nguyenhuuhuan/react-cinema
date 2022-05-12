@@ -1,7 +1,6 @@
 import axios from "axios";
 import * as React from "react";
 import { PixelCrop } from "react-image-crop";
-import { UserAccount } from "uione";
 import { FileUploads } from "../../model";
 
 const urlGetImg = "http://localhost:8082/my-profile/image";

@@ -6,7 +6,6 @@ import imageOnline from "../../assets/images/online.svg";
 import Uploads from "../../uploads/components/UploadModal/UploadContainer";
 import { FileUploads } from "../../uploads/model";
 import imgDefault from "../../assets/images/video-youtube.png";
-
 import GeneralInfo from "./general-info";
 import { ModalUploadGallery } from "./modalUploadGallery";
 import {
@@ -31,6 +30,7 @@ import { useSkillService } from "../my-profile";
 import Carousel from "../../component/carousel/Carousel";
 import CarouselImageItem from "../../component/carousel/CarouselImageItem";
 import CarouselVideoItem from "../../component/carousel/CarouselVideoItem";
+import { VideoPlayer } from "./youtube-player";
 const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
@@ -1153,15 +1153,7 @@ export const MyProfileForm = () => {
                               );
                             case "youtube":
                               return (
-                                <div className="data-item" key={index}>
-                                  <iframe
-                                    width="338"
-                                    height="190"
-                                    src={itemData.url}
-                                    title="YouTube video player"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
-                                  />
-                                </div>
+                                <VideoPlayer key={index} src={itemData.url} />
                               );
                             default:
                               return <></>;
