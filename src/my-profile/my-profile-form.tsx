@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { clone, OnClick, useUpdate } from "react-hook-core";
-import ReactModal from "react-modal";
-import { alert, handleError, message, UserAccount, useResource } from "uione";
-import imageOnline from "../assets/images/online.svg";
-import Uploads from "../uploads/components/UploadModal/UploadContainer";
-import { FileUploads } from "../uploads/model";
-import imgDefault from "../assets/images/video-youtube.png";
-import GeneralInfo from "./general-info";
-import { ModalUploadGallery } from "./modal-upload-gallery";
+import Axios from 'axios';
+import { HttpRequest } from 'axios-core';
+import React, { useEffect, useState } from 'react';
+import { clone, OnClick, useUpdate } from 'react-hook-core';
+import ReactModal from 'react-modal';
+import { Carousel, CarouselImageItem, CarouselVideoItem } from 'reactx-carousel';
+import { SuggestionService } from 'suggestion-service';
+import { alert, handleError, message, UserAccount, useResource } from 'uione';
+import { options } from 'uione';
+import imageOnline from '../assets/images/online.svg';
+import imgDefault from '../assets/images/video-youtube.png';
+import { config } from '../config';
+import Uploads from '../uploads/components/UploadModal/UploadContainer';
+import {
+  getFileExtension,
+  removeFileExtension,
+  typeFile,
+} from '../uploads/components/UploadModal/UploadHook';
+import { FileUploads } from '../uploads/model';
+import GeneralInfo from './general-info';
+import { ModalSelectCover } from './modal-select-cover';
+import { ModalUploadGallery } from './modal-upload-gallery';
 import {
   Achievement,
   Skill,
   useInterestService,
   useMyProfileService,
   User,
-} from "./my-profile";
-import Axios from "axios";
-import { HttpRequest } from "axios-core";
-import { options } from "uione";
-import { ModalSelectCover } from "./modal-select-cover";
-import { config } from "../config";
-import {
-  getFileExtension,
-  removeFileExtension,
-  typeFile,
-} from "../uploads/components/UploadModal/UploadHook";
-import { SuggestionService } from "suggestion-service";
-import { useSkillService } from "./my-profile";
-import { Carousel, CarouselImageItem, CarouselVideoItem } from "reactx-carousel";
+} from './my-profile';
+import { useSkillService } from './my-profile';
 const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
@@ -42,23 +42,23 @@ interface Edit {
 }
 const data: Edit = {
   edit: {
-    lookingFor: "",
-    interest: "",
+    lookingFor: '',
+    interest: '',
     highlight: false,
-    description: "",
-    subject: "",
-    skill: "",
+    description: '',
+    subject: '',
+    skill: '',
     hirable: false,
   },
 };
 const userAccount: UserAccount = JSON.parse(
-  sessionStorage.getItem("authService") || "{}"
+  sessionStorage.getItem('authService') || '{}'
 ) as UserAccount;
 export const MyProfileForm = () => {
   const service = useMyProfileService();
   const skillService = useSkillService();
   const interestService = useInterestService();
-  const { state, setState, updateState } = useUpdate<Edit>(data, "edit");
+  const { state, setState, updateState } = useUpdate<Edit>(data, 'edit');
 
   const resource = useResource();
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -66,15 +66,15 @@ export const MyProfileForm = () => {
   const [isEditingInterest, setIsEditingInterest] = useState<boolean>(false);
   const [isEditingLookingFor, setIsEditingLookingFor] =
     useState<boolean>(false);
-  const [isEditingSkill, setIsEditingSkill] = useState<boolean>(false); 
+  const [isEditingSkill, setIsEditingSkill] = useState<boolean>(false);
   const [isEditingAchievement, setIsEditingAchievement] =
     useState<boolean>(false);
-  const [bio, setBio] = useState<string>("");
+  const [bio, setBio] = useState<string>('');
   const [user, setUser] = useState<User>({} as any);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [modalConfirmIsOpen, setModalConfirmIsOpen] = useState<boolean>(false);
   const [modalUpload, setModalUpload] = useState(false);
-  const [typeUpload, setTypeUpload] = useState<typeFile>("cover");
+  const [typeUpload, setTypeUpload] = useState<typeFile>('cover');
   const [aspect, setAspect] = useState<number>(1);
   const [modalUploadGalleryOpen, setModalUploadGalleryOpen] = useState(false);
   const [modalSelectGalleryOpen, setModalSelectGalleryOpen] = useState(false);
@@ -90,42 +90,45 @@ export const MyProfileForm = () => {
   const [listSkill, setListSkill] = useState<string[]>([]);
   const [listInterest, setListInterest] = useState<string[]>([]);
   useState<FileUploads[]>();
-  const handleChangeFile = (data: string | undefined) => {
-    if (typeUpload === "cover") setUploadedCover(data);
-    else setUploadedAvatar(data);
+  const handleChangeFile = (fi: string | undefined) => {
+    if (typeUpload === 'cover') {
+      setUploadedCover(fi);
+    } else {
+      setUploadedAvatar(fi);
+    }
   };
   useEffect(() => {
-    const skillSuggestionService = new SuggestionService<string>(
+    const skillSuggestion = new SuggestionService<string>(
       skillService.query,
       20
     );
-    setSkillSuggestionService(skillSuggestionService);
-    const interestSuggestionService = new SuggestionService<string>(
+    setSkillSuggestionService(skillSuggestion);
+    const interestSuggestion = new SuggestionService<string>(
       interestService.query,
       20
     );
-    setInterestSuggestionService(interestSuggestionService);
-    service.getMyProfile(userAccount.id || "").then((data) => {
-      if (data) {
-        setUser(data);
-        setBio(data.bio || "");
-        setUploadedCover(data.coverURL);
-        setUploadedAvatar(data.imageURL);
+    setInterestSuggestionService(interestSuggestion);
+    service.getMyProfile(userAccount.id || '').then((profile) => {
+      if (profile) {
+        setUser(profile);
+        setBio(profile.bio || '');
+        setUploadedCover(profile.coverURL);
+        setUploadedAvatar(profile.imageURL);
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [previousSkill, setPreviousSkill] = useState({
-    keyword: "",
+    keyword: '',
     list: [] as string[],
   });
   const [previousInterest, setPreviousInterest] = useState({
-    keyword: "",
+    keyword: '',
     list: [] as string[],
   });
   const onChangeSkill = (e: React.FormEvent<HTMLInputElement>) => {
     updateState(e);
-    let newSkill = e.currentTarget.value;
+    const newSkill = e.currentTarget.value;
     if (newSkill) {
       if (skillSuggestionService) {
         skillSuggestionService
@@ -142,7 +145,7 @@ export const MyProfileForm = () => {
   };
   const onChangeInterest = (e: React.FormEvent<HTMLInputElement>) => {
     updateState(e);
-    let newInterest = e.currentTarget.value;
+    const newInterest = e.currentTarget.value;
     if (newInterest) {
       if (interestSuggestionService) {
         interestSuggestionService
@@ -164,9 +167,9 @@ export const MyProfileForm = () => {
   const httpPost = (
     url: string,
     obj: any,
-    options?: { headers?: Headers | undefined } | undefined
+    opts?: { headers?: Headers | undefined } | undefined
   ): Promise<any> => {
-    return httpRequest.post(url, obj, options);
+    return httpRequest.post(url, obj, opts);
   };
 
   const showPopup = (e: OnClick) => {
@@ -185,12 +188,12 @@ export const MyProfileForm = () => {
       setIsEditingLookingFor(!isEditingLookingFor);
     }
     if (isEditingSkill) {
-      setState({ edit: { ...state.edit, skill: "" } });
+      setState({ edit: { ...state.edit, skill: '' } });
       setIsEditingSkill(!isEditingSkill);
     }
     if (isEditingAchievement) {
       setState({
-        edit: { ...state.edit, subject: "", highlight: false, description: "" },
+        edit: { ...state.edit, subject: '', highlight: false, description: '' },
       });
       setIsEditingAchievement(!isEditingAchievement);
     }
@@ -201,7 +204,7 @@ export const MyProfileForm = () => {
     e.preventDefault();
     const { skill, hirable } = state.edit;
     const skillsEditing = user.skills ? user.skills : [];
-    if (skill && skill.trim() !== "") {
+    if (skill && skill.trim() !== '') {
       const item = { hirable, skill };
       if (
         skillsEditing.filter((skillEdit) => skillEdit.skill === skill)
@@ -209,7 +212,7 @@ export const MyProfileForm = () => {
       ) {
         skillsEditing.push(item);
         user.skills = skillsEditing;
-        setState({ edit: { ...state.edit, skill: "" } });
+        setState({ edit: { ...state.edit, skill: '' } });
         setUser({ ...user });
       } else {
         alert(resource.error_duplicated_skill, resource.error);
@@ -221,7 +224,7 @@ export const MyProfileForm = () => {
     event.preventDefault();
     if (isEditing) {
       service
-        .saveMyProfile({ ...user, id: userAccount.id || "" })
+        .saveMyProfile({ ...user, id: userAccount.id || '' })
         .then((successs) => {
           if (successs) {
             message(resource.success_save_my_profile);
@@ -234,7 +237,7 @@ export const MyProfileForm = () => {
   };
 
   const saveEmit = (rs: any) => {
-    if (rs.status === "success" && rs.user) {
+    if (rs.status === 'success' && rs.user) {
       setUser(rs.user);
       message(resource.success_save_my_profile);
     } else {
@@ -281,11 +284,11 @@ export const MyProfileForm = () => {
   const addLookingFor = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
     const lookingForUser = user.lookingFor ? user.lookingFor : [];
-    if (state.edit.lookingFor && state.edit.lookingFor.trim() !== "") {
+    if (state.edit.lookingFor && state.edit.lookingFor.trim() !== '') {
       if (!inArray(lookingForUser, state.edit.lookingFor)) {
         lookingForUser.push(state.edit.lookingFor);
         user.lookingFor = lookingForUser;
-        setState({ edit: { ...state.edit, lookingFor: "" } });
+        setState({ edit: { ...state.edit, lookingFor: '' } });
         setUser({ ...user });
       } else {
         alert(resource.error_duplicated_looking_for, resource.error);
@@ -313,12 +316,12 @@ export const MyProfileForm = () => {
   const addInterest = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
     const interests = user.interests ? user.interests : [];
-    if (state.edit.interest && state.edit.interest.trim() !== "") {
+    if (state.edit.interest && state.edit.interest.trim() !== '') {
       if (!inArray(interests, state.edit.interest)) {
         interests.push(state.edit.interest);
         user.interests = interests;
         setUser({ ...user });
-        setState({ edit: { ...state.edit, interest: "" } });
+        setState({ edit: { ...state.edit, interest: '' } });
       } else {
         alert(resource.error_duplicated_interest, resource.error);
       }
@@ -334,9 +337,9 @@ export const MyProfileForm = () => {
     skillContent: string
   ) => {
     e.preventDefault();
-    user.skills = user.skills.filter((item) => item["skill"] !== skillContent);
+    user.skills = user.skills.filter((item) => item['skill'] !== skillContent);
     setUser({ ...user });
-    setState({ edit: { ...state.edit, interest: "" } });
+    setState({ edit: { ...state.edit, interest: '' } });
   };
   const toggleAchievement = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
@@ -349,7 +352,7 @@ export const MyProfileForm = () => {
   ) => {
     if (user.achievements) {
       const achievements = user.achievements.filter(
-        (item: Achievement) => item["subject"] !== subject
+        (item: Achievement) => item['subject'] !== subject
       );
       user.achievements = achievements;
       setUser({ ...user });
@@ -374,7 +377,7 @@ export const MyProfileForm = () => {
       achievements.push(achievement);
       user.achievements = achievements;
       setUser({ ...user });
-      setState({ edit: { ...state.edit, description: "", subject: "" } });
+      setState({ edit: { ...state.edit, description: '', subject: '' } });
     }
   };
 
@@ -386,10 +389,10 @@ export const MyProfileForm = () => {
     e.preventDefault();
     setModalUpload(true);
     setTypeUpload(type);
-    if (type === "cover") {
+    if (type === 'cover') {
       setAspect(2.7);
       setSizes([576, 768]);
-    } else setAspect(1);
+    } else { setAspect(1); }
     setSizes([40, 400]);
   };
 
@@ -417,7 +420,7 @@ export const MyProfileForm = () => {
     setUser({ ...user, coverURL: url });
     setUploadedCover(url);
     service
-      .saveMyProfile({ ...user, coverURL: url, id: userAccount.id || "" })
+      .saveMyProfile({ ...user, coverURL: url, id: userAccount.id || '' })
       .then((successs) => {
         if (successs) {
           message(resource.success_save_my_profile);
@@ -434,99 +437,98 @@ export const MyProfileForm = () => {
   };
 
   const getImageBySize = (url: string | undefined, size: number): string => {
-    if (!url) return "";
+    if (!url) { return ''; }
     return removeFileExtension(url) + `_${size}.` + getFileExtension(url);
   };
 
-  const followers = "7 followers"; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
-  const following = "10 following"; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
+  const followers = '7 followers'; // StringUtil.format(ResourceManager.getString('user_profile_followers'), user.followerCount || 0);
+  const following = '10 following'; // StringUtil.format(ResourceManager.getString('user_profile_following'), user.followingCount || 0);
   return (
-    <div className="profile view-container">
-      <form id="userForm" name="userForm">
-        <header className="border-bottom-highlight">
-          <div className="cover-image">
+    <div className='profile view-container'>
+      <form id='userForm' name='userForm'>
+        <header className='border-bottom-highlight'>
+          <div className='cover-image'>
             <img
               src={
                 uploadedCover
                   ? uploadedCover
-                  : "https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg"
+                  : 'https://pre00.deviantart.net/6ecb/th/pre/f/2013/086/3/d/facebook_cover_1_by_alphacid-d5zfrww.jpg'
               }
-              alt="cover"
-              style={{ objectFit: "cover" }}
+              alt='cover'
+              style={{ objectFit: 'cover' }}
             />
-            <div className="contact-group">
-              <button id="btnPhone" name="btnPhone" className="btn-phone" />
-              <button id="btnEmail" name="btnEmail" className="btn-email" />
+            <div className='contact-group'>
+              <button id='btnPhone' name='btnPhone' className='btn-phone' />
+              <button id='btnEmail' name='btnEmail' className='btn-email' />
             </div>
-            <button id="btnFollow" name="btnFollow" className="btn-follow">
+            <button id='btnFollow' name='btnFollow' className='btn-follow'>
               Follow
             </button>
           </div>
           <button
-            id="btnCamera"
-            name="btnCamera"
-            className="btn-camera"
+            id='btnCamera'
+            name='btnCamera'
+            className='btn-camera'
             onClick={toggleDropdownCover}
           />
 
           <ul
-            id="dropdown-basic"
-            className={`dropdown-content-profile dropdown-upload-cover ${
-              dropdownCover ? "show-upload-cover" : ""
-            }`}
+            id='dropdown-basic'
+            className={`dropdown-content-profile dropdown-upload-cover ${dropdownCover ? 'show-upload-cover' : ''
+              }`}
           >
-            <li className="menu" onClick={(e) => openModalUpload(e, "cover")}>
+            <li className='menu' onClick={(e) => openModalUpload(e, 'cover')}>
               Upload
             </li>
             <hr style={{ margin: 0 }} />
-            <li className="menu" onClick={toggleSelectGallery}>
+            <li className='menu' onClick={toggleSelectGallery}>
               Choose from gallery
             </li>
           </ul>
 
-          <div className="avatar-wrapper">
+          <div className='avatar-wrapper'>
             <img
-              className="avatar"
+              className='avatar'
               src={
                 getImageBySize(uploadedAvatar, 400) ||
-                "https://www.bluebridgewindowcleaning.co.uk/wp-content/uploads/2016/04/default-avatar.png"
+                'https://www.bluebridgewindowcleaning.co.uk/wp-content/uploads/2016/04/default-avatar.png'
               }
-              alt="avatar"
+              alt='avatar'
             />
             <button
-              id="btnCamera"
-              name="btnCamera"
-              className="btn-camera"
-              onClick={(e) => openModalUpload(e, "upload")}
+              id='btnCamera'
+              name='btnCamera'
+              className='btn-camera'
+              onClick={(e) => openModalUpload(e, 'upload')}
             />
 
-            <img className="profile-status" src={imageOnline} alt="status" />
+            <img className='profile-status' src={imageOnline} alt='status' />
           </div>
-          <div className="profile-title">
+          <div className='profile-title'>
             <h3>{user.displayName}</h3>
             <p>{user.website}</p>
           </div>
-          <div className="profile-followers">
+          <div className='profile-followers'>
             <p>
-              <i className="material-icons highlight">group</i> {followers}
+              <i className='material-icons highlight'>group</i> {followers}
             </p>
             <p>
-              <i className="material-icons highlight">group_add</i> {following}
+              <i className='material-icons highlight'>group_add</i> {following}
             </p>
           </div>
         </header>
-        <div className="row">
-          <div className="col m12 l4">
-            <div className="card">
+        <div className='row'>
+          <div className='col m12 l4'>
+            <div className='card'>
               <header>
-                <i className="material-icons highlight">account_box</i>
+                <i className='material-icons highlight'>account_box</i>
                 {resource.user_profile_basic_info}
                 <button
-                  type="button"
-                  id="btnBasicInfo"
-                  name="btnBasicInfo"
+                  type='button'
+                  id='btnBasicInfo'
+                  name='btnBasicInfo'
                   hidden={isEditing}
-                  className="btn-edit"
+                  className='btn-edit'
                   onClick={showPopup}
                 />
               </header>
@@ -534,16 +536,16 @@ export const MyProfileForm = () => {
               <p>{user.company}</p>
             </div>
             {!isEditingSkill && (
-              <div className="card">
+              <div className='card'>
                 <header>
-                  <i className="material-icons highlight">local_mall</i>
+                  <i className='material-icons highlight'>local_mall</i>
                   {resource.skills}
                   <button
-                    type="button"
-                    id="btnSkill"
-                    name="btnSkill"
+                    type='button'
+                    id='btnSkill'
+                    name='btnSkill'
                     hidden={isEditing}
-                    className="btn-edit"
+                    className='btn-edit'
                     onClick={toggleSkill}
                   />
                 </header>
@@ -555,29 +557,29 @@ export const MyProfileForm = () => {
                           {item.skill}
                           <i
                             hidden={!item.hirable}
-                            className="star highlight"
+                            className='star highlight'
                           />
                         </p>
                       );
                     })}
                   <hr />
-                  <p className="description">
-                    <i className="star highlight" />
+                  <p className='description'>
+                    <i className='star highlight' />
                     {resource.user_profile_hirable_skill}
                   </p>
                 </section>
               </div>
             )}
             {isEditingSkill && (
-              <div className="card">
+              <div className='card'>
                 <header>
-                  <i className="material-icons highlight">local_mall</i>
+                  <i className='material-icons highlight'>local_mall</i>
                   {resource.skills}
                   <button
-                    type="button"
-                    id="btnSkill"
-                    name="btnSkill"
-                    className="btn-close"
+                    type='button'
+                    id='btnSkill'
+                    name='btnSkill'
+                    className='btn-close'
                     onClick={toggleSkill}
                   />
                 </header>
@@ -585,15 +587,15 @@ export const MyProfileForm = () => {
                   {user.skills &&
                     user.skills.map((item: Skill, index: number) => {
                       return (
-                        <div key={index} className="chip">
+                        <div key={index} className='chip'>
                           {item.skill}
                           {item.hirable === true && (
-                            <i className="star highlight" />
+                            <i className='star highlight' />
                           )}
                           <button
-                            type="button"
-                            name="btnRemoveSkill"
-                            className="close"
+                            type='button'
+                            name='btnRemoveSkill'
+                            className='close'
                             onClick={(e) => removeSkill(e, item.skill)}
                           />
                         </div>
@@ -601,59 +603,59 @@ export const MyProfileForm = () => {
                     })}
 
                   <section>
-                    <div className="form-group">
+                    <div className='form-group'>
                       <input
-                        list="listSkill"
-                        type="text"
-                        name="skill"
-                        className="form-control"
+                        list='listSkill'
+                        type='text'
+                        name='skill'
+                        className='form-control'
                         value={state.edit.skill}
                         onChange={onChangeSkill}
                         placeholder={resource.placeholder_user_profile_skill}
                         maxLength={50}
                         required={true}
-                        autoComplete="on"
+                        autoComplete='on'
                       />
                     </div>
                     {listSkill && listSkill.length > 0 && (
-                      <datalist id="listSkill">
+                      <datalist id='listSkill'>
                         {listSkill.map((item, index) => {
                           return <option key={index} value={item} />;
                         })}
                       </datalist>
                     )}
-                    <div className="btn-group">
+                    <div className='btn-group'>
                       <button
-                        type="button"
-                        id="btnAddAchievement"
-                        name="btnAddAchievement"
-                        className="btn-add"
+                        type='button'
+                        id='btnAddAchievement'
+                        name='btnAddAchievement'
+                        className='btn-add'
                         onClick={addSkill}
                       />
                       {resource.button_add_achievement}
                     </div>
                   </section>
-                  <label className="checkbox-container">
+                  <label className='checkbox-container'>
                     <input
-                      type="checkbox"
-                      id="hirable"
-                      name="hirable"
+                      type='checkbox'
+                      id='hirable'
+                      name='hirable'
                       checked={state.edit.hirable}
                       onChange={updateState}
                     />
                     {resource.user_profile_hirable_skill}
                   </label>
                   <hr />
-                  <p className="description">
-                    <i className="star highlight" />
+                  <p className='description'>
+                    <i className='star highlight' />
                     {resource.user_profile_hirable_skill}
                   </p>
                 </section>
                 <footer>
                   <button
-                    type="button"
-                    id="btnSaveSkill"
-                    name="btnSaveSkill"
+                    type='button'
+                    id='btnSaveSkill'
+                    name='btnSaveSkill'
                     onClick={saveChanges}
                   >
                     {resource.save}
@@ -662,16 +664,16 @@ export const MyProfileForm = () => {
               </div>
             )}
             {!isEditingLookingFor && (
-              <div className="card">
+              <div className='card'>
                 <header>
-                  <i className="material-icons highlight">find_in_page</i>
+                  <i className='material-icons highlight'>find_in_page</i>
                   {resource.user_profile_looking_for}
                   <button
-                    type="button"
-                    id="btnLookingFor"
-                    name="btnLookingFor"
+                    type='button'
+                    id='btnLookingFor'
+                    name='btnLookingFor'
                     hidden={isEditing && !isEditingLookingFor}
-                    className="btn-edit"
+                    className='btn-edit'
                     onClick={toggleLookingFor}
                   />
                 </header>
@@ -684,15 +686,15 @@ export const MyProfileForm = () => {
               </div>
             )}
             {isEditingLookingFor && (
-              <div className="card">
+              <div className='card'>
                 <header>
-                  <i className="material-icons highlight">find_in_page</i>
+                  <i className='material-icons highlight'>find_in_page</i>
                   {resource.user_profile_looking_for}
                   <button
-                    type="button"
-                    id="btnLookingFor"
-                    name="btnLookingFor"
-                    className="btn-close"
+                    type='button'
+                    id='btnLookingFor'
+                    name='btnLookingFor'
+                    className='btn-close'
                     onClick={toggleLookingFor}
                   />
                 </header>
@@ -700,21 +702,21 @@ export const MyProfileForm = () => {
                   {user.lookingFor &&
                     user.lookingFor.map((item: string, index: number) => {
                       return (
-                        <div key={index} className="chip" tabIndex={index}>
+                        <div key={index} className='chip' tabIndex={index}>
                           {item}
                           <button
-                            type="button"
-                            name="btnRemoveLookingFor"
-                            className="close"
+                            type='button'
+                            name='btnRemoveLookingFor'
+                            className='close'
                             onClick={(e) => removeLookingFor(e, item)}
                           />
                         </div>
                       );
                     })}
-                  <label className="form-group inline-input">
+                  <label className='form-group inline-input'>
                     <input
-                      name="lookingFor"
-                      className="form-control"
+                      name='lookingFor'
+                      className='form-control'
                       value={state.edit.lookingFor}
                       onChange={updateState}
                       placeholder={
@@ -723,19 +725,19 @@ export const MyProfileForm = () => {
                       maxLength={100}
                     />
                     <button
-                      type="button"
-                      id="btnAddLookingFor"
-                      name="btnAddLookingFor"
-                      className="btn-add"
+                      type='button'
+                      id='btnAddLookingFor'
+                      name='btnAddLookingFor'
+                      className='btn-add'
                       onClick={addLookingFor}
                     />
                   </label>
                 </section>
                 <footer>
                   <button
-                    type="button"
-                    id="btnSaveLookingFor"
-                    name="btnSaveLookingFor"
+                    type='button'
+                    id='btnSaveLookingFor'
+                    name='btnSaveLookingFor'
                     onClick={saveChanges}
                   >
                     {resource.save}
@@ -743,168 +745,168 @@ export const MyProfileForm = () => {
                 </footer>
               </div>
             )}
-            <div className="card">
+            <div className='card'>
               <header>
-                <i className="material-icons highlight">chat</i>
+                <i className='material-icons highlight'>chat</i>
                 {resource.user_profile_social}
                 <button
-                  type="button"
-                  id="btnSocial"
-                  name="btnSocial"
+                  type='button'
+                  id='btnSocial'
+                  name='btnSocial'
                   hidden={isEditing}
-                  className="btn-edit"
+                  className='btn-edit'
                   onClick={showPopup}
                 />
               </header>
               <div>
                 {user.facebookLink && (
                   <a
-                    href={"https://facebookcom/" + user.facebookLink}
-                    title="facebook"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={'https://facebookcom/' + user.facebookLink}
+                    title='facebook'
+                    target='_blank'
+                    rel='noreferrer'
                   >
-                    <i className="fa fa-facebook" />
+                    <i className='fa fa-facebook' />
                     <span>facebook</span>
                   </a>
                 )}
                 {user.skypeLink && (
                   <a
-                    href={"https://skype.com/" + user.skypeLink}
-                    title="Skype"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={'https://skype.com/' + user.skypeLink}
+                    title='Skype'
+                    target='_blank'
+                    rel='noreferrer'
                   >
-                    <i className="fa fa-skype" />
+                    <i className='fa fa-skype' />
                     <span>Skype</span>
                   </a>
                 )}
                 {user.twitterLink && (
                   <a
-                    href={"https://twitter.com/" + user.twitterLink}
-                    title="Twitter"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={'https://twitter.com/' + user.twitterLink}
+                    title='Twitter'
+                    target='_blank'
+                    rel='noreferrer'
                   >
-                    <i className="fa fa-twitter" />
+                    <i className='fa fa-twitter' />
                     <span>Twitter</span>
                   </a>
                 )}
                 {user.instagramLink && (
                   <a
-                    href={"https://instagram.com/" + user.instagramLink}
-                    title="Instagram"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={'https://instagram.com/' + user.instagramLink}
+                    title='Instagram'
+                    target='_blank'
+                    rel='noreferrer'
                   >
-                    <i className="fa fa-instagram" />
+                    <i className='fa fa-instagram' />
                     <span>Instagram</span>
                   </a>
                 )}
                 {user.linkedinLink && (
                   <a
-                    href={"https://linkedin.com/" + user.linkedinLink}
-                    title="Linked in"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={'https://linkedin.com/' + user.linkedinLink}
+                    title='Linked in'
+                    target='_blank'
+                    rel='noreferrer'
                   >
-                    <i className="fa fa-linkedin" />
+                    <i className='fa fa-linkedin' />
                     <span>Linked in</span>
                   </a>
                 )}
                 {user.googleLink && (
                   <a
-                    href={"https://plus.google.com/" + user.googleLink}
-                    title="Google"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={'https://plus.google.com/' + user.googleLink}
+                    title='Google'
+                    target='_blank'
+                    rel='noreferrer'
                   >
-                    <i className="fa fa-google" />
+                    <i className='fa fa-google' />
                     <span>Google</span>
                   </a>
                 )}
                 {user.dribbbleLink && (
                   <a
-                    href={"https://dribbble.com/" + user.dribbbleLink}
-                    title="dribbble"
-                    target="_blank"
-                    rel="noreferrer"
+                    href={'https://dribbble.com/' + user.dribbbleLink}
+                    title='dribbble'
+                    target='_blank'
+                    rel='noreferrer'
                   >
-                    <i className="fa fa-dribbble" />
+                    <i className='fa fa-dribbble' />
                     <span>dribbble</span>
                   </a>
                 )}
 
                 {user.customLink01 && (
-                  <a href={user.customLink01} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink01} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
                 {user.customLink02 && (
-                  <a href={user.customLink02} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink02} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
                 {user.customLink03 && (
-                  <a href={user.customLink03} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink03} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
                 {user.customLink04 && (
-                  <a href={user.customLink04} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink04} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
                 {user.customLink05 && (
-                  <a href={user.customLink05} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink05} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
                 {user.customLink06 && (
-                  <a href={user.customLink06} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink06} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
                 {user.customLink07 && (
-                  <a href={user.customLink07} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink07} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
                 {user.customLink08 && (
-                  <a href={user.customLink08} target="_blank" rel="noreferrer">
-                    <i className="fab fa-globe-asia" />
+                  <a href={user.customLink08} target='_blank' rel='noreferrer'>
+                    <i className='fab fa-globe-asia' />
                   </a>
                 )}
               </div>
             </div>
           </div>
-          <div className="col m12 l8">
-            <div className="card border-bottom-highlight">
+          <div className='col m12 l8'>
+            <div className='card border-bottom-highlight'>
               <header>
-                <i className="material-icons highlight">person</i>
+                <i className='material-icons highlight'>person</i>
                 {resource.user_profile_bio}
                 <button
-                  type="button"
-                  id="btnBio"
-                  name="btnBio"
+                  type='button'
+                  id='btnBio'
+                  name='btnBio'
                   hidden={isEditing && !isEditingBio}
-                  className={!isEditingBio ? "btn-edit" : "btn-close"}
+                  className={!isEditingBio ? 'btn-edit' : 'btn-close'}
                   onClick={toggleBio}
                 />
               </header>
               {!isEditingBio && <p>{user.bio}</p>}
               {isEditingBio && (
-                <textarea name="bio" value={user.bio} onChange={editBio} />
+                <textarea name='bio' value={user.bio} onChange={editBio} />
               )}
               {isEditingBio && (
                 <footer>
                   <button
-                    type="button"
-                    id="btnSaveBio"
-                    name="btnSaveBio"
+                    type='button'
+                    id='btnSaveBio'
+                    name='btnSaveBio'
                     onClick={(e) => {
                       saveChanges(e);
-                      setBio(user.bio || "");
+                      setBio(user.bio || '');
                     }}
                   >
                     {resource.save}
@@ -912,25 +914,25 @@ export const MyProfileForm = () => {
                 </footer>
               )}
             </div>
-            <div className="card border-bottom-highlight">
+            <div className='card border-bottom-highlight'>
               <header>
-                <i className="material-icons highlight">flash_on</i>
+                <i className='material-icons highlight'>flash_on</i>
                 {resource.interests}
                 <button
-                  type="button"
-                  id="btnInterest"
-                  name="btnInterest"
+                  type='button'
+                  id='btnInterest'
+                  name='btnInterest'
                   hidden={isEditing && !isEditingInterest}
-                  className={!isEditingInterest ? "btn-edit" : "btn-close"}
+                  className={!isEditingInterest ? 'btn-edit' : 'btn-close'}
                   onClick={toggleInterest}
                 />
               </header>
               {!isEditingInterest && (
-                <section className="row">
+                <section className='row'>
                   {user.interests &&
                     user.interests.map((item: string, index: number) => {
                       return (
-                        <span key={index} className="col s4">
+                        <span key={index} className='col s4'>
                           {item}
                         </span>
                       );
@@ -938,44 +940,44 @@ export const MyProfileForm = () => {
                 </section>
               )}
               {isEditingInterest && (
-                <section className="row">
+                <section className='row'>
                   {user.interests &&
                     user.interests.map((item: string, index: number) => {
                       return (
-                        <div key={index} className="chip" tabIndex={index}>
+                        <div key={index} className='chip' tabIndex={index}>
                           {item}
                           <button
-                            type="button"
-                            name="btnRemoveInterest"
-                            className="close"
+                            type='button'
+                            name='btnRemoveInterest'
+                            className='close'
                             onClick={(e) => removeInterest(e, item)}
                           />
                         </div>
                       );
                     })}
-                  <label className="col s12 inline-input">
+                  <label className='col s12 inline-input'>
                     <input
-                      list="listInterest"
-                      type="text"
-                      name="interest"
+                      list='listInterest'
+                      type='text'
+                      name='interest'
                       onChange={onChangeInterest}
                       placeholder={resource.placeholder_user_profile_interest}
                       value={state.edit.interest}
                       maxLength={100}
-                      autoComplete="on"
+                      autoComplete='on'
                     />
                     {listInterest && listInterest.length > 0 && (
-                      <datalist id="listInterest">
+                      <datalist id='listInterest'>
                         {listInterest.map((item, index) => {
                           return <option key={index} value={item} />;
                         })}
                       </datalist>
                     )}
                     <button
-                      type="button"
-                      id="btnAddInterest"
-                      name="btnAddInterest"
-                      className="btn-add"
+                      type='button'
+                      id='btnAddInterest'
+                      name='btnAddInterest'
+                      className='btn-add'
                       onClick={addInterest}
                     />
                   </label>
@@ -984,9 +986,9 @@ export const MyProfileForm = () => {
               {isEditingInterest && (
                 <footer>
                   <button
-                    type="button"
-                    id="btnSaveInterest"
-                    name="btnSaveInterest"
+                    type='button'
+                    id='btnSaveInterest'
+                    name='btnSaveInterest'
                     onClick={saveChanges}
                   >
                     {resource.save}
@@ -995,16 +997,16 @@ export const MyProfileForm = () => {
               )}
             </div>
 
-            <div className="card border-bottom-highlight">
+            <div className='card border-bottom-highlight'>
               <header>
-                <i className="material-icons highlight">beenhere</i>
+                <i className='material-icons highlight'>beenhere</i>
                 {resource.achievements}
                 <button
-                  type="button"
-                  id="btnAchievement"
-                  name="btnAchievement"
+                  type='button'
+                  id='btnAchievement'
+                  name='btnAchievement'
                   hidden={isEditing && !isEditingAchievement}
-                  className={!isEditingAchievement ? "btn-edit" : "btn-close"}
+                  className={!isEditingAchievement ? 'btn-edit' : 'btn-close'}
                   onClick={toggleAchievement}
                 />
               </header>
@@ -1017,10 +1019,10 @@ export const MyProfileForm = () => {
                         <h3>
                           {achievement.subject}
                           {achievement.highlight && (
-                            <i className="star highlight float-right" />
+                            <i className='star highlight float-right' />
                           )}
                         </h3>
-                        <p className="description">{achievement.description}</p>
+                        <p className='description'>{achievement.description}</p>
                         <hr />
                       </section>
                     );
@@ -1034,13 +1036,13 @@ export const MyProfileForm = () => {
                       <h3>
                         {achievement.subject}
                         {achievement.highlight && (
-                          <i className="star highlight" />
+                          <i className='star highlight' />
                         )}
                       </h3>
-                      <p className="description">{achievement.description}</p>
+                      <p className='description'>{achievement.description}</p>
                       <button
-                        type="button"
-                        className="btn-remove"
+                        type='button'
+                        className='btn-remove'
                         onClick={(e) =>
                           removeAchievement(e, achievement.subject)
                         }
@@ -1051,11 +1053,11 @@ export const MyProfileForm = () => {
                 )}
               {isEditingAchievement && (
                 <section>
-                  <div className="form-group">
+                  <div className='form-group'>
                     <input
-                      type="text"
-                      name="subject"
-                      className="form-control"
+                      type='text'
+                      name='subject'
+                      className='form-control'
                       value={state.edit.subject}
                       onChange={updateState}
                       placeholder={
@@ -1065,9 +1067,9 @@ export const MyProfileForm = () => {
                       required={true}
                     />
                     <input
-                      type="text"
-                      name="description"
-                      className="form-control"
+                      type='text'
+                      name='description'
+                      className='form-control'
                       value={state.edit.description}
                       onChange={updateState}
                       placeholder={
@@ -1077,22 +1079,22 @@ export const MyProfileForm = () => {
                       required={true}
                     />
                   </div>
-                  <label className="checkbox-container">
+                  <label className='checkbox-container'>
                     <input
-                      type="checkbox"
-                      id="highlight"
-                      name="highlight"
+                      type='checkbox'
+                      id='highlight'
+                      name='highlight'
                       checked={state.edit.highlight}
                       onChange={updateState}
                     />
                     {resource.user_profile_highlight_achievement}
                   </label>
-                  <div className="btn-group">
+                  <div className='btn-group'>
                     <button
-                      type="button"
-                      id="btnAddAchievement"
-                      name="btnAddAchievement"
-                      className="btn-add"
+                      type='button'
+                      id='btnAddAchievement'
+                      name='btnAddAchievement'
+                      className='btn-add'
                       onClick={addAchievement}
                     />
                     {resource.button_add_achievement}
@@ -1102,9 +1104,9 @@ export const MyProfileForm = () => {
               {isEditingAchievement && (
                 <footer>
                   <button
-                    type="button"
-                    id="btnSaveAchievement"
-                    name="btnSaveAchievement"
+                    type='button'
+                    id='btnSaveAchievement'
+                    name='btnSaveAchievement'
                     onClick={saveChanges}
                   >
                     {resource.save}
@@ -1112,55 +1114,55 @@ export const MyProfileForm = () => {
                 </footer>
               )}
             </div>
-            <div className="card border-bottom-highlight">
+            <div className='card border-bottom-highlight'>
               <header>
-                <i className="material-icons highlight btn-camera"></i>
+                <i className='material-icons highlight btn-camera'></i>
                 {resource.title_modal_gallery}
                 <button
-                  type="button"
-                  id="btnGallery"
-                  name="btnGallery"
-                  className={"btn-edit"}
+                  type='button'
+                  id='btnGallery'
+                  name='btnGallery'
+                  className={'btn-edit'}
                   onClick={openModalUploadGallery}
                 />
               </header>
-              <section className="row">
-                <div className="user-carousel-container">
+              <section className='row'>
+                <div className='user-carousel-container'>
                   <Carousel infiniteLoop={true}>
                     {user.gallery
                       ? user.gallery.map((itemData, index) => {
-                          switch (itemData.type) {
-                            case "video":
-                              return (
-                                <CarouselVideoItem
-                                  key={index}
-                                  type={itemData.type}
-                                  src={itemData.url}
-                                />
-                              );
-                            case "image":
-                              return (
-                                // <img className='image-carousel' src={itemData.url} key={index} alt={itemData.url} draggable={false}/>
-                                <CarouselImageItem
-                                  key={index}
-                                  src={itemData.url}
-                                />
-                              );
-                            case "youtube":
-                              return (
-                                <div className="data-item-youtube">
-                                  <iframe
-                                    src={itemData.url+"?enablejsapi=1"}
-                                    frameBorder="0"
-                                    className="iframe-youtube"
-                                  ></iframe>
-                                  ;
-                                </div>
-                              );
-                            default:
-                              return <></>;
-                          }
-                        })
+                        switch (itemData.type) {
+                          case 'video':
+                            return (
+                              <CarouselVideoItem
+                                key={index}
+                                type={itemData.type}
+                                src={itemData.url}
+                              />
+                            );
+                          case 'image':
+                            return (
+                              // <img className='image-carousel' src={itemData.url} key={index} alt={itemData.url} draggable={false}/>
+                              <CarouselImageItem
+                                key={index}
+                                src={itemData.url}
+                              />
+                            );
+                          case 'youtube':
+                            return (
+                              <div className='data-item-youtube'>
+                                <iframe
+                                  src={itemData.url + '?enablejsapi=1'}
+                                  frameBorder='0'
+                                  className='iframe-youtube'
+                                ></iframe>
+                                ;
+                              </div>
+                            );
+                          default:
+                            return <></>;
+                        }
+                      })
                       : [<></>]}
                   </Carousel>
                 </div>
@@ -1172,10 +1174,10 @@ export const MyProfileForm = () => {
       <ReactModal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel="Modal"
-        className="modal-portal-content"
-        bodyOpenClassName="modal-portal-open"
-        overlayClassName="modal-portal-backdrop"
+        contentLabel='Modal'
+        className='modal-portal-content'
+        bodyOpenClassName='modal-portal-open'
+        overlayClassName='modal-portal-backdrop'
       >
         <GeneralInfo
           resource={resource}
@@ -1187,39 +1189,38 @@ export const MyProfileForm = () => {
       <ReactModal
         isOpen={modalUpload}
         onRequestClose={closeModalUpload}
-        contentLabel="Modal"
+        contentLabel='Modal'
         // portalClassName='modal-portal'
-        className="modal-portal-content"
-        bodyOpenClassName="modal-portal-open"
-        overlayClassName="modal-portal-backdrop"
+        className='modal-portal-content'
+        bodyOpenClassName='modal-portal-open'
+        overlayClassName='modal-portal-backdrop'
       >
-        <div className="view-container profile-info">
-          <form model-name="data">
+        <div className='view-container profile-info'>
+          <form model-name='data'>
             <header>
               <h2>{resource.title_modal_uploads}</h2>
               <button
-                type="button"
-                id="btnClose"
-                name="btnClose"
-                className="btn-close"
+                type='button'
+                id='btnClose'
+                name='btnClose'
+                className='btn-close'
                 onClick={closeModalUpload}
               />
             </header>
             <Uploads
               post={httpPost}
-              setURL={(data) => handleChangeFile(data)}
+              setURL={(dt) => handleChangeFile(dt)}
               type={typeUpload}
               id={user.id}
-              url={config.authentication_url + "/my-profile"}
+              url={config.authentication_url + '/my-profile'}
               aspect={aspect}
               sizes={sizes}
             />
-
             <footer>
               <button
-                type="button"
-                id="btnSave"
-                name="btnSave"
+                type='button'
+                id='btnSave'
+                name='btnSave'
                 onClick={closeModalUpload}
               >
                 {resource.button_modal_ok}
@@ -1231,34 +1232,34 @@ export const MyProfileForm = () => {
       <ReactModal
         isOpen={modalConfirmIsOpen}
         onRequestClose={closeModalConfirm}
-        contentLabel="Modal"
-        className="modal-portal-content small-width-height"
-        bodyOpenClassName="modal-portal-open"
-        overlayClassName="modal-portal-backdrop"
+        contentLabel='Modal'
+        className='modal-portal-content small-width-height'
+        bodyOpenClassName='modal-portal-open'
+        overlayClassName='modal-portal-backdrop'
       >
-        <div className="view-container profile-info">
-          <form model-name="data">
+        <div className='view-container profile-info'>
+          <form model-name='data'>
             <header>
               <h2>Edit About</h2>
               <button
-                type="button"
-                id="btnClose"
-                name="btnClose"
-                className="btn-close"
+                type='button'
+                id='btnClose'
+                name='btnClose'
+                className='btn-close'
                 onClick={closeModalConfirm}
               />
             </header>
             <div>
-              <section className="row">
+              <section className='row'>
                 <div> {resource.warning_message_delete_bio}</div>
               </section>
             </div>
 
             <footer>
               <button
-                type="button"
-                id="btnSave"
-                name="btnSave"
+                type='button'
+                id='btnSave'
+                name='btnSave'
                 onClick={revertBioChages}
               >
                 {resource.button_modal_ok}

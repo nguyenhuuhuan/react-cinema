@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { HttpRequest } from 'axios-core';
 import { options, storage } from 'uione';
-import { MasterDataClient, MasterDataService } from './master-data';
-import { CinemaClient, CinemaService } from './cinema';
 import { CategoryClient, CategoryService } from './category';
+import { CinemaClient, CinemaService } from './cinema';
 import { FilmClient, FilmService } from './film';
-import { LocationService } from './location/location';
-import { LocationRateService } from './location-rate/location-rate';
 import { LocationClient } from './location';
 import { LocationRateClient } from './location-rate';
+import { LocationRateService } from './location-rate/location-rate';
+import { LocationService } from './location/location';
+import { MasterDataClient, MasterDataService } from './master-data';
 
 export * from './cinema';
 export * from './category';
@@ -27,8 +27,8 @@ export interface Config {
 }
 class ApplicationContext {
   cinemaService?: CinemaService;
-  categoryService?:CategoryService;
-  filmService?:FilmService;
+  categoryService?: CategoryService;
+  filmService?: FilmService;
   masterDataService?: MasterDataService;
   locationService?: LocationService;
   locationRateService?: LocationRateService;
@@ -48,7 +48,7 @@ class ApplicationContext {
   getCinemaService(): CinemaService {
     if (!this.cinemaService) {
       const c = this.getConfig();
-      console.log('cinema_url ', c.cinema_url)
+      console.log('cinema_url ', c.cinema_url);
       this.cinemaService = new CinemaClient(httpRequest, c.cinema_url);
     }
     return this.cinemaService;
@@ -61,7 +61,7 @@ class ApplicationContext {
     return this.filmService;
   }
 
-  getCategoryService(): CategoryService{
+  getCategoryService(): CategoryService {
     if (!this.categoryService) {
       const c = this.getConfig();
       this.categoryService = new CategoryClient(httpRequest, c.category_url);

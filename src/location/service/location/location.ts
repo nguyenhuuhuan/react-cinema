@@ -1,6 +1,6 @@
-import { Filter, Attributes, Service } from "onecore";
-import { FileUploads, Thumbnail } from "../../../uploads/model";
-import { LocationRate } from "../location-rate/location-rate";
+import { Attributes, Filter, Service } from 'onecore';
+import { FileUploads, Thumbnail } from '../../../uploads/model';
+import { LocationRate } from '../location-rate/location-rate';
 export interface Location {
   id: string;
   name: string;
@@ -15,7 +15,7 @@ export interface Location {
 }
 // filter
 export interface LocationFilter extends Filter {
-  id: string; 
+  id: string;
   name: string;
   description: string;
   longitude: number;
@@ -45,12 +45,12 @@ export const locationModel: Attributes = {
     q: true,
   },
   longitude: {
-    type: "number",
+    type: 'number',
     required: true,
     q: true,
   },
   latitude: {
-    type: "number",
+    type: 'number',
     required: true,
     q: true,
   },

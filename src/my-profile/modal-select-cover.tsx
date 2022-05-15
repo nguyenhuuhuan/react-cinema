@@ -1,8 +1,8 @@
-import { OnClick } from "react-hook-core";
-import ReactModal from "react-modal";
-import { useResource } from "uione";
-import { FileUploads } from "../uploads/model";
-import "./modal-select-cover.css";
+import { OnClick } from 'react-hook-core';
+import ReactModal from 'react-modal';
+import { useResource } from 'uione';
+import { FileUploads } from '../uploads/model';
+import './modal-select-cover.css';
 interface Props {
   modalSelectGalleryOpen: boolean;
   closeModalUploadGallery: (e: OnClick) => void;
@@ -21,41 +21,41 @@ export const ModalSelectCover = ({
     <ReactModal
       isOpen={modalSelectGalleryOpen}
       onRequestClose={closeModalUploadGallery}
-      contentLabel="Modal"
+      contentLabel='Modal'
       // portalClassName='modal-portal'
-      className="modal-portal-content"
-      bodyOpenClassName="modal-portal-open"
-      overlayClassName="modal-portal-backdrop"
+      className='modal-portal-content'
+      bodyOpenClassName='modal-portal-open'
+      overlayClassName='modal-portal-backdrop'
     >
-      <div className="view-container profile-info">
-        <form model-name="data">
+      <div className='view-container profile-info'>
+        <form model-name='data'>
           <header>
             <h2>{resource.title_select_gallery}</h2>
             <button
-              type="button"
-              id="btnClose"
-              name="btnClose"
-              className="btn-close"
+              type='button'
+              id='btnClose'
+              name='btnClose'
+              className='btn-close'
               onClick={closeModalUploadGallery}
             />
           </header>
-          <body className="container-gallery">
-            <ul className="row list-view">
+          <body className='container-gallery'>
+            <ul className='row list-view'>
               {list &&
                 list.length > 0 &&
                 list.map((gallery, i) => {
-                  if (gallery.type === "image")
+                  if (gallery.type === 'image') {
                     return (
-                      <div key={i} className="col s12 m6 l4 xl3 card-gallery">
+                      <div key={i} className='col s12 m6 l4 xl3 card-gallery'>
                         <img
-                          className="image-uploaded"
+                          className='image-uploaded'
                           src={gallery.url}
-                          alt="image_uploads"
+                          alt='image_uploads'
                         />
-                        <div key={i} className="mask">
-                          <section className="btn-group ">
+                        <div key={i} className='mask'>
+                          <section className='btn-group '>
                             <button
-                              className="btn-search"
+                              className='btn-search'
                               onClick={(e) => setImageCover(e, gallery.url)}
                             >
                               {resource.button_select}
@@ -64,15 +64,16 @@ export const ModalSelectCover = ({
                         </div>
                       </div>
                     );
+                  }
                 })}
             </ul>
           </body>
 
           <footer>
             <button
-              type="button"
-              id="btnSave"
-              name="btnSave"
+              type='button'
+              id='btnSave'
+              name='btnSave'
               onClick={closeModalUploadGallery}
             >
               {resource.button_modal_ok}

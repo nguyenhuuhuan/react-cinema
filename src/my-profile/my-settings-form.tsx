@@ -11,7 +11,7 @@ const data: InternalState = {
   settings: {} as any
 };
 const userAccount: UserAccount = JSON.parse(
-  sessionStorage.getItem("authService") || "{}"
+  sessionStorage.getItem('authService') || '{}'
 ) as UserAccount;
 export const MySettingsForm = () => {
   const service = useMyProfileService();
@@ -20,7 +20,7 @@ export const MySettingsForm = () => {
   const { state, setState, updateState } = useUpdate<InternalState>(data, 'settings');
 
   useEffect(() => {
-    service.getMySettings(userAccount.id??'').then(settings => {
+    service.getMySettings(userAccount.id ?? '').then(settings => {
       if (settings) {
         setState({ settings });
       }
@@ -31,7 +31,7 @@ export const MySettingsForm = () => {
   const save = (e: OnClick) => {
     e.preventDefault();
     confirm(resource.msg_confirm_save, resource.confirm, () => {
-      service.saveMySettings(userAccount.id??'', state.settings).then((res: number) => {
+      service.saveMySettings(userAccount.id ?? '', state.settings).then((res: number) => {
         const msg = res > 0 ? resource.success_save_my_settings : resource.fail_save_my_settings;
         message(msg);
       }).catch(handleError);

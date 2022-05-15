@@ -15,7 +15,7 @@ const categoryFilter: CategoryFilter = {
   categoryName: '',
   status: ''
 };
-const CategorySearch: CategorySearch = {
+const categorySearch: CategorySearch = {
   statusList: [],
   list: [],
   filter: categoryFilter
@@ -23,8 +23,8 @@ const CategorySearch: CategorySearch = {
 export const CategoriesForm = () => {
   const navigate = useNavigate();
   const refForm = React.useRef();
-  const { state, resource, component, updateState,  search, sort, toggleFilter, changeView, pageChanged, pageSizeChanged }
-    = useSearch<Category, CategoryFilter, CategorySearch>(refForm, CategorySearch, useCategory(), inputSearch());
+  const { state, resource, component, updateState, search, sort, toggleFilter, changeView, pageChanged, pageSizeChanged }
+    = useSearch<Category, CategoryFilter, CategorySearch>(refForm, categorySearch, useCategory(), inputSearch());
   component.viewable = true;
   component.editable = true;
 

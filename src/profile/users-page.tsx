@@ -13,12 +13,12 @@ interface UserSearch extends SearchComponentState<User, UserFilter> {
 }
 
 const theme = createTheme({
-  palette:{
-    primary:{
+  palette: {
+    primary: {
       main: '#4db6ac'
     }
   }
-})
+});
 const userFilter: UserFilter = {
   id: '',
   username: '',
@@ -52,7 +52,7 @@ export const UsersPage = () => {
 
   const filter = value(state.filter);
   const { list } = state;
-  
+
   return (
     <div className='view-container'>
       <header>
@@ -123,32 +123,32 @@ export const UsersPage = () => {
               <Autocomplete
                 options={[]}
                 multiple
-                id="tags-filled"
+                id='tags-filled'
                 freeSolo
                 value={interests}
                 onChange={(e, newValue: string[]) => {
-                  if (newValue.length>-1) {
+                  if (newValue.length > -1) {
                     setInterests(newValue);
-                    setState({filter:{...filter,interests:newValue}})
+                    setState({ filter: { ...filter, interests: newValue } });
                   }
                 }}
-                renderTags={(value: readonly string[], getTagProps) =>
-                  value.map((option: string, index: number) => (
-                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                renderTags={(v: readonly string[], getTagProps) =>
+                  v.map((option: string, index: number) => (
+                    <Chip variant='outlined' label={option} {...getTagProps({ index })} />
                   ))
                 }
                 renderInput={(params) => (
-                 <ThemeProvider theme={theme}>
-                   <TextField
-                 {...params}
-                 variant="standard"
-                 name='interest'
-                 color='primary'
-                 // onChange={(e)=>setInterest(e.target.value)}
-                 label={resource.interests}
-                 placeholder={resource.interests}
-               // value={interest}
-               /></ThemeProvider>
+                  <ThemeProvider theme={theme}>
+                    <TextField
+                      {...params}
+                      variant='standard'
+                      name='interest'
+                      color='primary'
+                      // onChange={(e)=>setInterest(e.target.value)}
+                      label={resource.interests}
+                      placeholder={resource.interests}
+                    // value={interest}
+                    /></ThemeProvider>
                 )}
               />
 
@@ -163,7 +163,7 @@ export const UsersPage = () => {
                 onChange={(e, newValue: Skill[]) => {
                   if (newValue.length>-1) {
                     setSkillTmpArray(newValue);
-                    
+
                     setState({filter:{...filter,:newValue}})
                   }
                 }}

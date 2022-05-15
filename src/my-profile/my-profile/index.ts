@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { options, storage, UserAccount } from 'uione';
 import { QueryClient } from 'web-clients';
 import { FileUploads } from '../../uploads/model';
-import { MyProfileService, SkillService, User, UserSettings } from './user';
+import { MyProfileService, User, UserSettings } from './user';
 
 export * from './user';
 
@@ -46,8 +46,8 @@ export class MyProfileClient implements MyProfileService {
       throw err;
     });
   }
-  saveMyProfile(data: User): Promise<number> {
-    return this.http.patch<number>(this.url, data).catch(err => {
+  saveMyProfile(usr: User): Promise<number> {
+    return this.http.patch<number>(this.url, usr).catch(err => {
       const data = (err && err.response) ? err.response : err;
       if (data && (data.status === 404 || data.status === 410)) {
         return 0;
@@ -78,8 +78,8 @@ export class MyProfileClient implements MyProfileService {
 
 export interface Config {
   myprofile_url: string;
-  skill_url:string;
-  interest_url:string;
+  skill_url: string;
+  interest_url: string;
 }
 class ApplicationContext {
   userService?: MyProfileService;
@@ -95,15 +95,15 @@ class ApplicationContext {
     }
     return this.userService;
   }
-  getSkillService():QueryService<string>{
-    if(!this.skillService){
+  getSkillService(): QueryService<string> {
+    if (!this.skillService) {
       const c = this.getConfig();
       this.skillService = new QueryClient<string>(httpRequest, c.skill_url);
     }
     return this.skillService;
   }
-  getInterestService():QueryService<string>{
-    if(!this.interestService){
+  getInterestService(): QueryService<string> {
+    if (!this.interestService) {
       const c = this.getConfig();
       this.interestService = new QueryClient<string>(httpRequest, c.interest_url);
     }
@@ -113,15 +113,15 @@ class ApplicationContext {
 
 export const context = new ApplicationContext();
 export function useMyProfileService(): MyProfileService {
-  const [service] = useState(() => { return context.getMyProfileService() })
+  const [service] = useState(() => context.getMyProfileService());
   return service;
 }
 
-export function useSkillService():QueryService<string>{
-  const [service] = useState(()=> {return context.getSkillService()})
+export function useSkillService(): QueryService<string> {
+  const [service] = useState(() => context.getSkillService());
   return service;
 }
-export function useInterestService():QueryService<string>{
-  const [service] = useState(()=> {return context.getInterestService()})
+export function useInterestService(): QueryService<string> {
+  const [service] = useState(() => context.getInterestService());
   return service;
 }

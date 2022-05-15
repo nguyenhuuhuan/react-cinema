@@ -6,23 +6,25 @@ import Loading from './Loading';
 import { dataURLtoFile,  State } from './UploadHook';
 
 interface Props {
-  file: File | undefined,
-  setFile: React.Dispatch<React.SetStateAction<File | undefined>>,
-  upload: () => Promise<void>,
-  state: State,
-  aspect:number,
-  setCompletedCrop: React.Dispatch<React.SetStateAction<PixelCrop | undefined>>,
-  setImage:React.Dispatch<React.SetStateAction<HTMLImageElement | undefined>>
+  file: File | undefined;
+  setFile: React.Dispatch<React.SetStateAction<File | undefined>>;
+  upload: () => Promise<void>;
+  state: State;
+  aspect: number;
+  setCompletedCrop: React.Dispatch<React.SetStateAction<PixelCrop | undefined>>;
+  setImage: React.Dispatch<React.SetStateAction<HTMLImageElement | undefined>>;
 }
 
 const UploadsModal = (props: Props) => {
   const [cropImage, setCropImage] = useState<string>('');
   const [select, setSelect] = useState<boolean>(false);
   const [isCrop, setIsCrop] = useState<boolean>(false);
-  const [isPreview, setIsPreview] = useState(false)
+  const [isPreview, setIsPreview] = useState(false);
   const handleSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const data = event.target.files
-    if (!data) return
+    const data = event.target.files;
+    if (!data) {
+      return;
+    }
     const fileUpload = data[0];
     if (fileUpload) {
       props.setFile(fileUpload);
@@ -37,8 +39,8 @@ const UploadsModal = (props: Props) => {
     }
   };
 
-  const handleSelectCropImage = (e:OnClick) => {
-    e.preventDefault()
+  const handleSelectCropImage = (e: OnClick) => {
+    e.preventDefault();
     if (cropImage && props.file) {
       props.setFile(dataURLtoFile(cropImage, props.file.name));
       setIsCrop(true);
@@ -46,10 +48,10 @@ const UploadsModal = (props: Props) => {
     }
   };
 
-  const togglePreview = (e:OnClick) => {
-    e.preventDefault()
-    setIsPreview(!isPreview)
-  }
+  const togglePreview = (e: OnClick) => {
+    e.preventDefault();
+    setIsPreview(!isPreview);
+  };
   return (
     <div className='upload-modal'>
       <div className='frame'>
@@ -67,7 +69,7 @@ const UploadsModal = (props: Props) => {
                       ) : (
                         <>
                           <CropImage setImage={props.setImage} setCompletedCropHook={props.setCompletedCrop} aspect={props.aspect} image={props.file} setCropImage={setCropImage} isPreview={isPreview} />
-                          <button onClick={(e)=>handleSelectCropImage(e)}>Select</button>
+                          <button onClick={(e) => handleSelectCropImage(e)}>Select</button>
                         </>
                       )
                     }

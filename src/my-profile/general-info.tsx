@@ -12,19 +12,19 @@ interface Props {
 interface State {
   user: User;
 }
-const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('authService')||'{}') as UserAccount;
+const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 export const GeneralInfo = ({ resource, user, close, saveEmit }: Props) => {
   const service = useMyProfileService();
   const { state, setState, updateState } = useUpdate<State>({ user }, 'user');
 
-  const closeModal = () => { 
+  const closeModal = () => {
     close();
   };
 
   const save = (e: OnClick) => {
     e.preventDefault();
     const usr = state.user;
-    service.saveMyProfile({...usr,id:userAccount.id||''}).then(success => {
+    service.saveMyProfile({ ...usr, id: userAccount.id || '' }).then(success => {
       let status = '';
       if (success) {
         status = 'success';

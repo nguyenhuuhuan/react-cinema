@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { HttpRequest } from 'axios-core';
 import { options, storage } from 'uione';
-import { LocationService } from './location/location';
-import { LocationRateService } from './location-rate/location-rate';
 import { LocationClient } from './location';
 import { LocationRateClient } from './location-rate';
+import { LocationRateService } from './location-rate/location-rate';
+import { LocationService } from './location/location';
 
 // axios.defaults.withCredentials = true;
 

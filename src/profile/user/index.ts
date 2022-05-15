@@ -2,23 +2,23 @@ import axios from 'axios';
 import { HttpRequest } from 'axios-core';
 import { options, storage } from 'uione';
 import { Client } from 'web-clients';
-import { ProfileService, UserService, User, UserSettings, UserFilter, userModel } from './user';
+import { ProfileService, User, UserFilter, userModel, UserService, UserSettings } from './user';
 
 export * from './user';
 
 const httpRequest = new HttpRequest(axios, options);
-export class UserClient extends Client<User, string, UserFilter> implements UserService{
-  constructor(http:HttpRequest, url: string){
-    super(http,url,userModel);
-    this.searchGet=false;
+export class UserClient extends Client<User, string, UserFilter> implements UserService {
+  constructor(http: HttpRequest, url: string) {
+    super(http, url, userModel);
+    this.searchGet = false;
   }
   postOnly(s: UserFilter): boolean {
     return true;
   }
-  
+
 }
 export class ProfileClient implements ProfileService {
-  constructor( private http: HttpRequest,private url: string) {
+  constructor( private http: HttpRequest, private url: string) {
     this.getMyProfile = this.getMyProfile.bind(this);
     this.getMySettings = this.getMySettings.bind(this);
   }
@@ -45,12 +45,12 @@ export class ProfileClient implements ProfileService {
 }
 export interface Config {
   myprofile_url: string;
-  user_url:string;
-  profile_url:string;
+  user_url: string;
+  profile_url: string;
 }
 class ApplicationContext {
   profileService?: ProfileService;
-  userService?:UserService;
+  userService?: UserService;
   getConfig(): Config {
     return storage.config();
   }
@@ -61,7 +61,7 @@ class ApplicationContext {
     }
     return this.profileService;
   }
-  getUserService():UserService{
+  getUserService(): UserService {
     if (!this.userService) {
       const c = this.getConfig();
       this.userService = new UserClient(httpRequest, c.profile_url);
@@ -75,6 +75,6 @@ export function getMyProfileService(): ProfileService {
   return context.getMyProfileService();
 }
 
-export function getUserService():UserService{
+export function getUserService(): UserService {
   return context.getUserService();
 }

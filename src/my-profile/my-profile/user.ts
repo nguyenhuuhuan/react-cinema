@@ -25,7 +25,7 @@ export interface User {
   occupation?: string;
   company?: string;
   lookingFor: string[];
-  gallery?:FileUploads[];
+  gallery?: FileUploads[];
 
   dribbbleLink: string;
   skypeLink: string;
@@ -109,8 +109,8 @@ export interface MyProfileService {
   fetchImageUploaded(): Promise<FileUploads | null>;
   fetchImageUploadedGallery(): Promise<FileUploads[] | null>;
 }
-export interface SkillService{
-  getSkills(q:string,max?:number):Promise<string[]|null>;
+export interface SkillService {
+  getSkills(q: string, max?: number): Promise<string[]|null>;
 }
 export const skillsModel: Attributes = {
   skill: {

@@ -8,75 +8,75 @@ import { useFilm } from './service';
 import { Film, FilmFilter } from './service/film';
 
 interface FilmSearch extends SearchComponentState<Film, FilmFilter> {
-    statusList: ValueText[];
+  statusList: ValueText[];
 }
 
 const filmFilter: FilmFilter = {
-    filmId: '',
-    title: '',
-    status: [],
-    description: '',
-    imageUrl: '',
-    trailerUrl: '',
+  filmId: '',
+  title: '',
+  status: [],
+  description: '',
+  imageUrl: '',
+  trailerUrl: '',
 };
 
 const initialState: FilmSearch = {
-    statusList: [],
-    list: [],
-    filter: filmFilter
+  statusList: [],
+  list: [],
+  filter: filmFilter
 };
 
 export const FilmsForm = () => {
-    const refForm = React.useRef();
-    const navigate = useNavigate();
-    const { state, resource, component, changeView, updateState, search, sort, toggleFilter, pageChanged, pageSizeChanged }
-        = useSearch<Film, FilmFilter, FilmSearch>(refForm, initialState, useFilm(), inputSearch());
-    component.viewable = true;
-    component.editable = true;
+  const refForm = React.useRef();
+  const navigate = useNavigate();
+  const { state, resource, component, changeView, updateState, search, sort, toggleFilter, pageChanged, pageSizeChanged }
+    = useSearch<Film, FilmFilter, FilmSearch>(refForm, initialState, useFilm(), inputSearch());
+  component.viewable = true;
+  component.editable = true;
 
-    const edit = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
-        e.preventDefault();
-        navigate(`edit/${id}`);
-    };
-    const add = (e:OnClick)=>{
-      e.preventDefault();
-      navigate('add');
-    }
-    const { list } = state;
-    const filter = value(state.filter);
-    return (
-        <div className='view-container'>
-            <header>
-                <h2>{resource.films}</h2>
-                <div className='btn-group'>
-                    {component.view !== 'table' && <button type='button' id='btnTable' name='btnTable' className='btn-table' data-view='table' onClick={changeView} />}
-                    {component.view === 'table' && <button type='button' id='btnListView' name='btnListView' className='btn-list-view' data-view='listview' onClick={changeView} />}
-                    {component.addable && <button type='button' id='btnNew' name='btnNew' className='btn-new' onClick={add} />}
+  const edit = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
+    e.preventDefault();
+    navigate(`edit/${id}`);
+  };
+  const add = (e: OnClick) => {
+    e.preventDefault();
+    navigate('add');
+  };
+  const { list } = state;
+  const filter = value(state.filter);
+  return (
+    <div className='view-container'>
+      <header>
+        <h2>{resource.films}</h2>
+        <div className='btn-group'>
+          {component.view !== 'table' && <button type='button' id='btnTable' name='btnTable' className='btn-table' data-view='table' onClick={changeView} />}
+          {component.view === 'table' && <button type='button' id='btnListView' name='btnListView' className='btn-list-view' data-view='listview' onClick={changeView} />}
+          {component.addable && <button type='button' id='btnNew' name='btnNew' className='btn-new' onClick={add} />}
 
-                </div>
-            </header>
-            <div>
-                <form id='filmsForm' name='filmsForm' noValidate={true} ref={refForm as any}>
-                    <section className='row search-group'>
-                        <label className='col s12 m4 search-input'>
-                            <PageSizeSelect size={component.pageSize} sizes={component.pageSizes} onChange={pageSizeChanged} />
-                            <input type='text' id='q' name='q' value={filter.q} onChange={updateState} maxLength={255} placeholder={resource.keyword} />
-                            <button type='button' className='btn-filter' onClick={toggleFilter} />
-                            <button type='submit' className='btn-search' onClick={search} />
-                        </label>
-                        <Pagination className='col s12 m8' total={component.total} size={component.pageSize} max={component.pageMaxSize} page={component.pageIndex} onChange={pageChanged} />
-                    </section>
-                    <section className='row search-group inline' hidden={component.hideFilter}>
-                        <label className='col s12 m4 l4'>
-                            {resource.title}
-                            <input type='text'
-                                id='title' name='title'
-                                value={filter.title}
-                                onChange={updateState}
-                                maxLength={300}
-                                placeholder={resource.title} />
-                        </label>
-                        {/* <label className='col s12 m4 l4'>
+        </div>
+      </header>
+      <div>
+        <form id='filmsForm' name='filmsForm' noValidate={true} ref={refForm as any}>
+          <section className='row search-group'>
+            <label className='col s12 m4 search-input'>
+              <PageSizeSelect size={component.pageSize} sizes={component.pageSizes} onChange={pageSizeChanged} />
+              <input type='text' id='q' name='q' value={filter.q} onChange={updateState} maxLength={255} placeholder={resource.keyword} />
+              <button type='button' className='btn-filter' onClick={toggleFilter} />
+              <button type='submit' className='btn-search' onClick={search} />
+            </label>
+            <Pagination className='col s12 m8' total={component.total} size={component.pageSize} max={component.pageMaxSize} page={component.pageIndex} onChange={pageChanged} />
+          </section>
+          <section className='row search-group inline' hidden={component.hideFilter}>
+            <label className='col s12 m4 l4'>
+              {resource.title}
+              <input type='text'
+                id='title' name='title'
+                value={filter.title}
+                onChange={updateState}
+                maxLength={300}
+                placeholder={resource.title} />
+            </label>
+            {/* <label className='col s12 m4 l4'>
               {resource.display_name}
               <input type='text'
                 id='displayName' name='displayName'
@@ -85,34 +85,34 @@ export const FilmsForm = () => {
                 maxLength={255}
                 placeholder={resource.display_name} />
             </label> */}
-                        <label className='col s12 m4 l4 checkbox-section'>
-                            {resource.status}
-                            <section className='checkbox-group'>
-                                <label>
-                                    <input
-                                        type='checkbox'
-                                        id='A'
-                                        name='status'
-                                        value='A'
-                                        checked={checked(filter.status, 'A')}
-                                        onChange={updateState} />
-                                    {resource.active}
-                                </label>
-                                <label>
-                                    <input
-                                        type='checkbox'
-                                        id='I'
-                                        name='status'
-                                        value='I'
-                                        checked={checked(filter.status, 'I')}
-                                        onChange={updateState} />
-                                    {resource.inactive}
-                                </label>
-                            </section>
-                        </label>
-                    </section>
-                </form>
-                <form className='list-result'>
+            <label className='col s12 m4 l4 checkbox-section'>
+              {resource.status}
+              <section className='checkbox-group'>
+                <label>
+                  <input
+                    type='checkbox'
+                    id='A'
+                    name='status'
+                    value='A'
+                    checked={checked(filter.status, 'A')}
+                    onChange={updateState} />
+                  {resource.active}
+                </label>
+                <label>
+                  <input
+                    type='checkbox'
+                    id='I'
+                    name='status'
+                    value='I'
+                    checked={checked(filter.status, 'I')}
+                    onChange={updateState} />
+                  {resource.inactive}
+                </label>
+              </section>
+            </label>
+          </section>
+        </form>
+        <form className='list-result'>
           {component.view === 'table' && <div className='table-responsive'>
             <table>
               <thead>
@@ -154,7 +154,7 @@ export const FilmsForm = () => {
             })}
           </ul>}
         </form>
-            </div>
-        </div>
-    );
+      </div>
+    </div>
+  );
 };
