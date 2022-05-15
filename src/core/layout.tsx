@@ -27,75 +27,60 @@ interface InternalState {
 }
 
 let sysBody: HTMLElement | null | undefined;
-function isTopMenu(): boolean {
+function getBody(): HTMLElement | null | undefined {
   if (!sysBody) {
     sysBody = document.getElementById('sysBody');
   }
-  if (sysBody) {
-    if (sysBody.classList.contains('top-menu')) {
+  return sysBody;
+}
+function hasClass(className: string, ele: HTMLElement | null | undefined): boolean {
+  if (ele && ele.classList.contains(className)) {
+    return true;
+  }
+  return false;
+}
+function parentHasClass(className: string, ele: HTMLElement | null | undefined): boolean {
+  if (ele) {
+    const parent = ele.parentElement;
+    if (parent && parent.classList.contains(className)) {
       return true;
     }
   }
   return false;
 }
 export const renderItem = (resource: StringMap): any => {
-  const top = isTopMenu();
+  const top = hasClass('top-menu', getBody());
   if (top) {
     return (
-      <><i className='material-icons'>view_list</i><span className='dropdown-item-profile'>{resource.sidebar}</span></>
+      <><i className='material-icons'>view_list</i><span>{resource.sidebar}</span></>
     );
   } else {
     return (
-      <><i className='material-icons'>credit_card</i><span className='dropdown-item-profile'>{resource.menu}</span></>
+      <><i className='material-icons'>credit_card</i><span>{resource.menu}</span></>
     );
   }
 };
 export const renderClassicMenu = (resource: StringMap): any => {
-  const top = isClassicMenu();
+  const top = hasClass('classic', getBody());
   if (top) {
     return (
-      <><i className='material-icons'>assessment</i><span className='dropdown-item-profile'>{resource.modern_menu}</span></>
+      <><i className='material-icons'>assessment</i><span>{resource.modern_menu}</span></>
     );
   } else {
     return (
-      <><i className='material-icons'>credit_card</i><span className='dropdown-item-profile'>{resource.classic_menu}</span></>
+      <><i className='material-icons'>credit_card</i><span>{resource.classic_menu}</span></>
     );
   }
 };
-function isClassicMenu(): boolean {
-  if (!sysBody) {
-    sysBody = document.getElementById('sysBody');
-  }
-  if (sysBody) {
-    if (sysBody.classList.contains('classic')) {
-      return true;
-    }
-  }
-  return false;
-}
-function isDarkMode(): boolean {
-  if (!sysBody) {
-    sysBody = document.getElementById('sysBody');
-  }
-  if (sysBody) {
-    const parent = sysBody.parentElement;
-    if (parent) {
-      if (parent.classList.contains('dark')) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
 export const renderMode = (resource: StringMap): any => {
-  const dark = isDarkMode();
+  const dark = parentHasClass('dark', getBody());
   if (dark) {
     return (
-      <><i className='material-icons'>radio_button_checked</i><span className='dropdown-item-profile'>{resource.light_mode}</span></>
+      <><i className='material-icons'>radio_button_checked</i><span>{resource.light_mode}</span></>
     );
   } else {
     return (
-      <><i className='material-icons'>timelapse</i><span className='dropdown-item-profile'>{resource.dark_mode}</span></>
+      <><i className='material-icons'>timelapse</i><span>{resource.dark_mode}</span></>
     );
   }
 };
@@ -345,7 +330,7 @@ export const LayoutComponent = () => {
                       <hr style={{ margin: 0 }} />
                       <li onClick={changeMode}>{renderMode(resource)}</li>
                       <hr style={{ margin: 0 }} />
-                      <li><i className='material-icons'>account_circle</i><Link className='dropdown-item-profile' to={'signin'} >{resource.signin}</Link></li>
+                      <li><i className='material-icons'>account_circle</i><Link to={'signin'} >{resource.signin}</Link></li>
                     </ul>
                   }
                   {user &&
@@ -355,12 +340,12 @@ export const LayoutComponent = () => {
                       <hr style={{ margin: 0 }} />
                       <li onClick={changeMode}>{renderMode(resource)}</li>
                       <hr style={{ margin: 0 }} />
-                      <li><i className='material-icons'>account_circle</i><Link className='dropdown-item-profile' to={'my-profile'} >{state.username}</Link></li>
-                      <li><i className='material-icons'>settings</i><Link className='dropdown-item-profile' to={'my-profile/settings'}>{resource.my_settings}</Link></li>
+                      <li><i className='material-icons'>account_circle</i><Link to={'my-profile'} >{state.username}</Link></li>
+                      <li><i className='material-icons'>settings</i><Link to={'my-profile/settings'}>{resource.my_settings}</Link></li>
                       <hr style={{ margin: 0 }} />
                       <li>
                         <i className='material-icons'>exit_to_app</i>
-                        <button className='dropdown-item-profile' onClick={signout}>
+                        <button onClick={signout}>
                           {resource.button_signout}
                         </button>
                       </li>
