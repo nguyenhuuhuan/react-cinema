@@ -2,11 +2,11 @@ import { ValueText } from "onecore";
 import * as React from "react";
 import {
   OnClick,
+  PageSizeSelect,
   SearchComponentState,
   useSearch,
   value,
 } from "react-hook-core";
-import { PageSizeSelect } from "react-page-size-select";
 import { useNavigate } from "react-router-dom";
 import { Pagination } from "reactx-pagination";
 import { inputSearch } from "uione";

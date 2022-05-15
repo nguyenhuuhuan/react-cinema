@@ -37,8 +37,8 @@ export const deleteFileYoutube = (fileUrl: string): Promise<number> | number => 
   return 0;
 };
 export const uploadVideoYoutube = (videoId: string): Promise<number> | number => {
-  const headers = new Headers();
-  return axios.post(config.authentication_url + `/my-profile/${user.id}/external-resource?type=${'youtube'}&url=${'https://www.youtube.com/embed/' + videoId}`, {}, { headers }).then(() => 1).catch(() => 0);
+  // const headers = new Headers();
+  return axios.post(config.authentication_url + `/my-profile/${user.id}/external-resource?type=${'youtube'}&url=${'https://www.youtube.com/embed/' + videoId}`, {}).then(() => 1).catch(() => 0);
 };
 export const getUser = (): Promise<string> => {
   return axios.get(config.authentication_url + '/image/users/' + user.id).then(r => r.data).catch(e => e);
@@ -50,8 +50,6 @@ export const updateData = (data: FileUploads[]): Promise<number> => {
   };
   return axios.patch(config.authentication_url + `/my-profile/${user.id}/gallery`, body).then(r => r.data as number).catch(e => e);
 };
-
-
 
 const urlYutuServece = 'http://localhost:8081';
 export const fetchThumbnailVideo = (videoId: string): Promise<Thumbnail> => {
