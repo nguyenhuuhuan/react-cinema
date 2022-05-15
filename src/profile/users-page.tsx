@@ -4,7 +4,7 @@ import * as React from 'react';
 import { checked, OnClick, PageSizeSelect, SearchComponentState, useSearch, value } from 'react-hook-core';
 import { useNavigate } from 'react-router';
 import { Pagination } from 'reactx-pagination';
-import { inputSearch, setUser } from 'uione';
+import { inputSearch } from 'uione';
 import femaleIcon from '../assets/images/female.png';
 import maleIcon from '../assets/images/male.png';
 import { getUserService, User, UserFilter } from './user';

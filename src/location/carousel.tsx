@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Carousel, CarouselImageItem, CarouselVideoItem } from 'reactx-carousel';
-import imgDefault from '../assets/images/video-youtube.png';
 
 import { OnClick } from 'react-hook-core';
 import { getLocations } from '../backoffice/service';

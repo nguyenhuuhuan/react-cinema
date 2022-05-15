@@ -2,7 +2,7 @@ import axios from 'axios';
 import { HttpRequest } from 'axios-core';
 import { QueryService } from 'onecore';
 import { useState } from 'react';
-import { options, storage, UserAccount } from 'uione';
+import { options, storage } from 'uione';
 import { QueryClient } from 'web-clients';
 import { FileUploads } from '../../uploads/model';
 import { MyProfileService, User, UserSettings } from './user';
@@ -10,7 +10,7 @@ import { MyProfileService, User, UserSettings } from './user';
 export * from './user';
 
 const httpRequest = new HttpRequest(axios, options);
-const user: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
+
 export class MyProfileClient implements MyProfileService {
   constructor(private http: HttpRequest, private url: string) {
     this.getMyProfile = this.getMyProfile.bind(this);
@@ -47,7 +47,8 @@ export class MyProfileClient implements MyProfileService {
     });
   }
   saveMyProfile(usr: User): Promise<number> {
-    return this.http.patch<number>(this.url, usr).catch(err => {
+    const url = this.url + '/' + usr.userId;
+    return this.http.patch<number>(url, usr).catch(err => {
       const data = (err && err.response) ? err.response : err;
       if (data && (data.status === 404 || data.status === 410)) {
         return 0;
@@ -57,7 +58,8 @@ export class MyProfileClient implements MyProfileService {
   }
 
   fetchImageUploaded(): Promise<FileUploads | null> {
-    return this.http.get<FileUploads>(this.url + `/${user.id}/fetchImageUploaded/`).catch(err => {
+    const userId = storage.getUserId();
+    return this.http.get<FileUploads>(this.url + `/${userId}/fetchImageUploaded/`).catch(err => {
       const data = (err && err.response) ? err.response : err;
       if (data && (data.status === 404 || data.status === 410)) {
         return null;
@@ -66,7 +68,8 @@ export class MyProfileClient implements MyProfileService {
     });
   }
   fetchImageUploadedGallery(): Promise<FileUploads[] | []> {
-    return this.http.get<FileUploads[]>(this.url + `/${user.id}/fetchImageGalleryUploaded`).catch(err => {
+    const userId = storage.getUserId();
+    return this.http.get<FileUploads[]>(this.url + `/${userId}/fetchImageGalleryUploaded`).catch(err => {
       const data = (err && err.response) ? err.response : err;
       if (data && (data.status === 404 || data.status === 410)) {
         return [];

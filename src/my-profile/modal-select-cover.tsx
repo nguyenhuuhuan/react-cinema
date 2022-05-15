@@ -64,6 +64,8 @@ export const ModalSelectCover = ({
                         </div>
                       </div>
                     );
+                  } else {
+                    return null;
                   }
                 })}
             </ul>

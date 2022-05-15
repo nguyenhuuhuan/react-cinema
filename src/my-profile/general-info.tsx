@@ -1,18 +1,16 @@
 import { OnClick, useUpdate } from 'react-hook-core';
-import { UserAccount } from 'uione';
 import './general-info.css';
 import { useMyProfileService, User } from './my-profile';
+
 interface Props {
   user: User;
   resource: any;
   close: any;
   saveEmit: any;
 }
-
 interface State {
   user: User;
 }
-const userAccount: UserAccount = JSON.parse(sessionStorage.getItem('authService') || '{}') as UserAccount;
 export const GeneralInfo = ({ resource, user, close, saveEmit }: Props) => {
   const service = useMyProfileService();
   const { state, setState, updateState } = useUpdate<State>({ user }, 'user');
@@ -24,7 +22,7 @@ export const GeneralInfo = ({ resource, user, close, saveEmit }: Props) => {
   const save = (e: OnClick) => {
     e.preventDefault();
     const usr = state.user;
-    service.saveMyProfile({ ...usr, id: userAccount.id || '' }).then(success => {
+    service.saveMyProfile({ ...usr, userId: usr.userId}).then(success => {
       let status = '';
       if (success) {
         status = 'success';
@@ -135,13 +133,4 @@ export const GeneralInfo = ({ resource, user, close, saveEmit }: Props) => {
       </form>
     </div>);
 };
-/*
-// @ts-ignore
-GeneralInfo.propTypes = {
-  user: PropTypes.any,
-  resource: PropTypes.any,
-  close: PropTypes.func,
-  saveEmit: PropTypes.func,
-};
-*/
 export default GeneralInfo;

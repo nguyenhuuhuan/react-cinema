@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { OnClick, useUpdate } from 'react-hook-core';
-import { confirm, handleError, message, UserAccount, useResource } from 'uione';
+import { confirm, handleError, message, useResource, storage } from 'uione';
 import { useMyProfileService, UserSettings } from './my-profile';
 
 interface InternalState {
@@ -10,9 +10,6 @@ interface InternalState {
 const data: InternalState = {
   settings: {} as any
 };
-const userAccount: UserAccount = JSON.parse(
-  sessionStorage.getItem('authService') || '{}'
-) as UserAccount;
 export const MySettingsForm = () => {
   const service = useMyProfileService();
   const resource = useResource();
@@ -20,22 +17,28 @@ export const MySettingsForm = () => {
   const { state, setState, updateState } = useUpdate<InternalState>(data, 'settings');
 
   useEffect(() => {
-    service.getMySettings(userAccount.id ?? '').then(settings => {
-      if (settings) {
-        setState({ settings });
-      }
-    });
+    const userId = storage.getUserId();
+    if (userId && userId.length > 0) {
+      service.getMySettings(userId).then(settings => {
+        if (settings) {
+          setState({ settings });
+        }
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const save = (e: OnClick) => {
     e.preventDefault();
-    confirm(resource.msg_confirm_save, resource.confirm, () => {
-      service.saveMySettings(userAccount.id ?? '', state.settings).then((res: number) => {
-        const msg = res > 0 ? resource.success_save_my_settings : resource.fail_save_my_settings;
-        message(msg);
-      }).catch(handleError);
-    }, resource.no, resource.yes);
+    const userId = storage.getUserId();
+    if (userId && userId.length > 0 && state.settings) {
+      confirm(resource.msg_confirm_save, resource.confirm, () => {
+        service.saveMySettings(userId, state.settings).then((res: number) => {
+          const msg = res > 0 ? resource.success_save_my_settings : resource.fail_save_my_settings;
+          message(msg);
+        }).catch(handleError);
+      }, resource.no, resource.yes);
+    }
   };
 
   return (

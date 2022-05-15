@@ -142,7 +142,7 @@ export const FilmsForm = () => {
               return (
                 <li key={i} className='col s12 m6 l4 xl3' onClick={e => edit(e, film.filmId)}>
                   <section>
-                    <img src={film.imageUrl && film.imageUrl.length > 0 ? film.imageUrl : ''} className='round-border' />
+                    <img src={film.imageUrl && film.imageUrl.length > 0 ? film.imageUrl : ''} className='round-border' alt='film'/>
                     <div>
                       <h3 className={film.status === 'I' ? 'inactive' : ''}>{film.title}</h3>
                       {/* <p>{user.email}</p> */}

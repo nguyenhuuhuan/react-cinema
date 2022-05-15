@@ -2,7 +2,7 @@ import { Attributes, DateRange, Filter, Repository, Service } from 'onecore';
 import { FileUploads } from '../../uploads/model';
 
 export interface User {
-  id: string;
+  userId: string;
   username: string;
   displayName: string;
   email?: string;
@@ -135,7 +135,7 @@ export const achievements: Attributes = {
   description: {}
 };
 export const userModel: Attributes = {
-  id: {
+  userId: {
     key: true,
     match: 'equal'
   },

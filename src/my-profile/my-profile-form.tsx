@@ -5,10 +5,10 @@ import { clone, OnClick, useUpdate } from 'react-hook-core';
 import ReactModal from 'react-modal';
 import { Carousel, CarouselImageItem, CarouselVideoItem } from 'reactx-carousel';
 import { SuggestionService } from 'suggestion-service';
-import { alert, handleError, message, UserAccount, useResource } from 'uione';
+import { alert, handleError, message, useResource, storage } from 'uione';
 import { options } from 'uione';
 import imageOnline from '../assets/images/online.svg';
-import imgDefault from '../assets/images/video-youtube.png';
+
 import { config } from '../config';
 import Uploads from '../uploads/components/UploadModal/UploadContainer';
 import {
@@ -51,9 +51,7 @@ const data: Edit = {
     hirable: false,
   },
 };
-const userAccount: UserAccount = JSON.parse(
-  sessionStorage.getItem('authService') || '{}'
-) as UserAccount;
+
 export const MyProfileForm = () => {
   const service = useMyProfileService();
   const skillService = useSkillService();
@@ -108,14 +106,17 @@ export const MyProfileForm = () => {
       20
     );
     setInterestSuggestionService(interestSuggestion);
-    service.getMyProfile(userAccount.id || '').then((profile) => {
-      if (profile) {
-        setUser(profile);
-        setBio(profile.bio || '');
-        setUploadedCover(profile.coverURL);
-        setUploadedAvatar(profile.imageURL);
-      }
-    });
+    const userId = storage.getUserId();
+    if (userId && userId.length > 0) {
+      service.getMyProfile(userId).then((profile) => {
+        if (profile) {
+          setUser(profile);
+          setBio(profile.bio || '');
+          setUploadedCover(profile.coverURL);
+          setUploadedAvatar(profile.imageURL);
+        }
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [previousSkill, setPreviousSkill] = useState({
@@ -224,7 +225,7 @@ export const MyProfileForm = () => {
     event.preventDefault();
     if (isEditing) {
       service
-        .saveMyProfile({ ...user, id: userAccount.id || '' })
+        .saveMyProfile(user)
         .then((successs) => {
           if (successs) {
             message(resource.success_save_my_profile);
@@ -420,7 +421,7 @@ export const MyProfileForm = () => {
     setUser({ ...user, coverURL: url });
     setUploadedCover(url);
     service
-      .saveMyProfile({ ...user, coverURL: url, id: userAccount.id || '' })
+      .saveMyProfile({ ...user, coverURL: url, userId: user.userId})
       .then((successs) => {
         if (successs) {
           message(resource.success_save_my_profile);
@@ -1155,6 +1156,7 @@ export const MyProfileForm = () => {
                                   src={itemData.url + '?enablejsapi=1'}
                                   frameBorder='0'
                                   className='iframe-youtube'
+                                  title='youtube video'
                                 ></iframe>
                                 ;
                               </div>
@@ -1211,7 +1213,7 @@ export const MyProfileForm = () => {
               post={httpPost}
               setURL={(dt) => handleChangeFile(dt)}
               type={typeUpload}
-              id={user.id}
+              id={user.userId}
               url={config.authentication_url + '/my-profile'}
               aspect={aspect}
               sizes={sizes}

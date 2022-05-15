@@ -8,6 +8,7 @@ import { config } from '../config';
 import UploadFile from '../uploads/app';
 import { FileUploads } from '../uploads/model';
 const httpRequest = new HttpRequest(Axios, options);
+
 const user: UserAccount = JSON.parse(
   sessionStorage.getItem('authService') || '{}'
 ) as UserAccount;
