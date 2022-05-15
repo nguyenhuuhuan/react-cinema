@@ -11,6 +11,7 @@ export interface Config {
   signup_url: string;
   password_url: string;
   oauth2_url: string;
+  public_privilege_url: string;
 }
 const httpRequest = new HttpRequest(axios);
 class ApplicationContext {

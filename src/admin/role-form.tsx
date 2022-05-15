@@ -128,33 +128,35 @@ export function RoleForm() {
   React.useEffect(() => {
     showModel(state.role);
   }, [state.role]); // eslint-disable-line react-hooks/exhaustive-deps
-  function showModel(role: Role) {
-    if (!role) {
+  function showModel(obj: Role) {
+    if (!obj) {
       return;
     }
     const { all } = state;
-    if (!role.privileges) {
-      role.privileges = [];
+    if (!obj.privileges) {
+      obj.privileges = [];
     } else {
-      role.privileges = role.privileges.map(p => p.split(' ', 1)[0]);
+      obj.privileges = obj.privileges.map(p => p.split(' ', 1)[0]);
     }
-    setState({ role }, () => isCheckedAll(role.privileges, all, setState));
+    setState({ role: obj }, () => isCheckedAll(obj.privileges, all, setState));
   }
   const handleCheckAll = (event: any) => {
-    const { role, all } = state;
+    const { all } = state;
+    const obj = state.role;
     event.persist();
     const checkedAll = event.target.checked;
-    role.privileges = (checkedAll ? all : []);
-    setState({ role, checkedAll });
+    obj.privileges = (checkedAll ? all : []);
+    setState({ role: obj, checkedAll });
   };
   const handleCheck = (event: any) => {
-    const { role, all, allPrivileges } = state;
+    const { all, allPrivileges } = state;
     event.persist();
+    const obj = state.role;
     const target = event.target;
     const id = target.getAttribute('data-id');
     const type = target.getAttribute('data-type');
-    role.privileges = buildPrivileges(id, type, role.privileges ? role.privileges : [], allPrivileges);
-    setState({ role }, () => isCheckedAll(role.privileges, all, setState));
+    obj.privileges = buildPrivileges(id, type, obj.privileges ? obj.privileges : [], allPrivileges);
+    setState({ role: obj }, () => isCheckedAll(role.privileges, all, setState));
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const q = e.target.value;
@@ -215,13 +217,14 @@ export function RoleForm() {
       );
     }
   };
+  const role = state.role;
   return (
     <div className='view-container'>
       <form id='roleForm' name='roleForm' model-name='role' ref={refForm as any}>
         <header>
           <button type='button' id='btnBack' name='btnBack' className='btn-back' onClick={back} />
           <h2>{flag.newMode ? resource.create : resource.edit} {resource.role}</h2>
-          <button className='btn-group btn-right'><i onClick={e => assign(e, state.role.roleId)} className='material-icons'>group</i></button>
+          <button className='btn-group btn-right'><i onClick={e => assign(e, role.roleId)} className='material-icons'>group</i></button>
         </header>
         <div>
           <section className='row'>
@@ -229,7 +232,7 @@ export function RoleForm() {
               {resource.role_id}
               <input type='text'
                 id='roleId' name='roleId'
-                value={state.role.roleId}
+                value={role.roleId || ''}
                 onChange={updateState}
                 maxLength={20} required={true}
                 readOnly={!flag.newMode}
@@ -239,7 +242,7 @@ export function RoleForm() {
               {resource.role_name}
               <input type='text'
                 id='roleName' name='roleName'
-                value={state.role.roleName}
+                value={role.roleName || ''}
                 onChange={updateState}
                 maxLength={255}
                 placeholder={resource.role_name} />
@@ -248,7 +251,7 @@ export function RoleForm() {
               {resource.remark}
               <input type='text'
                 id='remark' name='remark'
-                value={state.role.remark}
+                value={role.remark || ''}
                 onChange={updateState}
                 maxLength={255}
                 placeholder={resource.remark} />
@@ -262,7 +265,7 @@ export function RoleForm() {
                     id='active'
                     name='status'
                     onChange={(e) => updateState(e, () => setState)}
-                    value='A' checked={state.role.status === 'A'} />
+                    value='A' checked={role.status === 'A'} />
                   {resource.active}
                 </label>
                 <label>
@@ -271,7 +274,7 @@ export function RoleForm() {
                     id='inactive'
                     name='status'
                     onChange={(e) => updateState(e, () => setState)}
-                    value='I' checked={state.role.status === 'I'} />
+                    value='I' checked={role.status === 'I'} />
                   {resource.inactive}
                 </label>
               </div>

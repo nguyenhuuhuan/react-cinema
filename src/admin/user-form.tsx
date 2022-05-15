@@ -2,7 +2,7 @@ import { Item } from 'onecore';
 import * as React from 'react';
 import { createModel, DispatchWithCallback, EditComponentParam, useEdit } from 'react-hook-core';
 import { formatPhone } from 'ui-plus';
-import { emailOnBlur, Gender, handleError, inputEdit, phoneOnBlur, Status } from 'uione';
+import { emailOnBlur, Gender, handleError, inputEdit, phoneOnBlur, requiredOnBlur, Status } from 'uione';
 import { getMasterData, getUserService, User } from './service';
 
 interface InternalState {
@@ -26,8 +26,13 @@ const initialize = (id: string|null, load: (id: string|null) => void, set: Dispa
     set({ titleList, positionList }, () => load(id));
   }).catch(handleError);
 };
-const updateTitle = (title: string, user: User, set: DispatchWithCallback<Partial<InternalState>>) => {
-  user.title = title;
+const updateTitle = (ele: HTMLSelectElement, user: User, set: DispatchWithCallback<Partial<InternalState>>) => {
+  if (ele.value === '') {
+    ele.removeAttribute('data-value');
+  } else {
+    ele.setAttribute('data-value', ele.value);
+  }
+  user.title = ele.value;
   user.gender = (user.title === 'Mr' ? Gender.Male : Gender.Female);
   set({ user });
 };
@@ -74,16 +79,18 @@ export const UserForm = () => {
               name='displayName'
               value={user.displayName || ''}
               onChange={updateState}
+              onBlur={requiredOnBlur}
               maxLength={40} required={true}
               placeholder={resource.display_name} />
           </label>
-          <label className='col s12 m6'>
+          <label className='col s12 m6 flying'>
             {resource.person_title}
             <select
               id='title'
               name='title'
               value={user.title || ''}
-              onChange={e => updateTitle(e.target.value, state.user, setState)}>
+              data-value
+              onChange={e => updateTitle(e.target, state.user, setState)}>
               <option value=''>{resource.please_select}</option>
               )
               {state.titleList.map((item, index) => (
@@ -91,12 +98,13 @@ export const UserForm = () => {
               )}
             </select>
           </label>
-          <label className='col s12 m6'>
+          <label className='col s12 m6 flying'>
             {resource.position}
-            <select
+            <select style={{ width: '99%' }}
               id='position'
               name='position'
               value={user.position || ''}
+              data-value
               onChange={updateState}>
               <option value=''>{resource.please_select}</option>
               {
@@ -104,7 +112,7 @@ export const UserForm = () => {
               }
             </select>
           </label>
-          <label className='col s12 m6'>
+          <label className='col s12 m6 flying'>
             {resource.phone}
             <input
               type='tel'
@@ -116,7 +124,7 @@ export const UserForm = () => {
               maxLength={17}
               placeholder={resource.phone} />
           </label>
-          <label className='col s12 m6'>
+          <label className='col s12 m6 flying'>
             {resource.email}
             <input
               type='text'
