@@ -27,7 +27,7 @@ import {
   useMyProfileService,
   User,
 } from './my-profile';
-import { useSkillService } from './my-profile';
+import { useSkillService, useLookingForService } from './my-profile';
 const httpRequest = new HttpRequest(Axios, options);
 interface Edit {
   edit: {
@@ -56,6 +56,7 @@ export const MyProfileForm = () => {
   const service = useMyProfileService();
   const skillService = useSkillService();
   const interestService = useInterestService();
+  const lookingForService = useLookingForService();
   const { state, setState, updateState } = useUpdate<Edit>(data, 'edit');
 
   const resource = useResource();
@@ -82,11 +83,14 @@ export const MyProfileForm = () => {
     useState<SuggestionService<string>>();
   const [interestSuggestionService, setInterestSuggestionService] =
     useState<SuggestionService<string>>();
+  const [lookingForSuggestionService, setLookingForSuggestionService] =
+  useState<SuggestionService<string>>();
   const [dropdownCover, setDropdownCover] = useState<boolean>(false);
   const [sizes, setSizes] = useState<number[]>([]);
   // const [filesGalleryUploaded, setFilesGalleryUploaded] =
   const [listSkill, setListSkill] = useState<string[]>([]);
   const [listInterest, setListInterest] = useState<string[]>([]);
+  const [listLookingFor, setListLookingFor] = useState<string[]>([]);
   useState<FileUploads[]>();
   const handleChangeFile = (fi: string | undefined) => {
     if (typeUpload === 'cover') {
@@ -106,11 +110,19 @@ export const MyProfileForm = () => {
       20
     );
     setSkillSuggestionService(skillSuggestion);
+
     const interestSuggestion = new SuggestionService<string>(
       interestService.query,
       20
     );
     setInterestSuggestionService(interestSuggestion);
+
+    const lookingForSuggestion = new SuggestionService<string>(
+      lookingForService.query,
+      20
+    );
+    setLookingForSuggestionService(lookingForSuggestion);
+
     const userId = storage.getUserId();
     if (userId && userId.length > 0) {
       service.getMyProfile(userId).then((profile) => {
@@ -129,6 +141,11 @@ export const MyProfileForm = () => {
     list: [] as string[],
   });
   const [previousInterest, setPreviousInterest] = useState({
+    keyword: '',
+    list: [] as string[],
+  });
+
+  const [previousLookingFor, setPreviousLookingFor] = useState({
     keyword: '',
     list: [] as string[],
   });
@@ -152,14 +169,35 @@ export const MyProfileForm = () => {
   const onChangeInterest = (e: React.FormEvent<HTMLInputElement>) => {
     updateState(e);
     const newInterest = e.currentTarget.value;
+    
     if (newInterest) {
       if (interestSuggestionService) {
         interestSuggestionService
           .load(newInterest, previousInterest)
           .then((res) => {
-            if (res !== null) {
+            if (res !== null) {      
               setPreviousInterest(res.last);
               setListInterest(res.list);
+            }
+          })
+          .catch(handleError);
+      }
+    }
+  };
+
+  //-------change looking for----------------
+  const onChangeLookingFor = (e: React.FormEvent<HTMLInputElement>) => {
+    updateState(e);
+    const newLooking = e.currentTarget.value;
+    
+    if (newLooking) {
+      if (lookingForSuggestionService) {
+        lookingForSuggestionService
+          .load(newLooking, previousLookingFor)
+          .then((res) => {
+            if (res !== null) {      
+              setPreviousLookingFor(res.last);
+              setListLookingFor(res.list);
             }
           })
           .catch(handleError);
@@ -721,15 +759,25 @@ export const MyProfileForm = () => {
                     })}
                   <label className='form-group inline-input'>
                     <input
+                      list='listLookingFor'
+                      type='text'
                       name='lookingFor'
                       className='form-control'
                       value={state.edit.lookingFor}
-                      onChange={updateState}
+                      onChange={onChangeLookingFor}
                       placeholder={
                         resource.placeholder_user_profile_looking_for
                       }
                       maxLength={100}
+                      autoComplete='on'
                     />
+                    {listLookingFor && listLookingFor.length > 0 && (
+                      <datalist id='listLookingFor'>
+                        {listLookingFor.map((item, index) => {
+                          return <option key={index} value={item} />;
+                        })}
+                      </datalist>
+                    )}
                     <button
                       type='button'
                       id='btnAddLookingFor'
