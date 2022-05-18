@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as React from 'react';
 import { PixelCrop } from 'react-image-crop';
-import { FileUploads } from '../../model';
+import { FileUploads } from '../model';
 
 const urlGetImg = 'http://localhost:8082/my-profile/image';
 export interface State {
@@ -37,10 +37,13 @@ export const useUpload = (props: Props) => {
     success: false,
     loading: false,
   });
-
+  React.useEffect(() => {
+    console.log('user', props.id)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.id]);
   React.useEffect(() => {
     validateFile();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   React.useEffect(() => {
@@ -48,7 +51,7 @@ export const useUpload = (props: Props) => {
   }, [props.type]);
 
   const validateFile = async () => {
-    if (props.type !== 'gallery') { return; }
+    if (props.type === 'gallery') { return; }
     const img = await readFileAsync(file);
     if (!img) { return; }
     for (const size of props.sizes) {

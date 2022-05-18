@@ -10,12 +10,12 @@ import { options } from 'uione';
 import imageOnline from '../assets/images/online.svg';
 
 import { config } from '../config';
-import Uploads from '../uploads/components/UploadModal/UploadContainer';
+import Uploads from '../uploads/components/UploadContainer';
 import {
   getFileExtension,
   removeFileExtension,
   typeFile,
-} from '../uploads/components/UploadModal/UploadHook';
+} from '../uploads/components/UploadHook';
 import { FileUploads } from '../uploads/model';
 import GeneralInfo from './general-info';
 import { ModalSelectCover } from './modal-select-cover';
@@ -95,6 +95,11 @@ export const MyProfileForm = () => {
       setUploadedAvatar(fi);
     }
   };
+
+  // useEffect(() => {
+  //   console.log('user', user)
+  // }, [user])
+
   useEffect(() => {
     const skillSuggestion = new SuggestionService<string>(
       skillService.query,
@@ -421,7 +426,7 @@ export const MyProfileForm = () => {
     setUser({ ...user, coverURL: url });
     setUploadedCover(url);
     service
-      .saveMyProfile({ ...user, coverURL: url, userId: user.userId})
+      .saveMyProfile({ ...user, coverURL: url, userId: user.userId })
       .then((successs) => {
         if (successs) {
           message(resource.success_save_my_profile);

@@ -12,6 +12,8 @@ export interface Location {
   thumbnail?: string;
   imageURL?: string;
   status: string;
+  coverURL?:string;
+  gallery?:FileUploads[];
 }
 // filter
 export interface LocationFilter extends Filter {
@@ -28,6 +30,7 @@ export interface LocationService
   rateLocation(obj: LocationRate): Promise<any>;
   fetchImageUploaded(id: string): Promise<FileUploads[]> | FileUploads[];
   fetchThumbnailVideo(videoId: string): Promise<Thumbnail>;
+  // saveLocation(obj:Location):Promise<number>;
 }
 
 export const locationModel: Attributes = {

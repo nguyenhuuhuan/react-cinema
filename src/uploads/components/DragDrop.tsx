@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { FileUploads } from '../../model';
-import { updateData } from '../../service';
-import RenderItem from '../RenderFile';
+import { FileUploads } from './../model';
+import { updateData } from './../service';
+import RenderItem from './RenderFile';
 
 interface Props {
   list: FileUploads[];

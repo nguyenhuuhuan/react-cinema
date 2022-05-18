@@ -12,6 +12,8 @@ export interface Location {
   thumbnail?: string;
   imageURL?: string;
   status: string;
+  gallery?: FileUploads[];
+  coverURL?:string;
 }
 // filter
 export interface LocationFilter extends Filter {

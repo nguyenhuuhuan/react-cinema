@@ -14,7 +14,7 @@ import { Pagination } from 'reactx-pagination';
 import { inputSearch } from 'uione';
 import { LocationFilter } from '../backoffice/service/location/location';
 import LocationCarousel from './carousel';
-import { getLocations } from './service';
+import { useLocationsService } from './service';
 // import { LocationCarousel } from "./location-carousel";
 import { Location } from './service/location/location';
 
@@ -49,7 +49,7 @@ export const LocationsPage = () => {
   } = useSearch<Location, LocationFilter, LocationSearch>(
     refForm,
     initialState,
-    getLocations(),
+    useLocationsService(),
     inputSearch()
   );
   component.viewable = true;
@@ -112,8 +112,8 @@ export const LocationsPage = () => {
               onClick={(e) => onSetViewList(e)}
             />
           )}
-          {viewList && (
-            <button
+          {viewList && ( 
+            <button 
               type='button'
               id='btnListView'
               name='btnListView'

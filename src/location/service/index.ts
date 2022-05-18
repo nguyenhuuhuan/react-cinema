@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { HttpRequest } from 'axios-core';
+import { useState } from 'react';
 import { options, storage } from 'uione';
 import { LocationClient } from './location';
 import { LocationRateClient } from './location-rate';
@@ -49,8 +50,9 @@ class ApplicationContext {
 
 export const context = new ApplicationContext();
 
-export function getLocations(): LocationService {
-  return context.getLocationService();
+export function useLocationsService(): LocationService {
+  const [service] = useState(() => context.getLocationService());
+  return service;
 }
 
 export function getLocationRates(): LocationRateService {

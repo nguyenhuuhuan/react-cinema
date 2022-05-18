@@ -14,8 +14,8 @@ import {
 import Axios from "axios";
 import { HttpRequest } from "axios-core";
 import { options } from "uione";
-import { typeFile } from "./components/UploadModal/UploadHook";
-import Uploads from "./components/UploadModal/UploadContainer";
+import { typeFile } from "./components/UploadHook";
+import Uploads from "./components/UploadContainer";
 import { OnClick } from "react-hook-core";
 interface Props {
   type?: typeFile;

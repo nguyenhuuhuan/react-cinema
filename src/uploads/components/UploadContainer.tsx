@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactModal from 'react-modal';
 
-import { FileUploads } from '../../model';
+import { FileUploads } from '../model';
 import { typeFile, useUpload } from './UploadHook';
 import UploadsModal from './UploadModal';
 import './Uploads.scss';
