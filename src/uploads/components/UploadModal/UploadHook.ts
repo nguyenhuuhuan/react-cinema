@@ -1,23 +1,23 @@
-import axios from "axios";
-import * as React from "react";
-import { PixelCrop } from "react-image-crop";
-import { FileUploads } from "../../model";
+import axios from 'axios';
+import * as React from 'react';
+import { PixelCrop } from 'react-image-crop';
+import { FileUploads } from '../../model';
 
-const urlGetImg = "http://localhost:8082/my-profile/image";
+const urlGetImg = 'http://localhost:8082/my-profile/image';
 export interface State {
   success: boolean;
   loading: boolean;
 }
 
-export type typeFile = "cover" | "upload" | "gallery";
+export type typeFile = 'cover' | 'upload' | 'gallery';
 interface Props {
   post: (
     url: string,
     obj: any,
     options?:
       | {
-          headers?: Headers | undefined;
-        }
+        headers?: Headers | undefined;
+      }
       | undefined
   ) => Promise<any>;
   setURL?: (u: string) => void;
@@ -40,19 +40,20 @@ export const useUpload = (props: Props) => {
 
   React.useEffect(() => {
     validateFile();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   React.useEffect(() => {
-    console.log("type", props.type);
+    console.log('type', props.type);
   }, [props.type]);
 
   const validateFile = async () => {
-    if (props.type !== "gallery") return;
-    const image = await readFileAsync(file);
-    if (!image) return;
+    if (props.type !== 'gallery') { return; }
+    const img = await readFileAsync(file);
+    if (!img) { return; }
     for (const size of props.sizes) {
       const height = size / props.aspect;
-      if (image.naturalHeight < height || image.naturalWidth < size) {
+      if (img.naturalHeight < height || img.naturalWidth < size) {
         props.validateFile(true);
         setFile(undefined);
       }
@@ -60,24 +61,23 @@ export const useUpload = (props: Props) => {
   };
 
   const upload = async (id: string): Promise<FileUploads[]> => {
-    debugger;
-    if (!file) return [];
+    if (!file) { return []; }
     let fileCustomSizes: File[] = [];
     setState((pre) => ({ ...pre, loading: true }));
     const bodyFormData = new FormData();
-    if (props.type !== "gallery") {
+    if (props.type !== 'gallery') {
       fileCustomSizes = await resizes(props.sizes);
-      bodyFormData.append("files", file);
+      bodyFormData.append('files', file);
       fileCustomSizes.forEach((fileCustom) => {
-        bodyFormData.append("files", fileCustom);
+        bodyFormData.append('files', fileCustom);
       });
     } else {
-      bodyFormData.append("file", file);
+      bodyFormData.append('file', file);
     }
 
-    bodyFormData.append("id", id || "");
+    bodyFormData.append('id', id || '');
     const headers = new Headers();
-    headers.append("Content-Type", "multipart/form-data");
+    headers.append('Content-Type', 'multipart/form-data');
 
     return props
       .post(`${props.url}/${props.id}/${props.type}`, bodyFormData)
@@ -99,22 +99,23 @@ export const useUpload = (props: Props) => {
       });
   };
 
-  function readFileAsync(file: File | undefined): Promise<HTMLImageElement> {
+  function readFileAsync(fileObj: File | undefined): Promise<HTMLImageElement> {
     return new Promise<HTMLImageElement>((resolve, reject) => {
-      let reader = new FileReader();
+      const reader = new FileReader();
 
-      reader.onload = function (readerEvent) {
-        var image = new Image();
-        image.onload = function (imageEvent) {
-          resolve(image);
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+        img.onload = (imageEvent) => {
+          resolve(img);
         };
-        image.onerror = reject;
-        image.src = readerEvent.target!.result?.toString() || "";
+        img.onerror = reject;
+        // tslint:disable-next-line:no-non-null-assertion
+        img.src = readerEvent.target!.result?.toString() || '';
       };
 
       reader.onerror = reject;
 
-      if (file) reader.readAsDataURL(file);
+      if (fileObj) { reader.readAsDataURL(fileObj); }
     });
   }
 
@@ -127,18 +128,18 @@ export const useUpload = (props: Props) => {
     if (props.aspect === 0) {
       return;
     }
-    const canvas: HTMLCanvasElement = document.createElement("canvas");
+    const canvas: HTMLCanvasElement = document.createElement('canvas');
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
-    const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
-    if (!ctx) return;
+    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    if (!ctx) { return; }
     const pixelRatio = window.devicePixelRatio;
 
     canvas.width = completedCrop.width * pixelRatio;
     canvas.height = completedCrop.height * pixelRatio;
 
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    ctx.imageSmoothingQuality = "high";
+    ctx.imageSmoothingQuality = 'high';
 
     ctx.drawImage(
       image,
@@ -153,43 +154,45 @@ export const useUpload = (props: Props) => {
     );
     const imagee = new Image();
     imagee.src = canvas.toDataURL(file?.type);
-    const newFile = dataURLtoFile(imagee.src, file?.name ?? "");
+    const newFile = dataURLtoFile(imagee.src, file?.name ?? '');
     return newFile;
   };
 
   const resizes = async (sizes: number[]): Promise<File[]> => {
     const croptedFile = await cropImage();
-    if (!croptedFile) return [];
-    let image = await readFileAsync(croptedFile);
+    if (!croptedFile) { return []; }
+    const img = await readFileAsync(croptedFile);
     //
-    let files: File[] = [];
+    const files: File[] = [];
     sizes.forEach((size) => {
-      var canvas = document.createElement("canvas"),
-        ctx = canvas.getContext("2d"),
-        oc = document.createElement("canvas"),
-        octx = oc.getContext("2d");
+      const canvas = document.createElement('canvas'),
+        ctx = canvas.getContext('2d'),
+        oc = document.createElement('canvas'),
+        octx = oc.getContext('2d');
 
       canvas.width = size; // destination canvas size
-      canvas.height = (canvas.width * image.height) / image.width;
+      canvas.height = (canvas.width * img.height) / img.width;
       // var cur = {
       //   width: Math.floor(width * 0.5),
       //   height: Math.floor(height * 0.5),
       // };
-      var cur = {
-        width: Math.floor(image.width),
-        height: Math.floor(image.height),
+      let cur = {
+        width: Math.floor(img.width),
+        height: Math.floor(img.height),
       };
 
       oc.width = cur.width;
       oc.height = cur.height;
 
-      octx!.drawImage(image, 0, 0, cur.width, cur.height);
+      // tslint:disable-next-line:no-non-null-assertion
+      octx!.drawImage(img, 0, 0, cur.width, cur.height);
 
       while (cur.width * 0.5 > size) {
         cur = {
           width: Math.floor(cur.width * 0.5),
           height: Math.floor(cur.height * 0.5),
         };
+        // tslint:disable-next-line:no-non-null-assertion
         octx!.drawImage(
           oc,
           0,
@@ -202,6 +205,7 @@ export const useUpload = (props: Props) => {
           cur.height
         );
       }
+      // tslint:disable-next-line:no-non-null-assertion
       ctx!.drawImage(
         oc,
         0,
@@ -216,12 +220,12 @@ export const useUpload = (props: Props) => {
 
       const imagee = new Image();
       imagee.src = canvas.toDataURL(croptedFile.type);
-      const ext = getFileExtension(croptedFile?.name || "");
+      const ext = getFileExtension(croptedFile?.name || '');
       const newFile = dataURLtoFile(
         imagee.src,
-        removeFileExtension(croptedFile?.name || "") +
-          `_${size.toString()}.` +
-          ext
+        removeFileExtension(croptedFile?.name || '') +
+        `_${size.toString()}.` +
+        ext
       );
       files.push(newFile);
     });
@@ -231,7 +235,7 @@ export const useUpload = (props: Props) => {
 };
 
 export const getImageAvt = async (id: string) => {
-  let urlImg = "";
+  let urlImg = '';
   try {
     const res = await axios.get(urlGetImg + `/${id}`);
     urlImg = res.data;
@@ -241,10 +245,10 @@ export const getImageAvt = async (id: string) => {
   }
 };
 export const dataURLtoFile = (dataurl: string, filename: string) => {
-  const arr = dataurl.split(",");
+  const arr = dataurl.split(',');
   const mime = arr[0].match(/:(.*?);/);
-  let type = "";
-  if (mime) type = mime[1];
+  let type = '';
+  if (mime) { type = mime[1]; }
   const bstr = atob(arr[1]);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
@@ -255,15 +259,15 @@ export const dataURLtoFile = (dataurl: string, filename: string) => {
 };
 
 export function removeFileExtension(name: string): string {
-  const idx: number = name.lastIndexOf(".");
+  const idx: number = name.lastIndexOf('.');
   return idx >= 0 ? name.substring(0, idx) : name;
 }
 
 export function appendFileExtension(s: string, ext: string): string {
-  return ext.length > 0 ? s + "." + ext : s;
+  return ext.length > 0 ? s + '.' + ext : s;
 }
 
 export function getFileExtension(name: string): string {
-  const idx: number = name.lastIndexOf(".");
-  return idx >= 0 ? name.substring(idx + 1) : "";
+  const idx: number = name.lastIndexOf('.');
+  return idx >= 0 ? name.substring(idx + 1) : '';
 }

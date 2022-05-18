@@ -1,7 +1,6 @@
 import { FileUploads } from '../model';
 
 const RenderItem = (props: {item: FileUploads}) => {
-  console.log('item',props.item)
   if (props.item.type === 'youtube' ) {
     return (
       <div className='col xl11 l11 m11 s11'>
@@ -28,7 +27,7 @@ const RenderItem = (props: {item: FileUploads}) => {
     return (
       <div className='col xl11 l11 m11 s11'>
         <div className='data-item'>
-          <img className='image-uploaded' src={props.item.url} alt='image-uploads'/>
+          <img className='image-uploaded' src={props.item.url} alt='uploads'/>
         </div>
       </div>
     );

@@ -1,5 +1,4 @@
 import { HttpRequest } from 'axios-core';
-import { RoleFilter } from 'onecore';
 import { Client } from 'web-clients';
 import { Category, CategoryFilter, categoryModel, CategoryService } from './category';
 

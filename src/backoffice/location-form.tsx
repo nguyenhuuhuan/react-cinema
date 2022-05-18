@@ -22,54 +22,54 @@ const initialize = (id: string | null, load: (id: string | null) => void, set: D
 
 const initialState: InternalState = {
   location: {} as Location
-}; 
+};
 
 const param: EditComponentParam<Location, string, InternalState> = {
   createModel: createLocation,
   initialize
 };
-interface props {
-  state: InternalState,
-  setState: DispatchWithCallback<Partial<InternalState>>
+interface Props {
+  state: InternalState;
+  setState: DispatchWithCallback<Partial<InternalState>>;
 }
-function LocationMarker({ state, setState }: props) {
+function LocationMarker({ state, setState }: Props) {
   const map = useMapEvents({
     click(e: Leaflet.LeafletMouseEvent) {
       const { lat, lng } = e.latlng;
-      setState({ location: { ...state.location, longitude: lat, latitude: lng } })
+      setState({ location: { ...state.location, longitude: lat, latitude: lng } });
     },
-  })
+  });
   return state.location === null ? null : (
-    <Marker position={[state.location.longitude??1, state.location.latitude??1]}>
+    <Marker position={[state.location.longitude ?? 1, state.location.latitude ?? 1]}>
       <Popup>You are here</Popup>
     </Marker>
-  )
+  );
 }
 
 export const LocationForm = () => {
   const refForm = React.useRef();
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const { resource, setState, updateState, flag, save, back, state } = useEdit<Location, string, InternalState>(refForm, initialState, getLocations(), inputEdit(), param);
   const location = state.location;
 
   const closeModal = () => {
-    setModalIsOpen(false)
-  }
+    setModalIsOpen(false);
+  };
 
   const openModal = (e: OnClick) => {
-    e.preventDefault()
-    setModalIsOpen(true)
-  }
+    e.preventDefault();
+    setModalIsOpen(true);
+  };
 
   React.useEffect(() => {
-    const L = require("leaflet");
+    const L = require('leaflet');
 
     delete L.Icon.Default.prototype._getIconUrl;
 
     L.Icon.Default.mergeOptions({
-      iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-      iconUrl: require("leaflet/dist/images/marker-icon.png"),
-      shadowUrl: require("leaflet/dist/images/marker-shadow.png")
+      iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+      iconUrl: require('leaflet/dist/images/marker-icon.png'),
+      shadowUrl: require('leaflet/dist/images/marker-shadow.png')
     });
   }, []);
   return (
@@ -95,7 +95,7 @@ export const LocationForm = () => {
               readOnly={!flag.newMode}
               onChange={updateState}
               maxLength={20} required={true}
-              placeholder="Name" />
+              placeholder='Name' />
           </label>
           <label className='col s12 m6'>
             Type
@@ -107,7 +107,7 @@ export const LocationForm = () => {
               readOnly={!flag.newMode}
               onChange={updateState}
               maxLength={20} required={true}
-              placeholder="Type" />
+              placeholder='Type' />
           </label>
           <label className='col s12 m6'>
             Longitude
@@ -119,7 +119,7 @@ export const LocationForm = () => {
               readOnly
               onChange={updateState}
               maxLength={20} required={true}
-              placeholder="Longitude" />
+              placeholder='Longitude' />
           </label>
           <label className='col s12 m6'>
             Latitude
@@ -131,7 +131,7 @@ export const LocationForm = () => {
               readOnly
               onChange={updateState}
               maxLength={40} required={true}
-              placeholder="Latitude" />
+              placeholder='Latitude' />
           </label>
           <label className='col s12 m6'>
             Description
@@ -152,7 +152,7 @@ export const LocationForm = () => {
               name='thumbnail'
               value={location.thumbnail}
               onChange={updateState}
-              maxLength={40} 
+              maxLength={40}
               placeholder='Thumbnail' />
           </label> */}
           <label className='col s12 m6'>
@@ -222,12 +222,12 @@ export const LocationForm = () => {
                 scrollWheelZoom={true}
                 dragging={true}
                 easeLinearity={0.35}
-                style={{ height: "550px", width: "100%" }}
-         
+                style={{ height: '550px', width: '100%' }}
+
               >
                 <TileLayer
-                  attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors'
+                  url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
                 <LocationMarker state={state} setState={setState} />
               </MapContainer>

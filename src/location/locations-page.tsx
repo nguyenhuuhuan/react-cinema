@@ -1,31 +1,31 @@
-import { ValueText } from "onecore";
-import * as React from "react";
+import 'leaflet/dist/leaflet.css';
+import { ValueText } from 'onecore';
+import * as React from 'react';
 import {
   OnClick,
+  PageSizeSelect,
   SearchComponentState,
   useSearch,
   value,
-} from "react-hook-core";
-import { PageSizeSelect } from "react-page-size-select";
-import { useNavigate } from "react-router-dom";
-import { Pagination } from "reactx-pagination";
-import { inputSearch } from "uione";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import { LocationFilter } from "../backoffice/service/location/location";
-import { getLocations } from "./service";
+} from 'react-hook-core';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
+import { Pagination } from 'reactx-pagination';
+import { inputSearch } from 'uione';
+import { LocationFilter } from '../backoffice/service/location/location';
+import LocationCarousel from './carousel';
+import { getLocations } from './service';
 // import { LocationCarousel } from "./location-carousel";
-import { Location } from "./service/location/location";
-import LocationCarousel from "./carousel";
+import { Location } from './service/location/location';
 
 interface LocationSearch
   extends SearchComponentState<Location, LocationFilter> {
   statusList: ValueText[];
 }
 const userFilter: LocationFilter = {
-  id: "",
-  name: "",
-  description: "",
+  id: '',
+  name: '',
+  description: '',
   longitude: 0,
   latitude: 0,
 };
@@ -55,14 +55,14 @@ export const LocationsPage = () => {
   component.viewable = true;
   component.editable = true;
   React.useEffect(() => {
-    const L = require("leaflet");
+    const L = require('leaflet');
 
     delete L.Icon.Default.prototype._getIconUrl;
 
     L.Icon.Default.mergeOptions({
-      iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-      iconUrl: require("leaflet/dist/images/marker-icon.png"),
-      shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+      iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+      iconUrl: require('leaflet/dist/images/marker-icon.png'),
+      shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
   }, []);
 
@@ -84,8 +84,8 @@ export const LocationsPage = () => {
     value(state.filter)
   );
   React.useEffect(() => {
-    if (state.list) setList(state.list);
-    if (state.filter) setFilter(state.filter);
+    if (state.list) { setList(state.list); }
+    if (state.filter) { setFilter(state.filter); }
   }, [state]);
 
   const onSetViewList = (e: { preventDefault: () => void }) => {
@@ -99,37 +99,37 @@ export const LocationsPage = () => {
   };
 
   return (
-    <div className="view-container">
+    <div className='view-container'>
       <header>
         <h2>{resource.users}</h2>
-        <div className="btn-group">
+        <div className='btn-group'>
           {!viewList && (
             <button
-              type="button"
-              id="btnListView"
-              name="btnListView"
-              className="btn-grid"
+              type='button'
+              id='btnListView'
+              name='btnListView'
+              className='btn-grid'
               onClick={(e) => onSetViewList(e)}
             />
           )}
           {viewList && (
             <button
-              type="button"
-              id="btnListView"
-              name="btnListView"
-              className="btn-map"
-              data-view="listview"
+              type='button'
+              id='btnListView'
+              name='btnListView'
+              className='btn-map'
+              data-view='listview'
               onClick={(e) => onSetViewList(e)}
             >
-              <span className="material-icons-outlined"></span>
+              <span className='material-icons-outlined'></span>
             </button>
           )}
           {component.addable && (
             <button
-              type="button"
-              id="btnNew"
-              name="btnNew"
-              className="btn-new"
+              type='button'
+              id='btnNew'
+              name='btnNew'
+              className='btn-new'
               onClick={add}
             />
           )}
@@ -137,36 +137,36 @@ export const LocationsPage = () => {
       </header>
       <div>
         <form
-          id="usersForm"
-          name="usersForm"
+          id='usersForm'
+          name='usersForm'
           noValidate={true}
           ref={refForm as any}
         >
-          <section className="row search-group">
-            <label className="col s12 m4 search-input">
+          <section className='row search-group'>
+            <label className='col s12 m4 search-input'>
               <PageSizeSelect
                 size={component.pageSize}
                 sizes={component.pageSizes}
                 onChange={pageSizeChanged}
               />
               <input
-                type="text"
-                id="q"
-                name="q"
-                value={filter.q || ""}
+                type='text'
+                id='q'
+                name='q'
+                value={filter.q || ''}
                 onChange={updateState}
                 maxLength={255}
                 placeholder={resource.keyword}
               />
               <button
-                type="button"
-                className="btn-filter"
+                type='button'
+                className='btn-filter'
                 onClick={toggleFilter}
               />
-              <button type="submit" className="btn-search" onClick={search} />
+              <button type='submit' className='btn-search' onClick={search} />
             </label>
             <Pagination
-              className="col s12 m8"
+              className='col s12 m8'
               total={component.total}
               size={component.pageSize}
               max={component.pageMaxSize}
@@ -175,16 +175,16 @@ export const LocationsPage = () => {
             />
           </section>
           <section
-            className="row search-group inline"
+            className='row search-group inline'
             hidden={component.hideFilter}
           >
-            <label className="col s12 m4 l4">
+            <label className='col s12 m4 l4'>
               {resource.username}
               <input
-                type="text"
-                id="name"
-                name="name"
-                value={filter.name || ""}
+                type='text'
+                id='name'
+                name='name'
+                value={filter.name || ''}
                 onChange={updateState}
                 maxLength={255}
                 placeholder={resource.username}
@@ -192,18 +192,18 @@ export const LocationsPage = () => {
             </label>
           </section>
         </form>
-        <form className="list-result">
-         
+        <form className='list-result'>
+
           {viewList ? (
-            <ul className="row list-view 2">
+            <ul className='row list-view 2'>
               {list &&
                 list.length > 0 &&
                 list.map((location, i) => (
-               <LocationCarousel location={location} edit={edit}/>
+                  <LocationCarousel location={location} edit={edit} />
                 ))}
             </ul>
           ) : (
-            <div style={{ height: "600px", width: "800px" }}>
+            <div style={{ height: '600px', width: '800px' }}>
               <MapContainer
                 center={{ lat: 10.854886268472459, lng: 106.63051128387453 }}
                 zoom={16}
@@ -214,12 +214,12 @@ export const LocationsPage = () => {
                 dragging={true}
                 // animate={true}
                 easeLinearity={0.35}
-                style={{ height: "100%" }}
-                // onclick={addMarker}
+                style={{ height: '100%' }}
+              // onclick={addMarker}
               >
                 <TileLayer
                   attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
                 {list &&
                   list.map((location, idx) => (
@@ -227,7 +227,7 @@ export const LocationsPage = () => {
                       key={`marker-${idx}`}
                       position={[location.longitude, location.latitude]}
                       eventHandlers={{
-                        click:(e)=>{
+                        click: (e) => {
                           navigate(`${location.id}`);
                         }
                       }}

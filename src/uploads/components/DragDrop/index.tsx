@@ -5,18 +5,16 @@ import { updateData } from '../../service';
 import RenderItem from '../RenderFile';
 
 interface Props {
-  list: FileUploads[],
-  setList: React.Dispatch<React.SetStateAction<FileUploads[] | undefined>>,
-  handleDeleteFile: (url: string, type: string) => Promise<void>
+  list: FileUploads[];
+  setList: React.Dispatch<React.SetStateAction<FileUploads[] | undefined>>;
+  handleDeleteFile: (url: string, type: string) => Promise<void>;
 }
 
 const DragDrop = (props: Props) => {
-
   const onDragEnd = async (result: DropResult) => {
     if (!result.destination) {
       return;
     }
-
     const newList = reorder(
       props.list,
       result.source.index,
@@ -53,7 +51,7 @@ const DragDrop = (props: Props) => {
                   >
                     <div {...provide.dragHandleProps} className='col xl1 l1 m1 s1'>
                       <i className='material-icons menu-type'>menu</i>
-                      <i onClick={() => props.handleDeleteFile(item.url,item.type)} className='material-icons icon-delete'>delete</i>
+                      <i onClick={() => props.handleDeleteFile(item.url, item.type)} className='material-icons icon-delete'>delete</i>
                     </div>
                     <RenderItem item={item} />
                   </div>

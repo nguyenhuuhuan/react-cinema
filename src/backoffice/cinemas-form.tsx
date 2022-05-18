@@ -1,12 +1,9 @@
 import { Filter, ValueText } from 'onecore';
 import React from 'react';
-import { checked, OnClick, SearchComponentState, useSearch, value } from 'react-hook-core';
-import { PageSizeSelect } from 'react-page-size-select';
+import { checked, OnClick, PageSizeSelect, SearchComponentState, useSearch, value } from 'react-hook-core';
 import { useNavigate } from 'react-router-dom';
 import { Pagination } from 'reactx-pagination';
 import { inputSearch } from 'uione';
-import femaleIcon from '../assets/images/female.png';
-import maleIcon from '../assets/images/male.png';
 import { Cinema, useCinema } from './service';
 
 interface CinemaSearch extends SearchComponentState<Cinema, CimemaFilter> {

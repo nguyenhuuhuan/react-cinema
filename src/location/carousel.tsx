@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Carousel, CarouselImageItem, CarouselVideoItem } from "reactx-carousel";
-import imgDefault from "../assets/images/video-youtube.png";
+import { useEffect, useState } from 'react';
+import { Carousel, CarouselImageItem, CarouselVideoItem } from 'reactx-carousel';
 
-import "./carousel.css";
-import { Location } from "../backoffice/service/location/location";
-import { OnClick } from "react-hook-core";
-import { FileUploads } from "../uploads/model";
-import { getLocations } from "../backoffice/service";
+import { OnClick } from 'react-hook-core';
+import { getLocations } from '../backoffice/service';
+import { Location } from '../backoffice/service/location/location';
+import { FileUploads } from '../uploads/model';
+import './carousel.css';
 
 interface Props {
   edit: (e: any, id: string) => void;
@@ -21,14 +20,14 @@ export default function LocationCarousel({ edit, location }: Props) {
   }, [location, carousel]);
   const locationService = getLocations();
   const handleFetch = async () => {
-    if (!carousel || files) return;
+    if (!carousel || files) { return; }
     let res;
     try {
       res = await locationService.fetchImageUploaded(location.id);
-    } catch (error) {}
+    } catch (error) { }
     if (res && res.length > 0) {
       for (const item of res) {
-        if (item.type === "youtube") {
+        if (item.type === 'youtube') {
           const thumbnails = await locationService.fetchThumbnailVideo(
             item.url
           );
@@ -43,9 +42,9 @@ export default function LocationCarousel({ edit, location }: Props) {
     } else {
       const info: FileUploads[] = [
         {
-          source: "",
-          type: "image",
-          url: location.imageURL || "",
+          source: '',
+          type: 'image',
+          url: location.imageURL || '',
         },
       ];
       setFiles(info);
@@ -59,16 +58,16 @@ export default function LocationCarousel({ edit, location }: Props) {
   return (
     <>
       {carousel ? (
-        <div className="col s12 m6 l4 xl3 ">
+        <div className='col s12 m6 l4 xl3 '>
           <div
-            className="user-carousel-container "
+            className='user-carousel-container '
             onClick={(e) => toggleCarousel(e, false)}
           >
             {files && files.length > 0 ? (
               <Carousel infiniteLoop={true}>
                 {files.map((itemData, index) => {
                   switch (itemData.type) {
-                    case "video":
+                    case 'video':
                       return (
                         <CarouselVideoItem
                           key={index}
@@ -76,12 +75,12 @@ export default function LocationCarousel({ edit, location }: Props) {
                           src={itemData.url}
                         />
                       );
-                    case "image":
+                    case 'image':
                       return (
                         // <img className='image-carousel' src={itemData.url} key={index} alt={itemData.url} draggable={false}/>
                         <CarouselImageItem key={index} src={itemData.url} />
                       );
-                    case "youtube":
+                    case 'youtube':
                       return (
                         <CarouselVideoItem
                           key={index}
@@ -95,12 +94,12 @@ export default function LocationCarousel({ edit, location }: Props) {
                 })}
               </Carousel>
             ) : (
-              ""
+              ''
             )}
-            <div className="user-carousel-content">
+            <div className='user-carousel-content'>
               <h3
                 onClick={(e) => edit(e, location.id)}
-                className={location.status === "I" ? "inactive" : ""}
+                className={location.status === 'I' ? 'inactive' : ''}
               >
                 {location.name}
               </h3>
@@ -110,12 +109,12 @@ export default function LocationCarousel({ edit, location }: Props) {
         </div>
       ) : (
         <li
-          className="col s12 m6 l4 xl3 card "
+          className='col s12 m6 l4 xl3 card '
           onClick={(e) => toggleCarousel(e, true)}
         >
           <section>
             <div
-              className="cover"
+              className='cover'
               style={{
                 backgroundImage: `url('${location.imageURL}')`,
               }}

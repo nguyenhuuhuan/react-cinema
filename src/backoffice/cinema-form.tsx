@@ -1,4 +1,3 @@
-import { ValueText } from 'onecore';
 import React from 'react';
 import { createModel, DispatchWithCallback, EditComponentParam, useEdit } from 'react-hook-core';
 
@@ -15,13 +14,7 @@ const createCinema = (): Cinema => {
   return cinema;
 };
 const initialize = (id: string | null, load: (id: string | null) => void, set: DispatchWithCallback<Partial<InternalState>>) => {
-  console.log('id', id);
   load(id);
-};
-const updateTitle = (title: string, cinema: Cinema, set: DispatchWithCallback<Partial<InternalState>>) => {
-  cinema.name = title;
-  // user.gender = (user.title === 'Mr' ? Gender.Male : Gender.Female);
-  set({ cinema });
 };
 
 const initialState: InternalState = {
@@ -34,10 +27,8 @@ const param: EditComponentParam<Cinema, string, InternalState> = {
 };
 export const CinemaForm = () => {
   const refForm = React.useRef();
-  const { resource, setState, updateState, flag, save, back, state } = useEdit<Cinema, string, InternalState>(refForm, initialState, useCinema(), inputEdit(), param);
+  const { resource, updateState, flag, save, back, state } = useEdit<Cinema, string, InternalState>(refForm, initialState, useCinema(), inputEdit(), param);
   const cinema = state.cinema;
-  console.log('resource', resource)
-  console.log('state', state)
   return (
     <div className='view-container'>
       <form id='cinemaForm' name='cinemaForm' model-name='cinema' ref={refForm as any}>

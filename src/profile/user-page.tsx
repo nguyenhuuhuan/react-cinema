@@ -199,7 +199,7 @@ export function UserPage() {
             }
           </div>
           <div className='col m12 l8'>
-            {user.bio && user.bio.length >0 && <div className='card border-bottom-highlight'>
+            {user.bio && user.bio.length > 0 && <div className='card border-bottom-highlight'>
               <header>
                 <i className='material-icons highlight'>person</i>
                 {resource.user_profile_bio}
@@ -207,7 +207,7 @@ export function UserPage() {
               <p>{user.bio}</p>
             </div>
 }
-            {user.interests && user.interests.length >0 && <div className='card border-bottom-highlight'>
+            {user.interests && user.interests.length > 0 && <div className='card border-bottom-highlight'>
               <header>
                 <i className='material-icons highlight'>flash_on</i>
                 {resource.interests}
@@ -221,7 +221,7 @@ export function UserPage() {
               </section>
             </div>}
 
-            {user.achievements && user.achievements.length>0 &&<div className='card border-bottom-highlight'>
+            {user.achievements && user.achievements.length > 0 && <div className='card border-bottom-highlight'>
               <header>
                 <i className='material-icons highlight'>beenhere</i>
                 {resource.achievements}
