@@ -83,11 +83,13 @@ export interface Config {
   myprofile_url: string;
   skill_url: string;
   interest_url: string;
+  looking_for_url: string;
 }
 class ApplicationContext {
   userService?: MyProfileService;
   skillService?: QueryService<string>;
   interestService?: QueryService<string>;
+  lookingForService?: QueryService<string>;
   getConfig(): Config {
     return storage.config();
   }
@@ -112,6 +114,14 @@ class ApplicationContext {
     }
     return this.interestService;
   }
+
+  getLookingForService(): QueryService<string> {
+    if (!this.lookingForService) {
+      const c = this.getConfig();
+      this.lookingForService = new QueryClient<string>(httpRequest, c.looking_for_url);
+    }
+    return this.lookingForService;
+  }
 }
 
 export const context = new ApplicationContext();
@@ -126,5 +136,10 @@ export function useSkillService(): QueryService<string> {
 }
 export function useInterestService(): QueryService<string> {
   const [service] = useState(() => context.getInterestService());
+  return service;
+}
+
+export function useLookingForService(): QueryService<string> {
+  const [service] = useState(() => context.getLookingForService());
   return service;
 }
