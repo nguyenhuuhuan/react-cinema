@@ -208,13 +208,7 @@ export const MyProfileForm = () => {
   const closeModal = () => {
     setModalIsOpen(false);
   };
-  const httpPost = (
-    url: string,
-    obj: any,
-    opts?: { headers?: Headers | undefined } | undefined
-  ): Promise<any> => {
-    return httpRequest.post(url, obj, opts);
-  };
+
 
   const showPopup = (e: OnClick) => {
     e.preventDefault();
@@ -1263,7 +1257,7 @@ export const MyProfileForm = () => {
               />
             </header>
             <Uploads
-              post={httpPost}
+              post={httpRequest.post}
               setURL={(dt) => handleChangeFile(dt)}
               type={typeUpload}
               id={user.userId}

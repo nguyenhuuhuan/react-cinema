@@ -23,13 +23,7 @@ export const ModalUploadGallery = ({
   setGallery,
 }: Props) => {
   const resource = useResource();
-  const httpPost = (
-    url: string,
-    obj: any,
-    opts?: { headers?: Headers | undefined } | undefined
-  ): Promise<any> => {
-    return httpRequest.post(url, obj, opts);
-  };
+
   return (
     <ReactModal
       isOpen={modalUploadGalleryOpen}
@@ -55,7 +49,7 @@ export const ModalUploadGallery = ({
           <UploadFile
             setGallery={setGallery}
             type='gallery'
-            post={httpPost}
+            post={httpRequest.post}
             id={user.id || ''}
             url={config.authentication_url + '/my-profile'}
             sizes={[]}

@@ -47,14 +47,6 @@ export const LocationPage = () => {
     return (<div></div>);
   }
 
-  const httpPost = (
-    url: string,
-    obj: any,
-    opts?: { headers?: Headers | undefined } | undefined
-  ): Promise<any> => {
-    return httpRequest.post(url, obj, opts);
-  };
-
 
   const openModalUpload = (e: OnClick, type: typeFile) => {
     e.preventDefault();
@@ -193,7 +185,7 @@ export const LocationPage = () => {
               />
             </header>
             <Uploads
-              post={httpPost}
+              post={httpRequest.post}
               setURL={(dt) => handleChangeFile(dt)}
               type={typeUpload}
               id={location.id}

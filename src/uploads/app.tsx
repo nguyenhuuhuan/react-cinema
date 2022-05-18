@@ -35,16 +35,10 @@ interface Props {
 }
 
 const httpRequest = new HttpRequest(Axios, options);
-const httpPost = (
-  url: string,
-  obj: any,
-  options?: { headers?: Headers | undefined } | undefined
-): Promise<any> => {
-  return httpRequest.post(url, obj, options);
-};
+
 const UploadFile = ({
   type = "gallery",
-  post = httpPost,
+  post = httpRequest.post,
   url,
   id,
   sizes = [],

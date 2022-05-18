@@ -4,7 +4,7 @@ import ReactModal from 'react-modal';
 import { FileUploads } from '../model';
 import { typeFile, useUpload } from './UploadHook';
 import UploadsModal from './UploadModal';
-import './Uploads.scss';
+import './Uploads.css';
 
 interface Props {
   setFileGallery?: (data: FileUploads[]) => void;
