@@ -163,11 +163,7 @@ export const LayoutComponent = () => {
   };
 
   function toggleProfile() {
-    if (!user) {
-      navigate('/signin');
-    } else {
-      setState({ showProfile: state.showProfile === 'show' ? '' : 'show' });
-    }
+    setState({ showProfile: state.showProfile === 'show' ? '' : 'show' });
   }
   const changeClassicMenu = () => {
     if (!sysBody) {
@@ -333,11 +329,9 @@ export const LayoutComponent = () => {
                 <button type='button' className='mail'><i className='material-icons'>mail</i></button>*/}
                 {location.pathname !== '/' && location.pathname !== '' && <Link to='/profile'><i className='material-icons'>home</i></Link>}
                 <div className='dropdown-menu-profile'>
-                  {(!user || !user.imageURL) && (
                     <i className='material-icons' onClick={toggleProfile}>
                       person
                     </i>
-                  )}
                   {!user &&
                     <ul id='dropdown-basic' className={state.showProfile + ' dropdown-content-profile'}>
                       <li className='menu' onClick={changeMenu}>{renderItem(resource)}</li>
