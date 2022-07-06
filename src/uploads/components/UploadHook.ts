@@ -43,6 +43,7 @@ export const useUpload = (props: Props) => {
   }, [props.id]);
   React.useEffect(() => {
     validateFile();
+    console.log(file)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
